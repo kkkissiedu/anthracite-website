@@ -89,13 +89,13 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="bg-anthracite py-24 px-6"
+      className="bg-anthracite py-20 lg:py-28 px-6 md:px-8 lg:px-16"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1280px] mx-auto">
         {/* Section header */}
-        <div className="mb-16">
+        <div className="mb-12">
           <p
-            className="text-gold tracking-[0.3em] uppercase text-xs mb-4"
+            className="text-gold tracking-[0.3em] uppercase text-xs mb-3"
             style={{ fontFamily: "var(--font-body)" }}
           >
             Get In Touch

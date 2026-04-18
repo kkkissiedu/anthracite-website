@@ -113,17 +113,17 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="bg-cream text-dark-text py-24 md:py-32 px-6"
+      className="bg-cream text-dark-text py-20 lg:py-28 px-6 md:px-8 lg:px-16"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-[1280px] mx-auto">
 
         {/* Two-column layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center mb-16 md:mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center mb-12">
 
           {/* Left — large bold statement */}
           <div ref={leftRef} style={{ opacity: 0 }}>
             <p
-              className="text-gold tracking-[0.3em] uppercase text-xs mb-5"
+              className="text-gold tracking-[0.3em] uppercase text-xs mb-3"
               style={{ fontFamily: "var(--font-body)" }}
             >
               About Us
@@ -156,7 +156,7 @@ export default function About() {
         {/* Gold horizontal divider */}
         <div
           ref={dividerRef}
-          className="h-px gold-gradient-line mb-16 md:mb-20 origin-left"
+          className="h-px gold-gradient-line mb-12 origin-left"
           style={{ opacity: 0 }}
           aria-hidden
         />

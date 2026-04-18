@@ -85,7 +85,7 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 text-center">
         {/* Overline */}
         <p
           className="text-gold tracking-[0.3em] uppercase text-xs md:text-sm mb-6 md:mb-8 font-body"
@@ -122,7 +122,7 @@ export default function Hero() {
         {/* Subheading */}
         <p
           ref={subRef}
-          className="text-cream/60 text-base md:text-lg lg:text-xl max-w-[600px] mx-auto text-center leading-relaxed mb-10 md:mb-14 font-body"
+          className="text-cream/60 text-base md:text-lg lg:text-xl max-w-[600px] mx-auto text-center leading-relaxed mt-6 mb-10 font-body"
           style={{ fontFamily: "var(--font-body)", opacity: 0 }}
         >
           Pioneering AI-driven construction and 3D-printed green buildings to

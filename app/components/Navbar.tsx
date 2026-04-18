@@ -42,7 +42,7 @@ export default function Navbar() {
             : "bg-transparent py-5"
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <nav className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 flex items-center justify-between">
           {/* Logo */}
           <Link
             href="/"

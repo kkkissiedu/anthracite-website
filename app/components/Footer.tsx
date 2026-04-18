@@ -43,7 +43,7 @@ export default function Footer() {
   return (
     <footer className="bg-anthracite border-t border-gold/10">
       {/* Top bar */}
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 pt-16 pb-10">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
@@ -93,12 +93,12 @@ export default function Footer() {
       </div>
 
       {/* Gold divider */}
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16">
         <div className="h-px bg-gold/10" />
       </div>
 
       {/* Bottom bar */}
-      <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p
           className="text-cream/30 text-xs"
           style={{ fontFamily: "var(--font-body)" }}

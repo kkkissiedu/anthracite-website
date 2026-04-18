@@ -139,13 +139,13 @@ export default function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="bg-anthracite text-cream py-24 md:py-32 px-6"
+      className="bg-anthracite text-cream py-20 lg:py-28 px-6 md:px-8 lg:px-16"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-[1280px] mx-auto">
         {/* Header */}
-        <div className="mb-14 md:mb-16">
+        <div className="mb-12">
           <p
-            className="text-gold tracking-[0.3em] uppercase text-xs mb-4"
+            className="text-gold tracking-[0.3em] uppercase text-xs mb-3"
             style={{ fontFamily: "var(--font-body)" }}
           >
             Our Work
