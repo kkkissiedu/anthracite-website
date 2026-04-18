@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors */
+  --color-anthracite: #0d0d0d;
+  --color-gold: #c9952a;
+  --color-gold-highlight: #d4af37;
+  --color-cream: #f5f0e8;
+  --color-dark-text: #1a1a1a;
+
+  /* Typography */
+  --font-heading: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0d0d0d;
+  color: #f5f0e8;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+/* Gold gradient line animation */
+@keyframes gold-line-sweep {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gold-gradient-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #c9952a 20%,
+    #d4af37 40%,
+    #f5e07a 50%,
+    #d4af37 60%,
+    #c9952a 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: gold-line-sweep 4s linear infinite;
+}
+
+/* Selection */
+::selection {
+  background-color: #c9952a;
+  color: #0d0d0d;
+}
