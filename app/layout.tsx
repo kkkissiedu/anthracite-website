@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
-import LenisProvider from "./components/LenisProvider";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -19,6 +18,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.theanthracite.com"),
+  icons: {
+    icon: [{ url: "/logo-icon.svg", type: "image/svg+xml" }],
+  },
   title: "The Anthracite Limited | Architectural Design & Construction Ghana",
   description:
     "The Anthracite Limited pioneers AI-driven construction, 3D-printed green buildings, and parametric architectural design across Ghana and West Africa.",
@@ -62,7 +64,7 @@ export default function RootLayout({
       className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-anthracite text-cream overflow-x-hidden">
-        <LenisProvider>{children}</LenisProvider>
+        {children}
       </body>
     </html>
   );

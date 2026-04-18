@@ -48,7 +48,7 @@ export default function Footer() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src="/logo.png"
+              src="/logo-dark.svg"
               alt="The Anthracite Limited"
               width={120}
               height={40}

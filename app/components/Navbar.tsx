@@ -15,7 +15,6 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -49,24 +48,14 @@ export default function Navbar() {
             className="flex items-center gap-3 flex-shrink-0"
             aria-label="The Anthracite Limited"
           >
-            {!logoError ? (
-              <Image
-                src="/logo.png"
-                alt="The Anthracite Limited"
-                width={140}
-                height={40}
-                priority
-                className="h-8 w-auto object-contain"
-                onError={() => setLogoError(true)}
-              />
-            ) : (
-              <span
-                className="text-cream font-heading text-xl tracking-widest uppercase"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                <span className="text-gold">THE</span> ANTHRACITE
-              </span>
-            )}
+            <Image
+              src="/logo-dark.svg"
+              alt="The Anthracite Limited"
+              width={160}
+              height={44}
+              priority
+              className="h-9 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop nav */}
