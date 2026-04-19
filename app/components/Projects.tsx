@@ -6,6 +6,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { client, urlFor } from "@/lib/sanity";
+import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,14 +14,6 @@ type Category =
   | "architectural-structural"
   | "3d-design"
   | "real-estate-construction";
-
-type FeaturedCard = {
-  category: Category;
-  title: string;
-  description: string;
-  image: string | null;
-  href: string;
-};
 
 const CATEGORY_LABELS: Record<Category, string> = {
   "architectural-structural": "Architectural & Structural",
@@ -33,6 +26,12 @@ const CATEGORY_HREFS: Record<Category, string> = {
   "3d-design": "/work/sculptor",
   "real-estate-construction": "/services/real-estate",
 };
+
+const FEATURED_QUERY = `*[_type == "project" && featured == true] | order(_createdAt desc) {
+  _id, title, category, subcategory, description, overview,
+  mainImage, gallery, videoUrl, videoFile, panorama, model3d,
+  client, location, year
+}`;
 
 function EmptyState() {
   return (
@@ -50,57 +49,34 @@ function EmptyState() {
 }
 
 export default function Projects() {
-  const [cards, setCards] = useState<FeaturedCard[] | null>(null);
+  const [featured, setFeatured] = useState<SanityProject[] | null>(null);
+  const { openModal } = useProjectModal();
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     client
-      .fetch<
-        Array<{
-          _id: string;
-          title: string;
-          category: Category;
-          description: string;
-          mainImage: unknown;
-        }>
-      >(
-        `*[_type == "project" && featured == true] | order(_createdAt desc) {
-          _id, title, category, description, mainImage
-        }`
-      )
+      .fetch<SanityProject[]>(FEATURED_QUERY)
       .then((data) => {
         if (data?.length) {
-          const seen = new Set<Category>();
-          const featured: FeaturedCard[] = [];
+          const seen = new Set<string>();
+          const deduped: SanityProject[] = [];
           for (const p of data) {
             if (!seen.has(p.category)) {
               seen.add(p.category);
-              featured.push({
-                category: p.category,
-                title: p.title,
-                description: p.description,
-                image: p.mainImage
-                  ? urlFor(p.mainImage as Parameters<typeof urlFor>[0])
-                      .width(1200)
-                      .url()
-                  : null,
-                href: CATEGORY_HREFS[p.category] ?? "/",
-              });
+              deduped.push(p);
             }
           }
-          setCards(featured);
+          setFeatured(deduped);
         } else {
-          setCards([]);
+          setFeatured([]);
         }
       })
-      .catch(() => {
-        setCards([]);
-      });
+      .catch(() => setFeatured([]));
   }, []);
 
   useEffect(() => {
-    if (!cards?.length) return;
+    if (!featured?.length) return;
     const ctx = gsap.context(() => {
       const cardEls = gridRef.current?.querySelectorAll<HTMLElement>(".fw-card");
       if (!cardEls?.length) return;
@@ -122,7 +98,7 @@ export default function Projects() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [cards]);
+  }, [featured]);
 
   return (
     <section
@@ -148,71 +124,88 @@ export default function Projects() {
         </div>
 
         {/* Content */}
-        {cards === null ? null : cards.length === 0 ? (
+        {featured === null ? null : featured.length === 0 ? (
           <EmptyState />
         ) : (
-          <div
-            ref={gridRef}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          >
-            {cards.map((card) => (
-              <div
-                key={card.category}
-                className="fw-card group relative overflow-hidden"
-                style={{ opacity: 0 }}
-              >
-                <div className="relative w-full aspect-[3/4]">
-                  {card.image ? (
-                    <Image
-                      src={card.image}
-                      alt={card.title}
-                      fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-[#1a1a1a]" />
-                  )}
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featured.map((project) => {
+              const cat = project.category as Category;
+              const imgSrc = project.mainImage
+                ? urlFor(
+                    project.mainImage as Parameters<typeof urlFor>[0]
+                  )
+                    .width(1200)
+                    .url()
+                : null;
 
-                  {/* Content overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col gap-3">
-                    <span
-                      className="border border-gold/60 text-gold px-3 py-1 text-[10px] tracking-[0.25em] uppercase w-fit"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
-                      {CATEGORY_LABELS[card.category]}
-                    </span>
+              return (
+                <div
+                  key={project._id}
+                  className="fw-card group relative overflow-hidden cursor-pointer"
+                  style={{ opacity: 0 }}
+                  onClick={() => openModal(project)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && openModal(project)}
+                  aria-label={`Open ${project.title}`}
+                >
+                  <div className="relative w-full aspect-[3/4]">
+                    {imgSrc ? (
+                      <Image
+                        src={imgSrc}
+                        alt={project.title}
+                        fill
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-[#1a1a1a]" />
+                    )}
 
-                    <h3
-                      className="text-2xl md:text-3xl font-bold text-cream leading-tight"
-                      style={{ fontFamily: "var(--font-heading)" }}
-                    >
-                      {card.title}
-                    </h3>
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
-                    <p
-                      className="text-cream/65 text-sm leading-relaxed"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
-                      {card.description}
-                    </p>
+                    {/* Content overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col gap-3">
+                      <span
+                        className="border border-gold/60 text-gold px-3 py-1 text-[10px] tracking-[0.25em] uppercase w-fit"
+                        style={{ fontFamily: "var(--font-body)" }}
+                      >
+                        {CATEGORY_LABELS[cat] ?? cat}
+                      </span>
 
-                    <Link
-                      href={card.href}
-                      className="mt-1 inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
-                      View All →
-                    </Link>
+                      <h3
+                        className="text-2xl md:text-3xl font-bold text-cream leading-tight"
+                        style={{ fontFamily: "var(--font-heading)" }}
+                      >
+                        {project.title}
+                      </h3>
+
+                      {project.description && (
+                        <p
+                          className="text-cream/65 text-sm leading-relaxed"
+                          style={{ fontFamily: "var(--font-body)" }}
+                        >
+                          {project.description}
+                        </p>
+                      )}
+
+                      <Link
+                        href={CATEGORY_HREFS[cat] ?? "/"}
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-1 inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm w-fit"
+                        style={{ fontFamily: "var(--font-body)" }}
+                      >
+                        View All →
+                      </Link>
+                    </div>
+
+                    {/* Gold border on hover */}
+                    <div className="absolute inset-0 border border-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   </div>
-
-                  {/* Gold border on hover */}
-                  <div className="absolute inset-0 border border-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
