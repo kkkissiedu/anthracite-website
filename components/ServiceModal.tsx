@@ -153,12 +153,12 @@ export default function ServiceModal({
       aria-label={content.heading}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-none" />
 
       {/* Panel */}
       <div
         ref={panelRef}
-        className="relative w-full max-w-2xl bg-anthracite/95 backdrop-blur-md border border-cream/10 p-8 md:p-10 max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-2xl bg-anthracite/95 backdrop-blur-sm border border-cream/10 p-8 md:p-10 max-h-[90vh] overflow-y-auto"
         style={{ opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
       >
