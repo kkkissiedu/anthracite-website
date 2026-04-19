@@ -416,7 +416,7 @@ export default function ProjectModal() {
       {/* Backdrop */}
       <div
         ref={backdropRef}
-        className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md"
+        className="fixed inset-0 z-50 bg-black/70 backdrop-blur-none"
         onClick={handleClose}
         aria-hidden="true"
       />
@@ -430,7 +430,7 @@ export default function ProjectModal() {
       >
         <div
           ref={panelRef}
-          className="relative w-full h-full sm:max-w-6xl sm:max-h-[92vh] flex flex-col bg-[#0D0D0D] sm:bg-[#0D0D0D]/95 sm:backdrop-blur-md pointer-events-auto overflow-hidden"
+          className="relative w-full h-full sm:max-w-6xl sm:max-h-[92vh] flex flex-col bg-[#0D0D0D] sm:bg-[#0D0D0D]/95 sm:backdrop-blur-sm pointer-events-auto overflow-hidden"
         >
           {/* ── Header ── */}
           <div className="shrink-0 border-b border-white/10 px-6 py-5">

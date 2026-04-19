@@ -1,22 +1,12 @@
 "use client";
 
-import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import { Canvas } from "@react-three/fiber";
 
 const GOLD = "#C9952A";
 
 function WireframeBuilding() {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y += delta * 0.1;
-    groupRef.current.rotation.x += delta * 0.02;
-  });
-
   return (
-    <group ref={groupRef}>
+    <group rotation={[0.15, 0.4, 0]}>
       {/* Main tower */}
       <mesh position={[0, 0.6, 0]}>
         <boxGeometry args={[0.7, 2.8, 0.7]} />
@@ -49,9 +39,10 @@ function WireframeBuilding() {
 export default function HeroBackground3D() {
   return (
     <Canvas
+      frameloop="demand"
       camera={{ position: [0, 0, 6], fov: 45 }}
-      dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true }}
+      dpr={[1, Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 1.5)]}
+      gl={{ antialias: false, alpha: true, powerPreference: "low-power" }}
       style={{ background: "transparent" }}
     >
       <WireframeBuilding />
