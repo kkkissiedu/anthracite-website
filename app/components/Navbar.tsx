@@ -51,10 +51,10 @@ export default function Navbar() {
             <Image
               src="/logo-dark.svg"
               alt="The Anthracite Limited"
-              width={160}
-              height={44}
+              width={200}
+              height={56}
               priority
-              className="h-9 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
           </Link>
 
