@@ -53,6 +53,7 @@ export default function Projects() {
   const { openModal } = useProjectModal();
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const h2LineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     client
@@ -73,6 +74,26 @@ export default function Projects() {
         }
       })
       .catch(() => setFeatured([]));
+  }, []);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // h2 reveal
+      gsap.fromTo(
+        h2LineRef.current,
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 78%",
+          },
+        }
+      );
+    }, sectionRef);
+    return () => ctx.revert();
   }, []);
 
   useEffect(() => {
@@ -104,8 +125,21 @@ export default function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="bg-anthracite text-cream py-20 lg:py-28 px-6 md:px-8 lg:px-16"
+      className="relative bg-anthracite text-cream py-20 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
     >
+      {/* Decorative section number */}
+      <span
+        aria-hidden
+        className="absolute top-0 right-0 leading-none font-bold text-gold select-none pointer-events-none"
+        style={{
+          fontFamily: "var(--font-heading)",
+          fontSize: "180px",
+          opacity: 0.04,
+        }}
+      >
+        03
+      </span>
+
       <div className="max-w-[1280px] mx-auto">
         {/* Header */}
         <div className="mb-12">
@@ -115,12 +149,15 @@ export default function Projects() {
           >
             Our Work
           </p>
-          <h2
-            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Featured <span className="text-gold">Work</span>
-          </h2>
+          <div className="overflow-hidden">
+            <h2
+              ref={h2LineRef}
+              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
+              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
+            >
+              Featured <span className="text-gold">Work</span>
+            </h2>
+          </div>
         </div>
 
         {/* Content */}
@@ -155,53 +192,44 @@ export default function Projects() {
                         src={imgSrc}
                         alt={project.title}
                         fill
-                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     ) : (
                       <div className="absolute inset-0 bg-[#1a1a1a]" />
                     )}
 
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                    {/* Subtle permanent vignette */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
 
-                    {/* Content overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col gap-3">
-                      <span
-                        className="border border-gold/60 text-gold px-3 py-1 text-[10px] tracking-[0.25em] uppercase w-fit"
-                        style={{ fontFamily: "var(--font-body)" }}
-                      >
-                        {CATEGORY_LABELS[cat] ?? cat}
-                      </span>
-
-                      <h3
-                        className="text-2xl md:text-3xl font-bold text-cream leading-tight"
-                        style={{ fontFamily: "var(--font-heading)" }}
-                      >
-                        {project.title}
-                      </h3>
-
-                      {project.description && (
-                        <p
-                          className="text-cream/65 text-sm leading-relaxed"
+                    {/* ADM-style slide-up overlay */}
+                    <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
+                      <div className="p-6 flex flex-col gap-3">
+                        <span
+                          className="text-gold text-[10px] tracking-[0.25em] uppercase"
                           style={{ fontFamily: "var(--font-body)" }}
                         >
-                          {project.description}
-                        </p>
-                      )}
-
-                      <Link
-                        href={CATEGORY_HREFS[cat] ?? "/"}
-                        onClick={(e) => e.stopPropagation()}
-                        className="mt-1 inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm w-fit"
-                        style={{ fontFamily: "var(--font-body)" }}
-                      >
-                        View All →
-                      </Link>
+                          {CATEGORY_LABELS[cat] ?? cat}
+                        </span>
+                        <h3
+                          className="text-2xl md:text-3xl font-bold text-cream leading-tight"
+                          style={{ fontFamily: "var(--font-heading)" }}
+                        >
+                          {project.title}
+                        </h3>
+                        <Link
+                          href={CATEGORY_HREFS[cat] ?? "/"}
+                          onClick={(e) => e.stopPropagation()}
+                          className="mt-1 inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm w-fit"
+                          style={{ fontFamily: "var(--font-body)" }}
+                        >
+                          View All
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+                            <path d="M3 8h10M9 4l4 4-4 4" stroke="#C9952A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </Link>
+                      </div>
                     </div>
-
-                    {/* Gold border on hover */}
-                    <div className="absolute inset-0 border border-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   </div>
                 </div>
               );

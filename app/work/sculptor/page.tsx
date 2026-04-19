@@ -187,7 +187,6 @@ export default function SculptorPage() {
                   key={project._id}
                   project={project}
                   onOpen={handleOpen}
-                  /* Alternate aspect ratios for visual variety */
                   tall={i % 3 === 1}
                 />
               ))}
@@ -238,15 +237,15 @@ function SculptorCard({
             src={imgSrc}
             alt={project.title}
             fill
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="absolute inset-0 bg-[#111]" />
         )}
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+        {/* Subtle vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
 
         {/* Gold diagonal accent */}
         <div
@@ -257,36 +256,38 @@ function SculptorCard({
           }}
         />
 
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-2">
-          {project.subcategory && (
-            <span
-              className="text-gold text-[10px] tracking-[0.25em] uppercase"
+        {/* ADM-style slide-up overlay */}
+        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
+          <div className="p-5 flex flex-col gap-2">
+            {project.subcategory && (
+              <span
+                className="text-gold text-[10px] tracking-[0.25em] uppercase"
+                style={{ fontFamily: "var(--font-body)" }}
+              >
+                {project.subcategory}
+              </span>
+            )}
+            <h3
+              className="text-lg md:text-xl font-bold text-cream leading-tight"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {project.title}
+            </h3>
+            <div
+              className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-cream/45 tracking-[0.12em] uppercase"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              {project.subcategory}
-            </span>
-          )}
-
-          <h3
-            className="text-lg md:text-xl font-bold text-cream leading-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {project.title}
-          </h3>
-
-          <div
-            className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-cream/45 tracking-[0.12em] uppercase"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
-            {project.client && <span>{project.client}</span>}
-            {project.year && <span>{project.year}</span>}
+              {project.client && <span>{project.client}</span>}
+              {project.year && <span>{project.year}</span>}
+            </div>
+            <div className="flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase mt-1">
+              View Project
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="#C9952A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
           </div>
         </div>
-
-        {/* Hover: gold left border accent */}
-        <div className="absolute inset-y-0 left-0 w-0.5 bg-gold scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-400 ease-out pointer-events-none" />
-        <div className="absolute inset-0 border border-gold/0 group-hover:border-gold/40 transition-colors duration-300 pointer-events-none" />
       </div>
     </div>
   );

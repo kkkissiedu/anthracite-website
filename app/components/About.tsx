@@ -14,23 +14,24 @@ const STATS = [
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
   const statsRowRef = useRef<HTMLDivElement>(null);
   const counterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const h2Line1Ref = useRef<HTMLDivElement>(null);
+  const h2Line2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Left column slides in from left
+      // h2 line-by-line reveal
       gsap.fromTo(
-        leftRef.current,
-        { x: -80, opacity: 0 },
+        [h2Line1Ref.current, h2Line2Ref.current],
+        { yPercent: 110 },
         {
-          x: 0,
-          opacity: 1,
+          yPercent: 0,
           duration: 1,
           ease: "power3.out",
+          stagger: 0.12,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 75%",
@@ -38,12 +39,12 @@ export default function About() {
         }
       );
 
-      // Right column slides in from right
+      // Right column fades up
       gsap.fromTo(
         rightRef.current,
-        { x: 80, opacity: 0 },
+        { y: 40, opacity: 0 },
         {
-          x: 0,
+          y: 0,
           opacity: 1,
           duration: 1,
           ease: "power3.out",
@@ -113,15 +114,27 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="bg-cream text-dark-text py-20 lg:py-28 px-6 md:px-8 lg:px-16"
+      className="relative bg-cream text-dark-text py-20 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
     >
-      <div className="max-w-[1280px] mx-auto">
+      {/* Decorative section number */}
+      <span
+        aria-hidden
+        className="absolute top-0 right-0 leading-none font-bold text-gold select-none pointer-events-none"
+        style={{
+          fontFamily: "var(--font-heading)",
+          fontSize: "180px",
+          opacity: 0.04,
+        }}
+      >
+        01
+      </span>
 
+      <div className="max-w-[1280px] mx-auto">
         {/* Two-column layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center mb-12">
 
           {/* Left — large bold statement */}
-          <div ref={leftRef} style={{ opacity: 0 }}>
+          <div>
             <p
               className="text-gold tracking-[0.3em] uppercase text-xs mb-3"
               style={{ fontFamily: "var(--font-body)" }}
@@ -132,10 +145,17 @@ export default function About() {
               className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-dark-text"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Ghana&apos;s First{" "}
-              <span className="text-gold">3D-Printed</span>
-              <br />
-              Green Estate
+              <div className="overflow-hidden">
+                <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
+                  Ghana&apos;s First{" "}
+                  <span className="text-gold">3D-Printed</span>
+                </div>
+              </div>
+              <div className="overflow-hidden">
+                <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
+                  Green Estate
+                </div>
+              </div>
             </h2>
           </div>
 
@@ -190,7 +210,6 @@ export default function About() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
