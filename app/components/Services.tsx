@@ -165,7 +165,7 @@ export default function Services() {
         {/* Section header */}
         <div className="mb-12">
           <p
-            className="text-gold tracking-[0.3em] uppercase text-xs mb-3"
+            className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
             style={{ fontFamily: "var(--font-body)" }}
           >
             What We Do

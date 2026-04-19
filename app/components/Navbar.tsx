@@ -48,7 +48,7 @@ export default function Navbar() {
             aria-label="The Anthracite Limited"
           >
             <Image
-              src="/logo-dark.svg"
+              src="/logo-icon.svg"
               alt="The Anthracite Limited"
               width={160}
               height={44}

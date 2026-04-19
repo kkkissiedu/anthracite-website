@@ -136,7 +136,7 @@ export default function About() {
           {/* Left — large bold statement */}
           <div>
             <p
-              className="text-gold tracking-[0.3em] uppercase text-xs mb-3"
+              className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
               style={{ fontFamily: "var(--font-body)" }}
             >
               About Us
