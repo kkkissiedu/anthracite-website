@@ -17,25 +17,6 @@ type TeamMember = {
   linkedinUrl: string | null;
 };
 
-const STATIC_TEAM: TeamMember[] = [
-  {
-    id: "static-1",
-    name: "Kwame Asante",
-    role: "Founder & Principal Architect",
-    bio: "With over 15 years across structural design and computational engineering, Kwame leads the firm's vision of merging precision technology with bold architectural expression across West Africa.",
-    photo: null,
-    linkedinUrl: null,
-  },
-  {
-    id: "static-2",
-    name: "Amara Osei",
-    role: "Head of 3D Design & Digital Fabrication",
-    bio: "Amara directs The Sculptor studio, specialising in parametric design, digital twins, and additive manufacturing workflows that bridge concept and construction.",
-    photo: null,
-    linkedinUrl: null,
-  },
-];
-
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
 function LinkedInIcon() {
@@ -141,10 +122,27 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
 );
 MemberCard.displayName = "MemberCard";
 
+// ─── Empty state ──────────────────────────────────────────────────────────────
+
+function EmptyState() {
+  return (
+    <div className="flex items-center justify-center py-24">
+      <div className="border border-gold px-12 py-8 text-center">
+        <p
+          className="text-gold text-sm tracking-[0.2em] uppercase"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Content coming soon
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export default function Team() {
-  const [members, setMembers] = useState<TeamMember[]>(STATIC_TEAM);
+  const [members, setMembers] = useState<TeamMember[] | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -180,12 +178,17 @@ export default function Team() {
               linkedinUrl: m.linkedinUrl,
             }))
           );
+        } else {
+          setMembers([]);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        setMembers([]);
+      });
   }, []);
 
   useEffect(() => {
+    if (!members?.length) return;
     const ctx = gsap.context(() => {
       const cards = cardRefs.current.filter(Boolean);
       if (!cards.length) return;
@@ -232,18 +235,22 @@ export default function Team() {
           </h2>
         </div>
 
-        {/* Cards grid — responsive, accommodates more members later */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {members.map((member, i) => (
-            <MemberCard
-              key={member.id}
-              member={member}
-              ref={(el) => {
-                cardRefs.current[i] = el;
-              }}
-            />
-          ))}
-        </div>
+        {/* Content */}
+        {members === null ? null : members.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {members.map((member, i) => (
+              <MemberCard
+                key={member.id}
+                member={member}
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
