@@ -1,6 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type FormState = {
   name: string;
@@ -45,6 +49,10 @@ const INPUT_CLASS =
   "w-full bg-[#141414] border border-gold/30 focus:border-gold text-cream placeholder:text-cream/30 px-4 py-3 outline-none transition-colors duration-300 font-body text-sm";
 
 export default function Contact() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const h2Line1Ref = useRef<HTMLDivElement>(null);
+  const h2Line2Ref = useRef<HTMLDivElement>(null);
+
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -53,6 +61,26 @@ export default function Contact() {
   });
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        [h2Line1Ref.current, h2Line2Ref.current],
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.12,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 78%",
+          },
+        }
+      );
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -88,9 +116,23 @@ export default function Contact() {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
-      className="bg-anthracite py-20 lg:py-28 px-6 md:px-8 lg:px-16"
+      className="relative bg-anthracite py-20 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
     >
+      {/* Decorative section number */}
+      <span
+        aria-hidden
+        className="absolute top-0 right-0 leading-none font-bold text-gold select-none pointer-events-none"
+        style={{
+          fontFamily: "var(--font-heading)",
+          fontSize: "180px",
+          opacity: 0.04,
+        }}
+      >
+        05
+      </span>
+
       <div className="max-w-[1280px] mx-auto">
         {/* Section header */}
         <div className="mb-12">
@@ -104,9 +146,16 @@ export default function Contact() {
             className="text-cream text-4xl md:text-5xl lg:text-6xl leading-tight"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Let&apos;s Build
-            <br />
-            <span className="text-gold">Together</span>
+            <div className="overflow-hidden">
+              <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
+                Let&apos;s Build
+              </div>
+            </div>
+            <div className="overflow-hidden">
+              <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
+                <span className="text-gold">Together</span>
+              </div>
+            </div>
           </h2>
         </div>
 

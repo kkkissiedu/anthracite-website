@@ -17,8 +17,6 @@ type TeamMember = {
   linkedinUrl: string | null;
 };
 
-// ─── Sub-components ────────────────────────────────────────────────────────────
-
 function LinkedInIcon() {
   return (
     <svg
@@ -52,8 +50,6 @@ function AvatarPlaceholder({ name }: { name: string }) {
     </div>
   );
 }
-
-// ─── Card ─────────────────────────────────────────────────────────────────────
 
 const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
   ({ member }, ref) => (
@@ -122,8 +118,6 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
 );
 MemberCard.displayName = "MemberCard";
 
-// ─── Empty state ──────────────────────────────────────────────────────────────
-
 function EmptyState() {
   return (
     <div className="flex items-center justify-center py-24">
@@ -139,12 +133,11 @@ function EmptyState() {
   );
 }
 
-// ─── Section ──────────────────────────────────────────────────────────────────
-
 export default function Team() {
   const [members, setMembers] = useState<TeamMember[] | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const h2LineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     client
@@ -188,6 +181,25 @@ export default function Team() {
   }, []);
 
   useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        h2LineRef.current,
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+          },
+        }
+      );
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
     if (!members?.length) return;
     const ctx = gsap.context(() => {
       const cards = cardRefs.current.filter(Boolean);
@@ -216,8 +228,21 @@ export default function Team() {
     <section
       ref={sectionRef}
       id="team"
-      className="bg-cream text-dark-text py-20 lg:py-28 px-6 md:px-8 lg:px-16"
+      className="relative bg-cream text-dark-text py-20 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
     >
+      {/* Decorative section number */}
+      <span
+        aria-hidden
+        className="absolute top-0 right-0 leading-none font-bold text-gold select-none pointer-events-none"
+        style={{
+          fontFamily: "var(--font-heading)",
+          fontSize: "180px",
+          opacity: 0.04,
+        }}
+      >
+        04
+      </span>
+
       <div className="max-w-[1280px] mx-auto">
         {/* Header */}
         <div className="mb-12">
@@ -227,12 +252,15 @@ export default function Team() {
           >
             The People
           </p>
-          <h2
-            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-text"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Meet the <span className="text-gold">Team</span>
-          </h2>
+          <div className="overflow-hidden">
+            <h2
+              ref={h2LineRef}
+              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-text"
+              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
+            >
+              Meet the <span className="text-gold">Team</span>
+            </h2>
+          </div>
         </div>
 
         {/* Content */}

@@ -22,7 +22,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -59,16 +58,16 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden md:flex items-center gap-8 ml-auto">
+          <ul className="hidden md:flex items-center gap-12 ml-auto">
             {NAV_LINKS.map((link) => (
               <li key={link.label}>
                 <a
                   href={link.href}
-                  className="relative text-cream/80 hover:text-cream text-sm tracking-widest uppercase font-body transition-colors duration-300 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite rounded-sm"
+                  className="relative text-cream/80 hover:text-cream text-sm tracking-widest uppercase transition-colors duration-300 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite rounded-sm pb-1"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
                   {link.label}
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold group-hover:w-full transition-all duration-300 ease-out" />
+                  <span className="absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                 </a>
               </li>
             ))}

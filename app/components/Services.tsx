@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -100,9 +101,25 @@ const SERVICES = [
 export default function Services() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const h2LineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // h2 reveal
+      gsap.fromTo(
+        h2LineRef.current,
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+          },
+        }
+      );
+
       gsap.fromTo(
         cardRefs.current.filter(Boolean),
         { y: 60, opacity: 0 },
@@ -127,8 +144,21 @@ export default function Services() {
     <section
       ref={sectionRef}
       id="services"
-      className="bg-anthracite text-cream py-20 lg:py-28 px-6 md:px-8 lg:px-16"
+      className="relative bg-anthracite text-cream py-20 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
     >
+      {/* Decorative section number */}
+      <span
+        aria-hidden
+        className="absolute top-0 right-0 leading-none font-bold text-gold select-none pointer-events-none"
+        style={{
+          fontFamily: "var(--font-heading)",
+          fontSize: "180px",
+          opacity: 0.04,
+        }}
+      >
+        02
+      </span>
+
       <div className="max-w-[1280px] mx-auto">
 
         {/* Section header */}
@@ -139,12 +169,15 @@ export default function Services() {
           >
             What We Do
           </p>
-          <h2
-            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream max-w-xl"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Our <span className="text-gold">Services</span>
-          </h2>
+          <div className="overflow-hidden">
+            <h2
+              ref={h2LineRef}
+              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream max-w-xl"
+              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
+            >
+              Our <span className="text-gold">Services</span>
+            </h2>
+          </div>
         </div>
 
         {/* Cards grid */}
@@ -164,9 +197,6 @@ export default function Services() {
     </section>
   );
 }
-
-import { forwardRef } from "react";
-import Link from "next/link";
 
 type ServiceItem = (typeof SERVICES)[number];
 
@@ -229,7 +259,7 @@ const ServiceCard = forwardRef<HTMLDivElement, { service: ServiceItem }>(
           Explore →
         </Link>
 
-        {/* Bottom gold accent line — animates in on hover */}
+        {/* Bottom gold accent line */}
         <div
           className="h-px bg-gold scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100"
           aria-hidden

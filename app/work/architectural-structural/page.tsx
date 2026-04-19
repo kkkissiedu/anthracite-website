@@ -196,46 +196,49 @@ function ProjectCard({
             src={imgSrc}
             alt={project.title}
             fill
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="absolute inset-0 bg-[#1a1a1a]" />
         )}
 
-        {/* Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+        {/* Subtle vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
 
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-2">
-          {project.subcategory && (
-            <span
-              className="border border-gold/60 text-gold px-2 py-0.5 text-[10px] tracking-[0.2em] uppercase w-fit"
+        {/* ADM-style slide-up overlay */}
+        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
+          <div className="p-5 flex flex-col gap-2">
+            {project.subcategory && (
+              <span
+                className="text-gold text-[10px] tracking-[0.2em] uppercase"
+                style={{ fontFamily: "var(--font-body)" }}
+              >
+                {project.subcategory}
+              </span>
+            )}
+            <h3
+              className="text-xl md:text-2xl font-bold text-cream leading-tight"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {project.title}
+            </h3>
+            <div
+              className="flex flex-wrap gap-x-4 gap-y-0.5 text-[10px] text-cream/50 tracking-[0.12em] uppercase"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              {project.subcategory}
-            </span>
-          )}
-
-          <h3
-            className="text-xl md:text-2xl font-bold text-cream leading-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {project.title}
-          </h3>
-
-          <div
-            className="flex flex-wrap gap-x-4 gap-y-0.5 text-[10px] text-cream/50 tracking-[0.12em] uppercase"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
-            {project.client && <span>{project.client}</span>}
-            {project.location && <span>{project.location}</span>}
-            {project.year && <span>{project.year}</span>}
+              {project.client && <span>{project.client}</span>}
+              {project.location && <span>{project.location}</span>}
+              {project.year && <span>{project.year}</span>}
+            </div>
+            <div className="flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase mt-1">
+              View Project
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="#C9952A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
           </div>
         </div>
-
-        {/* Hover border */}
-        <div className="absolute inset-0 border border-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </div>
     </div>
   );
