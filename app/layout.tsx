@@ -3,6 +3,8 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { ProjectModalProvider } from "@/context/ProjectModalContext";
 import ProjectModal from "@/components/ProjectModal";
+import { ServiceModalProvider } from "@/context/ServiceModalContext";
+import ServiceModal from "@/components/ServiceModal";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -67,8 +69,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-anthracite text-cream overflow-x-hidden">
         <ProjectModalProvider>
-          {children}
-          <ProjectModal />
+          <ServiceModalProvider>
+            {children}
+            <ProjectModal />
+            <ServiceModal />
+          </ServiceModalProvider>
         </ProjectModalProvider>
       </body>
     </html>

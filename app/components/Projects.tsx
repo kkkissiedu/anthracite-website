@@ -103,16 +103,17 @@ export default function Projects() {
       if (!cardEls?.length) return;
       gsap.fromTo(
         Array.from(cardEls),
-        { y: 60, opacity: 0 },
+        { y: 60, opacity: 0, scale: 0.97 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.85,
+          scale: 1,
+          duration: 0.8,
           ease: "power3.out",
           stagger: 0.15,
           scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 78%",
+            trigger: sectionRef.current,
+            start: "top 70%",
           },
         }
       );
@@ -155,7 +156,7 @@ export default function Projects() {
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
               style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
             >
-              Featured <span className="text-gold">Work</span>
+              All Featured <span className="text-gold">Projects</span>
             </h2>
           </div>
         </div>
@@ -179,7 +180,7 @@ export default function Projects() {
                 <div
                   key={project._id}
                   className="fw-card group relative overflow-hidden cursor-pointer"
-                  style={{ opacity: 0 }}
+                  style={{ opacity: 0, transform: "scale(0.97)" }}
                   onClick={() => openModal(project)}
                   role="button"
                   tabIndex={0}
@@ -220,13 +221,10 @@ export default function Projects() {
                         <Link
                           href={CATEGORY_HREFS[cat] ?? "/"}
                           onClick={(e) => e.stopPropagation()}
-                          className="mt-1 inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm w-fit"
+                          className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
                           style={{ fontFamily: "var(--font-body)" }}
                         >
-                          View All
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-                            <path d="M3 8h10M9 4l4 4-4 4" stroke="#C9952A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
+                          VIEW ALL PROJECTS →
                         </Link>
                       </div>
                     </div>

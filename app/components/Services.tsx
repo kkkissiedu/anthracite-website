@@ -3,7 +3,7 @@
 import { useEffect, useRef, forwardRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
+import { useServiceModal, type ServiceId } from "@/context/ServiceModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -73,32 +73,33 @@ function RealEstateIcon() {
 
 const SERVICES = [
   {
+    id: "architectural-structural" as ServiceId,
     Icon: ArchitectureIcon,
     title: "Architectural & Structural Design",
     subtitle: null,
     description:
       "From concept to construction documentation — precision-engineered designs informed by physics-based simulations, computational methods, and real-world performance targets.",
-    href: "/work/architectural-structural",
   },
   {
+    id: "sculptor" as ServiceId,
     Icon: SculptorIcon,
     title: "3D Design Services",
     subtitle: "via The Sculptor",
     description:
       "High-fidelity 3D modelling, digital twins, and parametric design through our sister studio, enabling seamless transitions from virtual model to physical printed structure.",
-    href: "/work/sculptor",
   },
   {
+    id: "real-estate" as ServiceId,
     Icon: RealEstateIcon,
     title: "Real Estate & Construction",
     subtitle: null,
     description:
       "End-to-end real estate development and construction management, anchored by our flagship 3D-printed Green Building estate — built for durability, sustainability, and scale.",
-    href: "/services/real-estate",
   },
 ];
 
 export default function Services() {
+  const { openServiceModal } = useServiceModal();
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const h2LineRef = useRef<HTMLDivElement>(null);
@@ -186,6 +187,7 @@ export default function Services() {
             <ServiceCard
               key={service.title}
               service={service}
+              onExplore={() => openServiceModal(service.id)}
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
@@ -200,72 +202,73 @@ export default function Services() {
 
 type ServiceItem = (typeof SERVICES)[number];
 
-const ServiceCard = forwardRef<HTMLDivElement, { service: ServiceItem }>(
-  ({ service }, ref) => {
-    const { Icon, title, subtitle, description, href } = service;
+const ServiceCard = forwardRef<
+  HTMLDivElement,
+  { service: ServiceItem; onExplore: () => void }
+>(({ service, onExplore }, ref) => {
+  const { Icon, title, subtitle, description } = service;
 
-    return (
-      <div
-        ref={ref}
-        style={{ opacity: 0 }}
-        className="
-          group relative flex flex-col gap-6 p-8 md:p-10
-          border border-cream/10
-          transition-all duration-500 ease-out
-          hover:border-gold
-          before:absolute before:inset-0
-          before:border before:border-gold before:opacity-0
-          before:scale-[0.97] before:transition-all before:duration-500
-          hover:before:opacity-100 hover:before:scale-100
-        "
-      >
-        {/* Icon */}
-        <div className="transition-transform duration-300 group-hover:scale-110 w-fit">
-          <Icon />
-        </div>
-
-        {/* Title */}
-        <div>
-          <h3
-            className="text-xl md:text-2xl font-semibold text-cream leading-snug mb-1"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {title}
-          </h3>
-          {subtitle && (
-            <p
-              className="text-gold text-xs tracking-widest uppercase"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              {subtitle}
-            </p>
-          )}
-        </div>
-
-        {/* Description */}
-        <p
-          className="text-cream/55 text-sm leading-relaxed flex-1"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          {description}
-        </p>
-
-        {/* CTA */}
-        <Link
-          href={href}
-          className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          Explore →
-        </Link>
-
-        {/* Bottom gold accent line */}
-        <div
-          className="h-px bg-gold scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100"
-          aria-hidden
-        />
+  return (
+    <div
+      ref={ref}
+      style={{ opacity: 0 }}
+      className="
+        group relative flex flex-col gap-6 p-8 md:p-10
+        border border-cream/10
+        transition-all duration-500 ease-out
+        hover:border-gold
+        before:absolute before:inset-0
+        before:border before:border-gold before:opacity-0
+        before:scale-[0.97] before:transition-all before:duration-500
+        hover:before:opacity-100 hover:before:scale-100
+      "
+    >
+      {/* Icon */}
+      <div className="transition-transform duration-300 group-hover:scale-110 w-fit">
+        <Icon />
       </div>
-    );
-  }
-);
+
+      {/* Title */}
+      <div>
+        <h3
+          className="text-xl md:text-2xl font-semibold text-cream leading-snug mb-1"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          {title}
+        </h3>
+        {subtitle && (
+          <p
+            className="text-gold text-xs tracking-widest uppercase"
+            style={{ fontFamily: "var(--font-body)" }}
+          >
+            {subtitle}
+          </p>
+        )}
+      </div>
+
+      {/* Description */}
+      <p
+        className="text-cream/55 text-sm leading-relaxed flex-1"
+        style={{ fontFamily: "var(--font-body)" }}
+      >
+        {description}
+      </p>
+
+      {/* CTA */}
+      <button
+        onClick={onExplore}
+        className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+        style={{ fontFamily: "var(--font-body)" }}
+      >
+        Explore →
+      </button>
+
+      {/* Bottom gold accent line */}
+      <div
+        className="h-px bg-gold scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100"
+        aria-hidden
+      />
+    </div>
+  );
+});
 ServiceCard.displayName = "ServiceCard";
