@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
+import { ProjectModalProvider } from "@/context/ProjectModalContext";
+import ProjectModal from "@/components/ProjectModal";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -64,7 +66,10 @@ export default function RootLayout({
       className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-anthracite text-cream overflow-x-hidden">
-        {children}
+        <ProjectModalProvider>
+          {children}
+          <ProjectModal />
+        </ProjectModalProvider>
       </body>
     </html>
   );
