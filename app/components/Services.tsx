@@ -221,6 +221,7 @@ const ServiceCard = forwardRef<
         before:border before:border-gold before:opacity-0
         before:scale-[0.97] before:transition-all before:duration-500
         hover:before:opacity-100 hover:before:scale-100
+        before:pointer-events-none
       "
     >
       {/* Icon */}
