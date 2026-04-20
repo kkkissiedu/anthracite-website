@@ -137,7 +137,7 @@ export default function Contact() {
         {/* Section header */}
         <div className="mb-12">
           <p
-            className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
+            className="text-xs md:text-sm tracking-[0.4em] font-semibold uppercase text-gold mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
             Get In Touch
