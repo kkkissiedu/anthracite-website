@@ -30,7 +30,7 @@ const CATEGORY_HREFS: Record<Category, string> = {
 const FEATURED_QUERY = `*[_type == "project" && featured == true] | order(order asc) {
   _id, title, category, subcategory, description, overview,
   mainImage, gallery, videoUrl, videoFile, panorama, model3d,
-  client, location, year
+  client, location, year, tools
 }`;
 
 function EmptyState() {
