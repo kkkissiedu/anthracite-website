@@ -11,12 +11,11 @@ import Footer from "@/app/components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Filter = "All" | "Digital Twins" | "Parametric Design" | "Visualisation";
-const FILTERS: Filter[] = [
-  "All",
-  "Digital Twins",
-  "Parametric Design",
-  "Visualisation",
+type Filter = "All" | "vr-xr" | "visualization";
+const FILTERS: { value: Filter; label: string }[] = [
+  { value: "All", label: "All" },
+  { value: "vr-xr", label: "VR/XR" },
+  { value: "visualization", label: "Visualization" },
 ];
 
 const QUERY = `*[_type == "project" && category == "3d-design"] | order(order asc) {
@@ -44,9 +43,7 @@ export default function SculptorPage() {
   const filtered =
     filter === "All"
       ? projects
-      : projects.filter(
-          (p) => p.subcategory?.toLowerCase() === filter.toLowerCase()
-        );
+      : projects.filter((p) => p.subcategory === filter);
 
   useEffect(() => {
     if (!gridRef.current) return;
@@ -148,18 +145,18 @@ export default function SculptorPage() {
         <div className="max-w-[1280px] mx-auto">
           {/* Filter bar */}
           <div className="flex flex-wrap gap-3 mb-12">
-            {FILTERS.map((f) => (
+            {FILTERS.map(({ value, label }) => (
               <button
-                key={f}
-                onClick={() => setFilter(f)}
+                key={value}
+                onClick={() => setFilter(value)}
                 className={`px-5 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-300 border ${
-                  filter === f
+                  filter === value
                     ? "bg-gold text-anthracite border-gold font-semibold"
                     : "border-cream/20 text-cream/50 hover:border-gold/60 hover:text-cream"
                 }`}
                 style={{ fontFamily: "var(--font-body)" }}
               >
-                {f}
+                {label}
               </button>
             ))}
           </div>
