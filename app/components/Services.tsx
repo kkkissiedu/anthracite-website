@@ -165,6 +165,9 @@ export default function Services({
       );
     }, sectionRef);
 
+      setTimeout(() => { ScrollTrigger.refresh(); }, 100);
+    }, sectionRef);
+
     return () => ctx.revert();
   }, []);
 
@@ -212,7 +215,7 @@ export default function Services({
             <h2
               ref={h2LineRef}
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream max-w-xl"
-              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
+              style={{ fontFamily: "var(--font-heading)" }}
             >
               {headingNode}
             </h2>
@@ -255,7 +258,6 @@ const ServiceCard = forwardRef<
   return (
     <div
       ref={ref}
-      style={{ opacity: 0 }}
       className="
         group relative flex flex-col gap-6 p-8 md:p-10
         border border-cream/10

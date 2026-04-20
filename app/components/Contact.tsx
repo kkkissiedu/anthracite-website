@@ -105,6 +105,9 @@ export default function Contact({
         }
       );
     }, sectionRef);
+      setTimeout(() => { ScrollTrigger.refresh(); }, 100);
+    }, sectionRef);
+
     return () => ctx.revert();
   }, []);
 
@@ -174,14 +177,14 @@ export default function Contact({
           >
             {headingLine1 && (
               <div className="overflow-hidden">
-                <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
+                <div ref={h2Line1Ref}>
                   {headingLine1}
                 </div>
               </div>
             )}
             {headingLine2 && (
               <div className="overflow-hidden">
-                <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
+                <div ref={h2Line2Ref}>
                   {goldInLine2 ? (
                     <>
                       {headingLine2.slice(0, headingLine2.indexOf(contactHeadingGoldWord))}

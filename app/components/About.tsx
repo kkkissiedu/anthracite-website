@@ -145,6 +145,9 @@ export default function About({
       });
     }, sectionRef);
 
+      setTimeout(() => { ScrollTrigger.refresh(); }, 100);
+    }, sectionRef);
+
     return () => ctx.revert();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -185,14 +188,14 @@ export default function About({
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <div className="overflow-hidden">
-                <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
+                <div ref={h2Line1Ref}>
                   {line1Before}
                   {line1Gold && <span className="text-gold">{line1Gold}</span>}
                 </div>
               </div>
               {line2 && (
                 <div className="overflow-hidden">
-                  <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
+                  <div ref={h2Line2Ref}>
                     {line2}
                   </div>
                 </div>
@@ -201,7 +204,7 @@ export default function About({
           </div>
 
           {/* Right — mission paragraph */}
-          <div ref={rightRef} style={{ opacity: 0 }}>
+          <div ref={rightRef}>
             <p
               className="text-dark-text/75 text-base md:text-lg leading-relaxed"
               style={{ fontFamily: "var(--font-body)" }}
@@ -215,7 +218,6 @@ export default function About({
         <div
           ref={dividerRef}
           className="h-px gold-gradient-line mb-12 origin-left"
-          style={{ opacity: 0 }}
           aria-hidden
         />
 
@@ -223,7 +225,6 @@ export default function About({
         <div
           ref={statsRowRef}
           className="grid grid-cols-3 gap-6 md:gap-12"
-          style={{ opacity: 0 }}
         >
           {stats.map((stat, i) => (
             <div key={stat.label} className="text-center">

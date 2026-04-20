@@ -55,7 +55,6 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
   ({ member }, ref) => (
     <div
       ref={ref}
-      style={{ opacity: 0 }}
       className="group flex flex-col border border-dark-text/10 overflow-hidden"
     >
       {/* Photo */}
@@ -195,6 +194,7 @@ export default function Team() {
           },
         }
       );
+      setTimeout(() => { ScrollTrigger.refresh(); }, 100);
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -256,7 +256,7 @@ export default function Team() {
             <h2
               ref={h2LineRef}
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-text"
-              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
+              style={{ fontFamily: "var(--font-heading)" }}
             >
               Meet the <span className="text-gold">Team</span>
             </h2>
