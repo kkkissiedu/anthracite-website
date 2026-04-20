@@ -9,7 +9,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    revalidatePath("/");
+    revalidatePath('/');
+    revalidatePath('/work/architectural-structural');
+    revalidatePath('/work/sculptor');
+    revalidatePath('/services/real-estate');
     return NextResponse.json({ revalidated: true, now: Date.now() });
   } catch {
     return NextResponse.json(
