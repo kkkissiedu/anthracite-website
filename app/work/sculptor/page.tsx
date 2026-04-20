@@ -100,7 +100,7 @@ export default function SculptorPage() {
 
         <div className="relative max-w-[1280px] mx-auto">
           <p
-            className="text-gold tracking-[0.4em] uppercase text-xs mb-6"
+            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
             3D Design Studio

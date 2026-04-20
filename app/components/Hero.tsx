@@ -98,7 +98,7 @@ export default function Hero({
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 text-center">
         {/* Overline */}
         <p
-          className="text-gold tracking-[0.3em] uppercase text-xs md:text-sm mb-6 md:mb-8 font-body"
+          className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
           style={{ fontFamily: "var(--font-body)" }}
         >
           The Anthracite Limited

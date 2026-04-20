@@ -126,7 +126,7 @@ export default function RealEstatePage() {
             {/* Left: description */}
             <div>
               <p
-                className="text-gold tracking-[0.3em] uppercase text-xs mb-5"
+                className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
                 style={{ fontFamily: "var(--font-body)" }}
               >
                 Services
@@ -316,7 +316,7 @@ export default function RealEstatePage() {
         <div className="max-w-[1280px] mx-auto">
           <div className="mb-12">
             <p
-              className="text-gold tracking-[0.3em] uppercase text-xs mb-3"
+              className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
               Portfolio
