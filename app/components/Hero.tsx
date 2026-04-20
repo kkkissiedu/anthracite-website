@@ -8,10 +8,24 @@ const HeroBackground3D = dynamic(() => import("./HeroBackground3D"), {
   ssr: false,
 });
 
-const HEADING_WORDS = ["Building", "Ghana's", "Future"];
-const GOLD_WORD_INDEX = 2; // "Future"
+type HeroProps = {
+  heroTagline?: string;
+  heroGoldWord?: string;
+  heroSubtitle?: string;
+  heroCtaPrimary?: string;
+  heroCtaSecondary?: string;
+};
 
-export default function Hero() {
+export default function Hero({
+  heroTagline = "Building Ghana's Future",
+  heroGoldWord = "Future",
+  heroSubtitle = "Pioneering AI-driven construction and 3D-printed green buildings to shape a sustainable, modern Ghana.",
+  heroCtaPrimary = "Our Services",
+  heroCtaSecondary = "View Projects",
+}: HeroProps) {
+  const words = heroTagline.split(" ");
+  const goldIndex = words.indexOf(heroGoldWord);
+
   const containerRef = useRef<HTMLElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const subRef = useRef<HTMLParagraphElement>(null);
@@ -22,14 +36,12 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      // Words fade + slide in
       tl.fromTo(
         wordRefs.current.filter(Boolean),
         { opacity: 0, y: 60, skewY: 4 },
         { opacity: 1, y: 0, skewY: 0, duration: 0.9, stagger: 0.15 }
       );
 
-      // Subheading
       tl.fromTo(
         subRef.current,
         { opacity: 0, y: 24 },
@@ -37,7 +49,6 @@ export default function Hero() {
         "-=0.3"
       );
 
-      // CTAs
       tl.fromTo(
         ctaRef.current,
         { opacity: 0, y: 20 },
@@ -45,7 +56,6 @@ export default function Hero() {
         "-=0.2"
       );
 
-      // Gold line
       tl.fromTo(
         lineRef.current,
         { scaleX: 0, opacity: 0 },
@@ -71,7 +81,7 @@ export default function Hero() {
         <HeroBackground3D />
       </div>
 
-      {/* Dark overlay for legibility (future video support) */}
+      {/* Dark overlay for legibility */}
       <div className="absolute inset-0 bg-anthracite/60 z-[2]" aria-hidden />
 
       {/* Subtle radial glow */}
@@ -98,18 +108,16 @@ export default function Hero() {
         <h1
           className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-[1.05] tracking-tight mb-6 md:mb-8 flex flex-wrap justify-center gap-x-[0.3em]"
           style={{ fontFamily: "var(--font-heading)" }}
-          aria-label="Building Ghana's Future"
+          aria-label={heroTagline}
         >
-          {HEADING_WORDS.map((word, i) => (
-            <span key={word} className="inline-block">
+          {words.map((word, i) => (
+            <span key={`${word}-${i}`} className="inline-block">
               <span
                 ref={(el) => {
                   wordRefs.current[i] = el;
                 }}
                 className={`inline-block ${
-                  i === GOLD_WORD_INDEX
-                    ? "text-gold"
-                    : "text-cream"
+                  i === goldIndex ? "text-gold" : "text-cream"
                 }`}
                 style={{ willChange: "transform, opacity" }}
               >
@@ -125,8 +133,7 @@ export default function Hero() {
           className="text-cream/60 text-base md:text-lg lg:text-xl max-w-[600px] mx-auto text-center leading-relaxed mt-6 mb-10 font-body"
           style={{ fontFamily: "var(--font-body)", opacity: 0 }}
         >
-          Pioneering AI-driven construction and 3D-printed green buildings to
-          shape a sustainable, modern Ghana.
+          {heroSubtitle}
         </p>
 
         {/* CTAs */}
@@ -140,14 +147,14 @@ export default function Hero() {
             className="relative inline-flex items-center justify-center px-8 py-4 text-sm tracking-widest uppercase font-body font-medium bg-gold text-anthracite hover:bg-gold-highlight transition-colors duration-300 min-w-[180px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Our Services
+            {heroCtaPrimary}
           </a>
           <a
             href="#projects"
             className="relative inline-flex items-center justify-center px-8 py-4 text-sm tracking-widest uppercase font-body font-medium border border-gold text-gold hover:bg-gold hover:text-anthracite transition-colors duration-300 min-w-[180px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            View Projects
+            {heroCtaSecondary}
           </a>
         </div>
       </div>

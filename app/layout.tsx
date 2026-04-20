@@ -4,7 +4,6 @@ import "./globals.css";
 import { ProjectModalProvider } from "@/context/ProjectModalContext";
 import ProjectModal from "@/components/ProjectModal";
 import { ServiceModalProvider } from "@/context/ServiceModalContext";
-import ServiceModal from "@/components/ServiceModal";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -72,7 +71,6 @@ export default function RootLayout({
           <ServiceModalProvider>
             {children}
             <ProjectModal />
-            <ServiceModal />
           </ServiceModalProvider>
         </ProjectModalProvider>
       </body>

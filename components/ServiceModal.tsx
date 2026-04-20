@@ -5,6 +5,18 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useServiceModal, type ServiceId } from "@/context/ServiceModalContext";
 
+type ServiceModalProps = {
+  serviceOneTitle?: string;
+  serviceOneModalDescription?: string;
+  serviceOneServices?: string[];
+  serviceTwoTitle?: string;
+  serviceTwoModalDescription?: string;
+  serviceTwoServices?: string[];
+  serviceThreeTitle?: string;
+  serviceThreeModalDescription?: string;
+  serviceThreeServices?: string[];
+};
+
 type ServiceData = {
   heading: string;
   description: string;
@@ -13,55 +25,62 @@ type ServiceData = {
   ctaHref: string;
 };
 
-const SERVICE_CONTENT: Record<ServiceId, ServiceData> = {
-  "architectural-structural": {
-    heading: "Architectural & Structural Design",
-    description:
-      "From concept to construction documentation, we deliver precision-engineered designs informed by physics-based simulations, computational methods, and real-world performance targets. Our workflow integrates structural analysis in ABAQUS and ProtaStructure with BIM documentation in Autodesk Revit and AutoCAD.",
-    services: [
-      "Structural Analysis & Design",
-      "BIM Documentation",
-      "Construction Drawings",
-      "Seismic & Load Analysis",
-      "Foundation Design",
-      "Structural Detailing",
-    ],
-    ctaLabel: "View Our Structural Projects →",
-    ctaHref: "/work/architectural-structural",
-  },
-  sculptor: {
-    heading: "The Sculptor — 3D Design Services",
-    description:
-      "High-fidelity 3D modelling, digital twins, and parametric design through our sister studio. We bridge the gap between virtual model and physical structure, producing assets for visualisation, construction simulation, and additive manufacturing workflows.",
-    services: [
-      "3D Modelling & Visualisation",
-      "Digital Twins",
-      "Parametric Design",
-      "Synthetic Data Generation",
-      "VR/AR Experiences",
-      "3D Printing Preparation",
-    ],
-    ctaLabel: "View 3D Design Work →",
-    ctaHref: "/work/sculptor",
-  },
-  "real-estate": {
-    heading: "Real Estate & Construction",
-    description:
-      "End-to-end real estate development and construction management, anchored by our flagship 3D-printed Green Building estate. We manage projects from site acquisition through to handover, built for durability, sustainability, and scale across Ghana and West Africa.",
-    services: [
-      "Real Estate Development",
-      "Construction Management",
-      "Green Building Design",
-      "3D-Printed Construction",
-      "Project Management",
-      "Sustainability Consulting",
-    ],
-    ctaLabel: "Explore Real Estate Services →",
-    ctaHref: "/services/real-estate",
-  },
-};
+export default function ServiceModal({
+  serviceOneTitle = "Architectural & Structural Design",
+  serviceOneModalDescription = "From concept to construction documentation, we deliver precision-engineered designs informed by physics-based simulations, computational methods, and real-world performance targets. Our workflow integrates structural analysis in ABAQUS and ProtaStructure with BIM documentation in Autodesk Revit and AutoCAD.",
+  serviceOneServices = [
+    "Structural Analysis & Design",
+    "BIM Documentation",
+    "Construction Drawings",
+    "Seismic & Load Analysis",
+    "Foundation Design",
+    "Structural Detailing",
+  ],
+  serviceTwoTitle = "The Sculptor — 3D Design Services",
+  serviceTwoModalDescription = "High-fidelity 3D modelling, digital twins, and parametric design through our sister studio. We bridge the gap between virtual model and physical structure, producing assets for visualisation, construction simulation, and additive manufacturing workflows.",
+  serviceTwoServices = [
+    "3D Modelling & Visualisation",
+    "Digital Twins",
+    "Parametric Design",
+    "Synthetic Data Generation",
+    "VR/AR Experiences",
+    "3D Printing Preparation",
+  ],
+  serviceThreeTitle = "Real Estate & Construction",
+  serviceThreeModalDescription = "End-to-end real estate development and construction management, anchored by our flagship 3D-printed Green Building estate. We manage projects from site acquisition through to handover, built for durability, sustainability, and scale across Ghana and West Africa.",
+  serviceThreeServices = [
+    "Real Estate Development",
+    "Construction Management",
+    "Green Building Design",
+    "3D-Printed Construction",
+    "Project Management",
+    "Sustainability Consulting",
+  ],
+}: ServiceModalProps) {
+  const SERVICE_CONTENT: Record<ServiceId, ServiceData> = {
+    "architectural-structural": {
+      heading: serviceOneTitle,
+      description: serviceOneModalDescription,
+      services: serviceOneServices,
+      ctaLabel: "View Our Structural Projects →",
+      ctaHref: "/work/architectural-structural",
+    },
+    sculptor: {
+      heading: serviceTwoTitle,
+      description: serviceTwoModalDescription,
+      services: serviceTwoServices,
+      ctaLabel: "View 3D Design Work →",
+      ctaHref: "/work/sculptor",
+    },
+    "real-estate": {
+      heading: serviceThreeTitle,
+      description: serviceThreeModalDescription,
+      services: serviceThreeServices,
+      ctaLabel: "Explore Real Estate Services →",
+      ctaHref: "/services/real-estate",
+    },
+  };
 
-export default function ServiceModal() {
   const { activeServiceId, closeServiceModal } = useServiceModal();
   const backdropRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -101,7 +120,6 @@ export default function ServiceModal() {
     animateClose(closeServiceModal);
   }, [animateClose, closeServiceModal]);
 
-  // Open animation
   useEffect(() => {
     if (!activeServiceId) return;
     document.body.style.overflow = "hidden";
@@ -111,7 +129,6 @@ export default function ServiceModal() {
     };
   }, [activeServiceId, animateOpen]);
 
-  // Escape key
   useEffect(() => {
     if (!activeServiceId) return;
     const onKey = (e: KeyboardEvent) => {

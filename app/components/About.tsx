@@ -6,13 +6,56 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const STATS = [
-  { value: 12, suffix: "+", label: "Projects" },
-  { value: 3, suffix: "", label: "Services" },
-  { value: 2, suffix: "", label: "Engineers" },
-];
+type AboutProps = {
+  aboutLabel?: string;
+  aboutHeading?: string;
+  aboutHeadingGoldWords?: string;
+  aboutBody?: string;
+  statOneValue?: string;
+  statOneLabel?: string;
+  statTwoValue?: string;
+  statTwoLabel?: string;
+  statThreeValue?: string;
+  statThreeLabel?: string;
+};
 
-export default function About() {
+function parseStatValue(raw: string): { value: number; suffix: string } {
+  const match = raw.match(/^(\d+)(.*)$/);
+  return match
+    ? { value: parseInt(match[1], 10), suffix: match[2] }
+    : { value: 0, suffix: "" };
+}
+
+export default function About({
+  aboutLabel = "About Us",
+  aboutHeading = "Ghana's First 3D-Printed Green Estate",
+  aboutHeadingGoldWords = "3D-Printed",
+  aboutBody = "The Anthracite Limited is pioneering Ghana's first 3D-printed Green Building estate, fusing Physics-Informed AI, computational design, and sustainable construction into a complete workflow from digital twin to physical structure.",
+  statOneValue = "12+",
+  statOneLabel = "Projects",
+  statTwoValue = "3",
+  statTwoLabel = "Services",
+  statThreeValue = "2",
+  statThreeLabel = "Engineers",
+}: AboutProps) {
+  const stats = [
+    { ...parseStatValue(statOneValue), label: statOneLabel },
+    { ...parseStatValue(statTwoValue), label: statTwoLabel },
+    { ...parseStatValue(statThreeValue), label: statThreeLabel },
+  ];
+
+  // Split heading at gold word: everything before+including gold = line 1, after = line 2
+  const goldWord = aboutHeadingGoldWords;
+  const goldIdx = aboutHeading.indexOf(goldWord);
+  let line1Before = aboutHeading;
+  let line1Gold = "";
+  let line2 = "";
+  if (goldIdx !== -1) {
+    line1Before = aboutHeading.slice(0, goldIdx);
+    line1Gold = goldWord;
+    line2 = aboutHeading.slice(goldIdx + goldWord.length).trim();
+  }
+
   const sectionRef = useRef<HTMLElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
@@ -23,7 +66,6 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // h2 line-by-line reveal
       gsap.fromTo(
         [h2Line1Ref.current, h2Line2Ref.current],
         { yPercent: 110 },
@@ -39,7 +81,6 @@ export default function About() {
         }
       );
 
-      // Right column fades up
       gsap.fromTo(
         rightRef.current,
         { y: 40, opacity: 0 },
@@ -55,7 +96,6 @@ export default function About() {
         }
       );
 
-      // Gold divider scales in
       gsap.fromTo(
         dividerRef.current,
         { scaleX: 0, opacity: 0 },
@@ -71,7 +111,6 @@ export default function About() {
         }
       );
 
-      // Stats row fades up
       gsap.fromTo(
         statsRowRef.current,
         { y: 30, opacity: 0 },
@@ -87,8 +126,7 @@ export default function About() {
         }
       );
 
-      // Counter animations
-      STATS.forEach((stat, i) => {
+      stats.forEach((stat, i) => {
         const el = counterRefs.current[i];
         if (!el) return;
         const obj = { val: 0 };
@@ -108,6 +146,7 @@ export default function About() {
     }, sectionRef);
 
     return () => ctx.revert();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -139,7 +178,7 @@ export default function About() {
               className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              About Us
+              {aboutLabel}
             </p>
             <h2
               className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-dark-text"
@@ -147,15 +186,17 @@ export default function About() {
             >
               <div className="overflow-hidden">
                 <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
-                  Ghana&apos;s First{" "}
-                  <span className="text-gold">3D-Printed</span>
+                  {line1Before}
+                  {line1Gold && <span className="text-gold">{line1Gold}</span>}
                 </div>
               </div>
-              <div className="overflow-hidden">
-                <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
-                  Green Estate
+              {line2 && (
+                <div className="overflow-hidden">
+                  <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
+                    {line2}
+                  </div>
                 </div>
-              </div>
+              )}
             </h2>
           </div>
 
@@ -165,10 +206,7 @@ export default function About() {
               className="text-dark-text/75 text-base md:text-lg leading-relaxed"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              The Anthracite Limited is pioneering Ghana&apos;s first
-              3D-printed Green Building estate, fusing Physics-Informed AI,
-              computational design, and sustainable construction into a
-              complete workflow from digital twin to physical structure.
+              {aboutBody}
             </p>
           </div>
         </div>
@@ -187,7 +225,7 @@ export default function About() {
           className="grid grid-cols-3 gap-6 md:gap-12"
           style={{ opacity: 0 }}
         >
-          {STATS.map((stat, i) => (
+          {stats.map((stat, i) => (
             <div key={stat.label} className="text-center">
               <p
                 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold leading-none"

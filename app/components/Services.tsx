@@ -1,11 +1,26 @@
 "use client";
 
-import { useEffect, useRef, forwardRef } from "react";
+import React, { useEffect, useRef, forwardRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useServiceModal, type ServiceId } from "@/context/ServiceModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
+
+type ServicesProps = {
+  servicesLabel?: string;
+  servicesHeading?: string;
+  servicesHeadingGoldWord?: string;
+  serviceOneTitle?: string;
+  serviceOneSubtitle?: string | null;
+  serviceOneDescription?: string;
+  serviceTwoTitle?: string;
+  serviceTwoSubtitle?: string | null;
+  serviceTwoDescription?: string;
+  serviceThreeTitle?: string;
+  serviceThreeSubtitle?: string | null;
+  serviceThreeDescription?: string;
+};
 
 function ArchitectureIcon() {
   return (
@@ -71,42 +86,54 @@ function RealEstateIcon() {
   );
 }
 
-const SERVICES = [
-  {
-    id: "architectural-structural" as ServiceId,
-    Icon: ArchitectureIcon,
-    title: "Architectural & Structural Design",
-    subtitle: null,
-    description:
-      "From concept to construction documentation — precision-engineered designs informed by physics-based simulations, computational methods, and real-world performance targets.",
-  },
-  {
-    id: "sculptor" as ServiceId,
-    Icon: SculptorIcon,
-    title: "3D Design Services",
-    subtitle: "via The Sculptor",
-    description:
-      "High-fidelity 3D modelling, digital twins, and parametric design through our sister studio, enabling seamless transitions from virtual model to physical printed structure.",
-  },
-  {
-    id: "real-estate" as ServiceId,
-    Icon: RealEstateIcon,
-    title: "Real Estate & Construction",
-    subtitle: null,
-    description:
-      "End-to-end real estate development and construction management, anchored by our flagship 3D-printed Green Building estate — built for durability, sustainability, and scale.",
-  },
-];
-
-export default function Services() {
+export default function Services({
+  servicesLabel = "What We Do",
+  servicesHeading = "Our Services",
+  servicesHeadingGoldWord = "Services",
+  serviceOneTitle = "Architectural & Structural Design",
+  serviceOneSubtitle = null,
+  serviceOneDescription = "From concept to construction documentation — precision-engineered designs informed by physics-based simulations, computational methods, and real-world performance targets.",
+  serviceTwoTitle = "3D Design Services",
+  serviceTwoSubtitle = "via The Sculptor",
+  serviceTwoDescription = "High-fidelity 3D modelling, digital twins, and parametric design through our sister studio, enabling seamless transitions from virtual model to physical printed structure.",
+  serviceThreeTitle = "Real Estate & Construction",
+  serviceThreeSubtitle = null,
+  serviceThreeDescription = "End-to-end real estate development and construction management, anchored by our flagship 3D-printed Green Building estate — built for durability, sustainability, and scale.",
+}: ServicesProps) {
   const { openServiceModal } = useServiceModal();
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const h2LineRef = useRef<HTMLDivElement>(null);
 
+  const services = [
+    {
+      id: "architectural-structural" as ServiceId,
+      Icon: ArchitectureIcon,
+      title: serviceOneTitle,
+      subtitle: serviceOneSubtitle ?? null,
+      description: serviceOneDescription,
+    },
+    {
+      id: "sculptor" as ServiceId,
+      Icon: SculptorIcon,
+      title: serviceTwoTitle,
+      subtitle: serviceTwoSubtitle ?? null,
+      description: serviceTwoDescription,
+    },
+    {
+      id: "real-estate" as ServiceId,
+      Icon: RealEstateIcon,
+      title: serviceThreeTitle,
+      subtitle: serviceThreeSubtitle ?? null,
+      description: serviceThreeDescription,
+    },
+  ];
+
+  // Split heading at gold word
+  const goldIdx = servicesHeading.indexOf(servicesHeadingGoldWord);
+
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // h2 reveal
       gsap.fromTo(
         h2LineRef.current,
         { yPercent: 110 },
@@ -141,6 +168,17 @@ export default function Services() {
     return () => ctx.revert();
   }, []);
 
+  const headingNode =
+    goldIdx !== -1 ? (
+      <>
+        {servicesHeading.slice(0, goldIdx)}
+        <span className="text-gold">{servicesHeadingGoldWord}</span>
+        {servicesHeading.slice(goldIdx + servicesHeadingGoldWord.length)}
+      </>
+    ) : (
+      servicesHeading
+    );
+
   return (
     <section
       ref={sectionRef}
@@ -168,7 +206,7 @@ export default function Services() {
             className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            What We Do
+            {servicesLabel}
           </p>
           <div className="overflow-hidden">
             <h2
@@ -176,16 +214,16 @@ export default function Services() {
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream max-w-xl"
               style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
             >
-              Our <span className="text-gold">Services</span>
+              {headingNode}
             </h2>
           </div>
         </div>
 
         {/* Cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {SERVICES.map((service, i) => (
+          {services.map((service, i) => (
             <ServiceCard
-              key={service.title}
+              key={service.id}
               service={service}
               onExplore={() => openServiceModal(service.id)}
               ref={(el) => {
@@ -200,7 +238,13 @@ export default function Services() {
   );
 }
 
-type ServiceItem = (typeof SERVICES)[number];
+type ServiceItem = {
+  id: ServiceId;
+  Icon: () => React.ReactElement;
+  title: string;
+  subtitle: string | null;
+  description: string;
+};
 
 const ServiceCard = forwardRef<
   HTMLDivElement,

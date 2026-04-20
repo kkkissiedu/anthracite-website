@@ -1,6 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
+type FooterProps = {
+  footerCopyright?: string;
+  footerTagline?: string | null;
+};
+
 const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "Services", href: "#services" },
@@ -39,7 +44,10 @@ const SOCIAL_LINKS = [
   },
 ];
 
-export default function Footer() {
+export default function Footer({
+  footerCopyright = "© 2025 The Anthracite Limited. All Rights Reserved.",
+  footerTagline = "Kumasi, Ghana",
+}: FooterProps) {
   return (
     <footer className="bg-anthracite border-t border-gold/10">
       {/* Top bar */}
@@ -103,14 +111,16 @@ export default function Footer() {
           className="text-cream/30 text-xs"
           style={{ fontFamily: "var(--font-body)" }}
         >
-          © 2025 The Anthracite Limited. All Rights Reserved.
+          {footerCopyright}
         </p>
-        <p
-          className="text-cream/20 text-xs"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          Kumasi, Ghana
-        </p>
+        {footerTagline && (
+          <p
+            className="text-cream/20 text-xs"
+            style={{ fontFamily: "var(--font-body)" }}
+          >
+            {footerTagline}
+          </p>
+        )}
       </div>
     </footer>
   );

@@ -15,6 +15,15 @@ type FormState = {
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
+type ContactProps = {
+  contactLabel?: string;
+  contactHeading?: string;
+  contactHeadingGoldWord?: string;
+  contactSubtext?: string;
+  contactEmail?: string;
+  contactLocation?: string;
+};
+
 const SOCIAL_LINKS = [
   {
     label: "LinkedIn",
@@ -48,7 +57,14 @@ const SOCIAL_LINKS = [
 const INPUT_CLASS =
   "w-full bg-[#141414] border border-gold/30 focus:border-gold text-cream placeholder:text-cream/30 px-4 py-3 outline-none transition-colors duration-300 font-body text-sm";
 
-export default function Contact() {
+export default function Contact({
+  contactLabel = "Get In Touch",
+  contactHeading = "Let's Build Together",
+  contactHeadingGoldWord = "Together",
+  contactSubtext = "We're pioneering the future of construction in Ghana. Reach out to discuss your project, partnership, or investment opportunities.",
+  contactEmail = "hello@theanthracite.com",
+  contactLocation = "Kumasi, Ghana",
+}: ContactProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const h2Line1Ref = useRef<HTMLDivElement>(null);
   const h2Line2Ref = useRef<HTMLDivElement>(null);
@@ -61,6 +77,16 @@ export default function Contact() {
   });
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // Split heading at gold word: line 1 = before gold word, line 2 = gold word (and beyond)
+  const goldIdx = contactHeading.indexOf(contactHeadingGoldWord);
+  let headingLine1 = contactHeading;
+  let headingLine2 = "";
+  if (goldIdx !== -1) {
+    headingLine1 = contactHeading.slice(0, goldIdx).trim();
+    headingLine2 = contactHeading.slice(goldIdx).trim();
+  }
+  const goldInLine2 = headingLine2.indexOf(contactHeadingGoldWord) !== -1;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -140,22 +166,34 @@ export default function Contact() {
             className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Get In Touch
+            {contactLabel}
           </p>
           <h2
             className="text-cream text-4xl md:text-5xl lg:text-6xl leading-tight"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            <div className="overflow-hidden">
-              <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
-                Let&apos;s Build
+            {headingLine1 && (
+              <div className="overflow-hidden">
+                <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
+                  {headingLine1}
+                </div>
               </div>
-            </div>
-            <div className="overflow-hidden">
-              <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
-                <span className="text-gold">Together</span>
+            )}
+            {headingLine2 && (
+              <div className="overflow-hidden">
+                <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
+                  {goldInLine2 ? (
+                    <>
+                      {headingLine2.slice(0, headingLine2.indexOf(contactHeadingGoldWord))}
+                      <span className="text-gold">{contactHeadingGoldWord}</span>
+                      {headingLine2.slice(headingLine2.indexOf(contactHeadingGoldWord) + contactHeadingGoldWord.length)}
+                    </>
+                  ) : (
+                    headingLine2
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </h2>
         </div>
 
@@ -167,9 +205,7 @@ export default function Contact() {
                 className="text-cream/50 text-sm leading-relaxed max-w-sm"
                 style={{ fontFamily: "var(--font-body)" }}
               >
-                We&apos;re pioneering the future of construction in Ghana. Reach
-                out to discuss your project, partnership, or investment
-                opportunities.
+                {contactSubtext}
               </p>
             </div>
 
@@ -183,11 +219,11 @@ export default function Contact() {
                   Email
                 </p>
                 <a
-                  href="mailto:hello@theanthracite.com"
+                  href={`mailto:${contactEmail}`}
                   className="text-cream/80 hover:text-gold transition-colors duration-300 text-sm"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
-                  hello@theanthracite.com
+                  {contactEmail}
                 </a>
               </div>
 
@@ -202,7 +238,7 @@ export default function Contact() {
                   className="text-cream/80 text-sm"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
-                  Kumasi, Ghana
+                  {contactLocation}
                 </p>
               </div>
             </div>
