@@ -25,6 +25,7 @@ export type SanityProject = {
   client?: string;
   location?: string;
   year?: number;
+  tools?: string[];
 };
 
 type ModalContextType = {

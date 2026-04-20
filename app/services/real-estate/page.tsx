@@ -17,7 +17,7 @@ const FILTERS: Filter[] = ["All", "Residential", "Commercial", "Mixed-Use"];
 const QUERY = `*[_type == "project" && category == "real-estate-construction"] | order(order asc) {
   _id, title, category, subcategory, description, overview,
   mainImage, gallery, videoUrl, videoFile, panorama, model3d,
-  client, location, year
+  client, location, year, tools
 }`;
 
 const SERVICE_BULLETS = [
