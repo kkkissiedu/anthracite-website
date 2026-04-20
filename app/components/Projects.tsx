@@ -27,7 +27,7 @@ const CATEGORY_HREFS: Record<Category, string> = {
   "real-estate-construction": "/services/real-estate",
 };
 
-const FEATURED_QUERY = `*[_type == "project" && featured == true] | order(_createdAt desc) {
+const FEATURED_QUERY = `*[_type == "project" && featured == true] | order(order asc) {
   _id, title, category, subcategory, description, overview,
   mainImage, gallery, videoUrl, videoFile, panorama, model3d,
   client, location, year

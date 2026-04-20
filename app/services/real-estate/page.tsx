@@ -14,7 +14,7 @@ gsap.registerPlugin(ScrollTrigger);
 type Filter = "All" | "Residential" | "Commercial" | "Mixed-Use";
 const FILTERS: Filter[] = ["All", "Residential", "Commercial", "Mixed-Use"];
 
-const QUERY = `*[_type == "project" && category == "real-estate-construction"] | order(_createdAt desc) {
+const QUERY = `*[_type == "project" && category == "real-estate-construction"] | order(order asc) {
   _id, title, category, subcategory, description, overview,
   mainImage, gallery, videoUrl, videoFile, panorama, model3d,
   client, location, year

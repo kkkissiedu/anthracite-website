@@ -6,6 +6,13 @@ export const project = defineType({
   type: "document",
   fields: [
     defineField({
+      name: "order",
+      title: "Display Order",
+      type: "number",
+      description: "Lower numbers appear first. Use gaps like 10, 20, 30 to leave room for future projects.",
+      initialValue: 99,
+    }),
+    defineField({
       name: "title",
       title: "Title",
       type: "string",
