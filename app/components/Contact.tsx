@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { triggerSectionTransition } from "@/lib/sectionTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -66,8 +67,8 @@ export default function Contact({
   contactLocation = "Kumasi, Ghana",
 }: ContactProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const h2Line1Ref = useRef<HTMLDivElement>(null);
-  const h2Line2Ref = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState<FormState>({
     name: "",
@@ -78,7 +79,7 @@ export default function Contact({
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  // Split heading at gold word: line 1 = before gold word, line 2 = gold word (and beyond)
+  // Split heading at gold word
   const goldIdx = contactHeading.indexOf(contactHeadingGoldWord);
   let headingLine1 = contactHeading;
   let headingLine2 = "";
@@ -90,17 +91,37 @@ export default function Contact({
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Left col (heading + info) slides in from left
       gsap.fromTo(
-        [h2Line1Ref.current, h2Line2Ref.current],
-        { yPercent: 110 },
+        leftColRef.current,
+        { x: -50, opacity: 0 },
         {
-          yPercent: 0,
-          duration: 1,
+          x: 0,
+          opacity: 1,
+          duration: 0.9,
           ease: "power3.out",
-          stagger: 0.12,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 78%",
+            start: "top 75%",
+            once: true,
+            onEnter: () => triggerSectionTransition(),
+          },
+        }
+      );
+
+      // Right col (form) slides in from right — simultaneously
+      gsap.fromTo(
+        rightColRef.current,
+        { x: 50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.9,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            once: true,
           },
         }
       );
@@ -160,46 +181,43 @@ export default function Contact({
       </span>
 
       <div className="max-w-[1280px] mx-auto">
-        {/* Section header */}
-        <div className="mb-12">
-          <p
-            className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
-            {contactLabel}
-          </p>
-          <h2
-            className="text-cream text-4xl md:text-5xl lg:text-6xl leading-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {headingLine1 && (
-              <div className="overflow-hidden">
-                <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
-                  {headingLine1}
-                </div>
-              </div>
-            )}
-            {headingLine2 && (
-              <div className="overflow-hidden">
-                <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
-                  {goldInLine2 ? (
-                    <>
-                      {headingLine2.slice(0, headingLine2.indexOf(contactHeadingGoldWord))}
-                      <span className="text-gold">{contactHeadingGoldWord}</span>
-                      {headingLine2.slice(headingLine2.indexOf(contactHeadingGoldWord) + contactHeadingGoldWord.length)}
-                    </>
-                  ) : (
-                    headingLine2
-                  )}
-                </div>
-              </div>
-            )}
-          </h2>
-        </div>
-
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-          {/* Left — company info */}
-          <div className="flex flex-col gap-10">
+          {/* Left — heading + company info */}
+          <div ref={leftColRef} className="flex flex-col gap-10" style={{ opacity: 0 }}>
+            <div>
+              <p
+                className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
+                style={{ fontFamily: "var(--font-body)" }}
+              >
+                {contactLabel}
+              </p>
+              <h2
+                className="text-cream text-4xl md:text-5xl lg:text-6xl leading-tight"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                {headingLine1 && (
+                  <div className="overflow-hidden">
+                    <div>{headingLine1}</div>
+                  </div>
+                )}
+                {headingLine2 && (
+                  <div className="overflow-hidden">
+                    <div>
+                      {goldInLine2 ? (
+                        <>
+                          {headingLine2.slice(0, headingLine2.indexOf(contactHeadingGoldWord))}
+                          <span className="text-gold">{contactHeadingGoldWord}</span>
+                          {headingLine2.slice(headingLine2.indexOf(contactHeadingGoldWord) + contactHeadingGoldWord.length)}
+                        </>
+                      ) : (
+                        headingLine2
+                      )}
+                    </div>
+                  </div>
+                )}
+              </h2>
+            </div>
+
             <div>
               <p
                 className="text-cream/50 text-sm leading-relaxed max-w-sm"
@@ -272,7 +290,7 @@ export default function Contact({
           </div>
 
           {/* Right — form */}
-          <div>
+          <div ref={rightColRef} style={{ opacity: 0 }}>
             {status === "success" ? (
               <div className="flex flex-col items-start gap-4 py-12">
                 <div className="w-12 h-px bg-gold" />

@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { client, urlFor } from "@/lib/sanity";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
+import { triggerSectionTransition } from "@/lib/sectionTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,7 +54,7 @@ export default function Projects() {
   const { openModal } = useProjectModal();
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const h2LineRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     client
@@ -78,17 +79,20 @@ export default function Projects() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // h2 reveal
+      // Label and heading slide in from left
       gsap.fromTo(
-        h2LineRef.current,
-        { yPercent: 110 },
+        headerRef.current,
+        { x: -60, opacity: 0 },
         {
-          yPercent: 0,
+          x: 0,
+          opacity: 1,
           duration: 1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 78%",
+            start: "top 75%",
+            once: true,
+            onEnter: () => triggerSectionTransition(),
           },
         }
       );
@@ -103,17 +107,18 @@ export default function Projects() {
       if (!cardEls?.length) return;
       gsap.fromTo(
         Array.from(cardEls),
-        { y: 60, opacity: 0, scale: 0.97 },
+        { x: 30, y: 30, opacity: 0 },
         {
+          x: 0,
           y: 0,
           opacity: 1,
-          scale: 1,
           duration: 0.8,
           ease: "power3.out",
           stagger: 0.15,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 70%",
+            once: true,
           },
         }
       );
@@ -143,22 +148,19 @@ export default function Projects() {
 
       <div className="max-w-[1280px] mx-auto">
         {/* Header */}
-        <div className="mb-12">
+        <div ref={headerRef} className="mb-12" style={{ opacity: 0 }}>
           <p
-            className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
+            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
             Featured Projects
           </p>
-          <div className="overflow-hidden">
-            <h2
-              ref={h2LineRef}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
-              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
-            >
-              All Featured <span className="text-gold">Projects</span>
-            </h2>
-          </div>
+          <h2
+            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            All Featured <span className="text-gold">Projects</span>
+          </h2>
         </div>
 
         {/* Content */}
@@ -180,7 +182,7 @@ export default function Projects() {
                 <div
                   key={project._id}
                   className="fw-card group relative overflow-hidden cursor-pointer"
-                  style={{ opacity: 0, transform: "scale(0.97)" }}
+                  style={{ opacity: 0 }}
                   onClick={() => openModal(project)}
                   role="button"
                   tabIndex={0}

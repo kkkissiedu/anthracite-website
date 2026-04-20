@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { client, urlFor } from "@/lib/sanity";
+import { triggerSectionTransition } from "@/lib/sectionTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -136,8 +137,8 @@ function EmptyState() {
 export default function Team() {
   const [members, setMembers] = useState<TeamMember[] | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const h2LineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     client
@@ -182,16 +183,20 @@ export default function Team() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Entire section content fades in with subtle scale
       gsap.fromTo(
-        h2LineRef.current,
-        { yPercent: 110 },
+        contentRef.current,
+        { scale: 0.97, opacity: 0 },
         {
-          yPercent: 0,
+          scale: 1,
+          opacity: 1,
           duration: 1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 75%",
+            once: true,
+            onEnter: () => triggerSectionTransition(),
           },
         }
       );
@@ -212,10 +217,11 @@ export default function Team() {
           opacity: 1,
           duration: 0.85,
           ease: "power3.out",
-          stagger: 0.15,
+          stagger: 0.2,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 72%",
+            once: true,
           },
         }
       );
@@ -243,24 +249,21 @@ export default function Team() {
         04
       </span>
 
-      <div className="max-w-[1280px] mx-auto">
+      <div ref={contentRef} className="max-w-[1280px] mx-auto" style={{ opacity: 0 }}>
         {/* Header */}
         <div className="mb-12">
           <p
-            className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
+            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
             The People
           </p>
-          <div className="overflow-hidden">
-            <h2
-              ref={h2LineRef}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-text"
-              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
-            >
-              Meet the <span className="text-gold">Team</span>
-            </h2>
-          </div>
+          <h2
+            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-text"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            Meet the <span className="text-gold">Team</span>
+          </h2>
         </div>
 
         {/* Content */}

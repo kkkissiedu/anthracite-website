@@ -4,6 +4,9 @@ import "./globals.css";
 import { ProjectModalProvider } from "@/context/ProjectModalContext";
 import ProjectModal from "@/components/ProjectModal";
 import { ServiceModalProvider } from "@/context/ServiceModalContext";
+import SmoothScroll from "./components/SmoothScroll";
+import ScrollProgress from "@/components/ScrollProgress";
+import SectionTransitionOverlay from "@/components/SectionTransitionOverlay";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -67,6 +70,9 @@ export default function RootLayout({
       className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-anthracite text-cream overflow-x-hidden">
+        <SmoothScroll />
+        <ScrollProgress />
+        <SectionTransitionOverlay />
         <ProjectModalProvider>
           <ServiceModalProvider>
             {children}

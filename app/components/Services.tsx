@@ -4,6 +4,7 @@ import React, { useEffect, useRef, forwardRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useServiceModal, type ServiceId } from "@/context/ServiceModalContext";
+import { triggerSectionTransition } from "@/lib/sectionTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -103,7 +104,7 @@ export default function Services({
   const { openServiceModal } = useServiceModal();
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const h2LineRef = useRef<HTMLDivElement>(null);
+  const h2Ref = useRef<HTMLHeadingElement>(null);
 
   const services = [
     {
@@ -129,37 +130,40 @@ export default function Services({
     },
   ];
 
-  // Split heading at gold word
   const goldIdx = servicesHeading.indexOf(servicesHeadingGoldWord);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Heading reveals via clipPath sweep
       gsap.fromTo(
-        h2LineRef.current,
-        { yPercent: 110 },
+        h2Ref.current,
+        { clipPath: "inset(0 100% 0 0)" },
         {
-          yPercent: 0,
-          duration: 1,
+          clipPath: "inset(0 0% 0 0)",
+          duration: 0.8,
           ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 75%",
+            once: true,
+            onEnter: () => triggerSectionTransition(),
           },
         }
       );
 
       gsap.fromTo(
         cardRefs.current.filter(Boolean),
-        { y: 60, opacity: 0 },
+        { y: 50, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           duration: 0.8,
           ease: "power3.out",
-          stagger: 0.15,
+          stagger: 0.12,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 70%",
+            once: true,
           },
         }
       );
@@ -203,16 +207,16 @@ export default function Services({
         {/* Section header */}
         <div className="mb-12">
           <p
-            className="text-gold tracking-[0.35em] uppercase text-sm font-medium mb-3"
+            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
             {servicesLabel}
           </p>
           <div className="overflow-hidden">
             <h2
-              ref={h2LineRef}
+              ref={h2Ref}
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream max-w-xl"
-              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
+              style={{ fontFamily: "var(--font-heading)", clipPath: "inset(0 100% 0 0)" }}
             >
               {headingNode}
             </h2>
