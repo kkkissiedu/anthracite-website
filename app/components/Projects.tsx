@@ -92,6 +92,7 @@ export default function Projects() {
           },
         }
       );
+      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -117,6 +118,7 @@ export default function Projects() {
           },
         }
       );
+      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, sectionRef);
 
     return () => ctx.revert();
@@ -154,7 +156,7 @@ export default function Projects() {
             <h2
               ref={h2LineRef}
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
-              style={{ fontFamily: "var(--font-heading)", transform: "translateY(110%)" }}
+              style={{ fontFamily: "var(--font-heading)" }}
             >
               All Featured <span className="text-gold">Projects</span>
             </h2>
@@ -180,7 +182,6 @@ export default function Projects() {
                 <div
                   key={project._id}
                   className="fw-card group relative overflow-hidden cursor-pointer"
-                  style={{ opacity: 0, transform: "scale(0.97)" }}
                   onClick={() => openModal(project)}
                   role="button"
                   tabIndex={0}

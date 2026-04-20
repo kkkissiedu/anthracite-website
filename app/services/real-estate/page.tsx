@@ -69,20 +69,24 @@ export default function RealEstatePage() {
     const cards = gridRef.current.querySelectorAll<HTMLElement>(".re-card");
     if (!cards.length) return;
 
-    gsap.set(Array.from(cards), { y: 50, opacity: 0 });
-
     ctxRef.current = gsap.context(() => {
-      gsap.to(Array.from(cards), {
-        y: 0,
-        opacity: 1,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: gridRef.current,
-          start: "top 85%",
-        },
-      });
+      gsap.fromTo(
+        Array.from(cards),
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          ease: "power3.out",
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: gridRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
+      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, gridRef);
 
     return () => {
@@ -398,7 +402,6 @@ function RECard({
   return (
     <div
       className="re-card group relative overflow-hidden cursor-pointer"
-      style={{ opacity: 0 }}
       onClick={() => onOpen(project)}
       role="button"
       tabIndex={0}

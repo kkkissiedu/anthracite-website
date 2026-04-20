@@ -104,8 +104,7 @@ export default function Contact({
           },
         }
       );
-    }, sectionRef);
-      setTimeout(() => { ScrollTrigger.refresh(); }, 100);
+      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, sectionRef);
 
     return () => ctx.revert();

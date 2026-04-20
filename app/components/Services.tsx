@@ -163,9 +163,7 @@ export default function Services({
           },
         }
       );
-    }, sectionRef);
-
-      setTimeout(() => { ScrollTrigger.refresh(); }, 100);
+      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, sectionRef);
 
     return () => ctx.revert();

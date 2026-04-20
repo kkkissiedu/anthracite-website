@@ -131,7 +131,7 @@ export default function Hero({
         <p
           ref={subRef}
           className="text-cream/60 text-base md:text-lg lg:text-xl max-w-[600px] mx-auto text-center leading-relaxed mt-6 mb-10 font-body"
-          style={{ fontFamily: "var(--font-body)", opacity: 0 }}
+          style={{ fontFamily: "var(--font-body)" }}
         >
           {heroSubtitle}
         </p>
@@ -140,7 +140,6 @@ export default function Hero({
         <div
           ref={ctaRef}
           className="flex flex-col sm:flex-row gap-4 items-center justify-center"
-          style={{ opacity: 0 }}
         >
           <a
             href="#services"
@@ -178,7 +177,6 @@ export default function Hero({
         <div
           ref={lineRef}
           className="h-px w-full gold-gradient-line origin-left"
-          style={{ opacity: 0 }}
         />
       </div>
     </section>

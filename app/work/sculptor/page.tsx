@@ -55,21 +55,25 @@ export default function SculptorPage() {
     const cards = gridRef.current.querySelectorAll<HTMLElement>(".sculpt-card");
     if (!cards.length) return;
 
-    gsap.set(Array.from(cards), { y: 60, opacity: 0, scale: 0.97 });
-
     ctxRef.current = gsap.context(() => {
-      gsap.to(Array.from(cards), {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.12,
-        scrollTrigger: {
-          trigger: gridRef.current,
-          start: "top 85%",
-        },
-      });
+      gsap.fromTo(
+        Array.from(cards),
+        { y: 60, opacity: 0, scale: 0.97 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.12,
+          scrollTrigger: {
+            trigger: gridRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
+      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, gridRef);
 
     return () => {
@@ -220,7 +224,6 @@ function SculptorCard({
       className="sculpt-card group relative overflow-hidden cursor-pointer mb-6"
       style={{
         breakInside: "avoid",
-        opacity: 0,
       }}
       onClick={() => onOpen(project)}
       role="button"
