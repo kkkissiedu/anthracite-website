@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { triggerSectionTransition } from "@/lib/sectionTransition";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,6 +44,7 @@ export default function About({
     { ...parseStatValue(statThreeValue), label: statThreeLabel },
   ];
 
+  // Split heading at gold word: everything before+including gold = line 1, after = line 2
   const goldWord = aboutHeadingGoldWords;
   const goldIdx = aboutHeading.indexOf(goldWord);
   let line1Before = aboutHeading;
@@ -57,33 +57,30 @@ export default function About({
   }
 
   const sectionRef = useRef<HTMLElement>(null);
-  const leftColRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
   const statsRowRef = useRef<HTMLDivElement>(null);
   const counterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const h2Line1Ref = useRef<HTMLDivElement>(null);
+  const h2Line2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Left column fades up first
       gsap.fromTo(
-        leftColRef.current,
-        { y: 40, opacity: 0 },
+        [h2Line1Ref.current, h2Line2Ref.current],
+        { yPercent: 110 },
         {
-          y: 0,
-          opacity: 1,
+          yPercent: 0,
           duration: 1,
           ease: "power3.out",
+          stagger: 0.12,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 75%",
-            once: true,
-            onEnter: () => triggerSectionTransition(),
           },
         }
       );
 
-      // Right column follows 0.2s later
       gsap.fromTo(
         rightRef.current,
         { y: 40, opacity: 0 },
@@ -92,16 +89,13 @@ export default function About({
           opacity: 1,
           duration: 1,
           ease: "power3.out",
-          delay: 0.2,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 75%",
-            once: true,
           },
         }
       );
 
-      // Gold divider after columns
       gsap.fromTo(
         dividerRef.current,
         { scaleX: 0, opacity: 0 },
@@ -113,7 +107,6 @@ export default function About({
           scrollTrigger: {
             trigger: dividerRef.current,
             start: "top 88%",
-            once: true,
           },
         }
       );
@@ -129,7 +122,6 @@ export default function About({
           scrollTrigger: {
             trigger: statsRowRef.current,
             start: "top 88%",
-            once: true,
           },
         }
       );
@@ -145,7 +137,6 @@ export default function About({
           scrollTrigger: {
             trigger: statsRowRef.current,
             start: "top 85%",
-            once: true,
           },
           onUpdate() {
             el.textContent = Math.round(obj.val) + stat.suffix;
@@ -182,7 +173,7 @@ export default function About({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center mb-12">
 
           {/* Left — large bold statement */}
-          <div ref={leftColRef} style={{ opacity: 0 }}>
+          <div>
             <p
               className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
               style={{ fontFamily: "var(--font-body)" }}
@@ -194,14 +185,16 @@ export default function About({
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <div className="overflow-hidden">
-                <div>
+                <div ref={h2Line1Ref} style={{ transform: "translateY(110%)" }}>
                   {line1Before}
                   {line1Gold && <span className="text-gold">{line1Gold}</span>}
                 </div>
               </div>
               {line2 && (
                 <div className="overflow-hidden">
-                  <div>{line2}</div>
+                  <div ref={h2Line2Ref} style={{ transform: "translateY(110%)" }}>
+                    {line2}
+                  </div>
                 </div>
               )}
             </h2>
