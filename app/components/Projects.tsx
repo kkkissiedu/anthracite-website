@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useRef } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
@@ -47,6 +47,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const h2LineRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const featured = useMemo(() => {
     const seen = new Set<string>();
@@ -151,73 +152,156 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         {featured.length === 0 ? (
           <EmptyState />
         ) : (
-          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featured.map((project) => {
-              const cat = project.category as Category;
-              const imgSrc = project.mainImage
-                ? urlFor(
-                    project.mainImage as Parameters<typeof urlFor>[0]
-                  )
-                    .width(1200)
-                    .url()
-                : null;
-
-              return (
-                <div
-                  key={project._id}
-                  className="fw-card group relative overflow-hidden cursor-pointer"
-                  onClick={() => openModal(project)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && openModal(project)}
-                  aria-label={`Open ${project.title}`}
-                >
-                  <div className="relative w-full aspect-[3/4]">
-                    {imgSrc ? (
-                      <Image
-                        src={imgSrc}
-                        alt={project.title}
-                        fill
-                        className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-[#1a1a1a]" />
-                    )}
-
-                    {/* Subtle permanent vignette */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-
-                    {/* ADM-style slide-up overlay */}
-                    <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
-                      <div className="p-6 flex flex-col gap-3">
-                        <span
-                          className="text-gold text-[10px] tracking-[0.25em] uppercase"
-                          style={{ fontFamily: "var(--font-body)" }}
-                        >
-                          {CATEGORY_LABELS[cat] ?? cat}
-                        </span>
-                        <h3
-                          className="text-2xl md:text-3xl font-bold text-cream leading-tight"
-                          style={{ fontFamily: "var(--font-heading)" }}
-                        >
-                          {project.title}
-                        </h3>
-                        <Link
-                          href={CATEGORY_HREFS[cat] ?? "/"}
-                          onClick={(e) => e.stopPropagation()}
-                          className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-                          style={{ fontFamily: "var(--font-body)" }}
-                        >
-                          VIEW ALL PROJECTS →
-                        </Link>
+          <>
+            {/* Mobile: carousel — one card at a time */}
+            <div className="md:hidden">
+              {(() => {
+                const project = featured[currentIndex];
+                const cat = project.category as Category;
+                const imgSrc = project.mainImage
+                  ? urlFor(project.mainImage as Parameters<typeof urlFor>[0]).width(800).url()
+                  : null;
+                return (
+                  <div
+                    className="fw-card group relative overflow-hidden cursor-pointer w-full"
+                    onClick={() => openModal(project)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && openModal(project)}
+                    aria-label={`Open ${project.title}`}
+                  >
+                    <div className="relative w-full aspect-[3/4]">
+                      {imgSrc ? (
+                        <Image
+                          src={imgSrc}
+                          alt={project.title}
+                          fill
+                          className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
+                          sizes="100vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-[#1a1a1a]" />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+                      <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
+                        <div className="p-6 flex flex-col gap-3">
+                          <span className="text-gold text-[10px] tracking-[0.25em] uppercase" style={{ fontFamily: "var(--font-body)" }}>
+                            {CATEGORY_LABELS[cat] ?? cat}
+                          </span>
+                          <h3 className="text-2xl font-bold text-cream leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                            {project.title}
+                          </h3>
+                          <Link
+                            href={CATEGORY_HREFS[cat] ?? "/"}
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+                            style={{ fontFamily: "var(--font-body)" }}
+                          >
+                            VIEW ALL PROJECTS →
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
+                );
+              })()}
+              {featured.length > 1 && (
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <button
+                    onClick={() => setCurrentIndex(i => (i - 1 + featured.length) % featured.length)}
+                    className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                    aria-label="Previous project"
+                  >
+                    ←
+                  </button>
+                  <div className="flex gap-2">
+                    {featured.map((_, i) => (
+                      <div
+                        key={i}
+                        className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setCurrentIndex(i => (i + 1) % featured.length)}
+                    className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                    aria-label="Next project"
+                  >
+                    →
+                  </button>
                 </div>
-              );
-            })}
-          </div>
+              )}
+            </div>
+
+            {/* Desktop: existing grid layout — completely unchanged */}
+            <div ref={gridRef} className="hidden md:grid md:grid-cols-3 gap-6">
+              {featured.map((project) => {
+                const cat = project.category as Category;
+                const imgSrc = project.mainImage
+                  ? urlFor(
+                      project.mainImage as Parameters<typeof urlFor>[0]
+                    )
+                      .width(1200)
+                      .url()
+                  : null;
+
+                return (
+                  <div
+                    key={project._id}
+                    className="fw-card group relative overflow-hidden cursor-pointer"
+                    onClick={() => openModal(project)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && openModal(project)}
+                    aria-label={`Open ${project.title}`}
+                  >
+                    <div className="relative w-full aspect-[3/4]">
+                      {imgSrc ? (
+                        <Image
+                          src={imgSrc}
+                          alt={project.title}
+                          fill
+                          className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-[#1a1a1a]" />
+                      )}
+
+                      {/* Subtle permanent vignette */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+
+                      {/* ADM-style slide-up overlay */}
+                      <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
+                        <div className="p-6 flex flex-col gap-3">
+                          <span
+                            className="text-gold text-[10px] tracking-[0.25em] uppercase"
+                            style={{ fontFamily: "var(--font-body)" }}
+                          >
+                            {CATEGORY_LABELS[cat] ?? cat}
+                          </span>
+                          <h3
+                            className="text-2xl md:text-3xl font-bold text-cream leading-tight"
+                            style={{ fontFamily: "var(--font-heading)" }}
+                          >
+                            {project.title}
+                          </h3>
+                          <Link
+                            href={CATEGORY_HREFS[cat] ?? "/"}
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+                            style={{ fontFamily: "var(--font-body)" }}
+                          >
+                            VIEW ALL PROJECTS →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
     </section>

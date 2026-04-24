@@ -256,6 +256,11 @@ const ServiceCard = forwardRef<
   return (
     <div
       ref={ref}
+      onClick={onExplore}
+      role="button"
+      tabIndex={0}
+      aria-label={`Explore ${title}`}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onExplore(); } }}
       className="
         group relative flex flex-col gap-6 p-8 md:p-10
         border border-cream/10
@@ -266,6 +271,8 @@ const ServiceCard = forwardRef<
         before:scale-[0.97] before:transition-all before:duration-500
         hover:before:opacity-100 hover:before:scale-100
         before:pointer-events-none
+        cursor-pointer
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D0D0D]
       "
     >
       {/* Icon */}
@@ -301,7 +308,7 @@ const ServiceCard = forwardRef<
 
       {/* CTA */}
       <button
-        onClick={onExplore}
+        onClick={(e) => { e.stopPropagation(); onExplore(); }}
         className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
         style={{ fontFamily: "var(--font-body)" }}
       >
