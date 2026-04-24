@@ -4,6 +4,7 @@ import "./globals.css";
 import { ProjectModalProvider } from "@/context/ProjectModalContext";
 import ProjectModal from "@/components/ProjectModal";
 import { ServiceModalProvider } from "@/context/ServiceModalContext";
+import StructuredData from "@/components/StructuredData";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -67,6 +68,7 @@ export default function RootLayout({
       className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-anthracite text-cream overflow-x-hidden">
+        <StructuredData />
         <ProjectModalProvider>
           <ServiceModalProvider>
             {children}
