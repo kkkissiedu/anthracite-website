@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
 import gsap from "gsap";
-
-const HeroBackground3D = dynamic(() => import("./HeroBackground3D"), {
-  ssr: false,
-});
 
 type HeroProps = {
   heroTagline?: string;
@@ -72,17 +67,24 @@ export default function Hero({
       ref={containerRef}
       className="relative min-h-screen flex flex-col items-center justify-center bg-anthracite overflow-hidden"
     >
-      {/* 3D wireframe building — behind all content */}
-      <div
-        className="absolute inset-0 z-[1] pointer-events-none"
-        style={{ opacity: 0.18 }}
+      {/* Video background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster="/hero-poster.jpg"
         aria-hidden
+        className="absolute inset-0 w-full h-full object-cover z-[0] pointer-events-none"
+        style={{ filter: 'brightness(0.45) saturate(0.7)' }}
       >
-        <HeroBackground3D />
-      </div>
+        <source src="/hero.webm" type="video/webm" />
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
 
       {/* Dark overlay for legibility */}
-      <div className="absolute inset-0 bg-anthracite/60 z-[2]" aria-hidden />
+      <div className="absolute inset-0 bg-black/60 z-[2]" aria-hidden />
 
       {/* Subtle radial glow */}
       <div
