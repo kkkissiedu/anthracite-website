@@ -77,7 +77,7 @@ export default function Hero({
         poster="/hero-poster.jpg"
         aria-hidden
         className="absolute inset-0 w-full h-full object-cover z-[0] pointer-events-none"
-        style={{ filter: 'brightness(0.45) saturate(0.7)' }}
+        style={{ filter: 'brightness(0.45) saturate(1.2) sepia(0.3) hue-rotate(5deg)' }}
       >
         <source src="/hero.webm" type="video/webm" />
         <source src="/hero.mp4" type="video/mp4" />
