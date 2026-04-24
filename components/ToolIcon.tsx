@@ -26,19 +26,20 @@ export default function ToolIcon({ tool }: { tool: string }) {
   if (!meta) return null;
 
   return (
-    <div className="flex flex-col items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-gold/40 transition-colors duration-200">
-      <div className="w-10 h-10 flex items-center justify-center">
-        <Image
-          src={`/icons/tools/${meta.file}`}
-          alt={meta.label}
-          width={40}
-          height={40}
-          className="object-contain w-full h-full"
-        />
-      </div>
-      <span className="text-[10px] text-center text-white/60 leading-tight font-medium tracking-wide">
+    <div
+      title={meta.label}
+      className="relative group/tip w-10 h-10 p-2 rounded-lg bg-white/5 border border-white/10 hover:border-gold/40 transition-colors duration-200 flex items-center justify-center cursor-default"
+    >
+      <Image
+        src={`/icons/tools/${meta.file}`}
+        alt={meta.label}
+        width={24}
+        height={24}
+        className="object-contain w-full h-full"
+      />
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-[#1a1a1a] border border-white/10 text-[10px] text-white/80 whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
         {meta.label}
-      </span>
+      </div>
     </div>
   );
 }

@@ -502,14 +502,14 @@ export default function ProjectModal() {
 
           {/* ── Tools & Software ── */}
           {activeProject.tools && activeProject.tools.length > 0 && activeProject.category !== 'real-estate-construction' && (
-            <div className="shrink-0 px-6 pt-6 pb-5 border-b border-white/10">
+            <div className="shrink-0 px-6 pt-4 pb-5 border-b border-white/10">
               <h4
                 className="text-[10px] uppercase tracking-[0.2em] text-gold mb-4"
                 style={{ fontFamily: "var(--font-body)" }}
               >
                 Tools &amp; Software
               </h4>
-              <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+              <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
                 {activeProject.tools.map((tool: string) => (
                   <ToolIcon key={tool} tool={tool} />
                 ))}
