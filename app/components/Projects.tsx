@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { client, urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,12 +27,6 @@ const CATEGORY_HREFS: Record<Category, string> = {
   "real-estate-construction": "/services/real-estate",
 };
 
-const FEATURED_QUERY = `*[_type == "project" && featured == true] | order(order asc) {
-  _id, title, category, subcategory, description, overview,
-  mainImage, gallery, videoUrl, videoFile, panorama, model3d,
-  client, location, year, tools
-}`;
-
 function EmptyState() {
   return (
     <div className="flex items-center justify-center py-24">
@@ -48,33 +42,23 @@ function EmptyState() {
   );
 }
 
-export default function Projects() {
-  const [featured, setFeatured] = useState<SanityProject[] | null>(null);
+export default function Projects({ projects }: { projects: SanityProject[] }) {
   const { openModal } = useProjectModal();
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const h2LineRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    client
-      .fetch<SanityProject[]>(FEATURED_QUERY)
-      .then((data) => {
-        if (data?.length) {
-          const seen = new Set<string>();
-          const deduped: SanityProject[] = [];
-          for (const p of data) {
-            if (!seen.has(p.category)) {
-              seen.add(p.category);
-              deduped.push(p);
-            }
-          }
-          setFeatured(deduped);
-        } else {
-          setFeatured([]);
-        }
-      })
-      .catch(() => setFeatured([]));
-  }, []);
+  const featured = useMemo(() => {
+    const seen = new Set<string>();
+    const deduped: SanityProject[] = [];
+    for (const p of projects) {
+      if (!seen.has(p.category)) {
+        seen.add(p.category);
+        deduped.push(p);
+      }
+    }
+    return deduped;
+  }, [projects]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -98,7 +82,7 @@ export default function Projects() {
   }, []);
 
   useEffect(() => {
-    if (!featured?.length) return;
+    if (!featured.length) return;
     const ctx = gsap.context(() => {
       const cardEls = gridRef.current?.querySelectorAll<HTMLElement>(".fw-card");
       if (!cardEls?.length) return;
@@ -164,7 +148,7 @@ export default function Projects() {
         </div>
 
         {/* Content */}
-        {featured === null ? null : featured.length === 0 ? (
+        {featured.length === 0 ? (
           <EmptyState />
         ) : (
           <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">

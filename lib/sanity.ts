@@ -69,3 +69,53 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]`;
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   return client.fetch(siteSettingsQuery);
 }
+
+export type FeaturedProject = {
+  _id: string;
+  title: string;
+  category: string;
+  subcategory?: string;
+  description?: string;
+  overview?: unknown[];
+  mainImage?: unknown;
+  gallery?: unknown[];
+  videoUrl?: string;
+  videoFile?: { asset: { url: string } };
+  model3d?: { asset: { url: string } };
+  panorama?: unknown[];
+  client?: string;
+  location?: string;
+  year?: number;
+  tools?: string[];
+};
+
+export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
+  return client.fetch(
+    `*[_type == "project" && featured == true] | order(order asc) {
+      _id, title, category, subcategory, description, overview,
+      mainImage, gallery, videoUrl, videoFile, panorama, model3d,
+      client, location, year, tools
+    }`,
+    {},
+    { next: { revalidate: 60 } }
+  );
+}
+
+export type RawTeamMember = {
+  _id: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo: unknown;
+  linkedinUrl: string | null;
+};
+
+export async function getTeamMembers(): Promise<RawTeamMember[]> {
+  return client.fetch(
+    `*[_type == "teamMember"] | order(_createdAt asc) {
+      _id, name, role, bio, photo, linkedinUrl
+    }`,
+    {},
+    { next: { revalidate: 60 } }
+  );
+}

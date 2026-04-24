@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useMemo, useEffect, useRef, forwardRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { client, urlFor } from "@/lib/sanity";
+import { urlFor, type RawTeamMember } from "@/lib/sanity";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -132,52 +132,27 @@ function EmptyState() {
   );
 }
 
-export default function Team() {
-  const [members, setMembers] = useState<TeamMember[] | null>(null);
+export default function Team({ members: rawMembers }: { members: RawTeamMember[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const h2LineRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    client
-      .fetch<
-        Array<{
-          _id: string;
-          name: string;
-          role: string;
-          bio: string;
-          photo: unknown;
-          linkedinUrl: string | null;
-        }>
-      >(
-        `*[_type == "teamMember"] | order(_createdAt asc) {
-          _id, name, role, bio, photo, linkedinUrl
-        }`
-      )
-      .then((data) => {
-        if (data?.length) {
-          setMembers(
-            data.map((m) => ({
-              id: m._id,
-              name: m.name,
-              role: m.role,
-              bio: m.bio,
-              photo: m.photo
-                ? urlFor(m.photo as Parameters<typeof urlFor>[0])
-                    .width(700)
-                    .url()
-                : null,
-              linkedinUrl: m.linkedinUrl,
-            }))
-          );
-        } else {
-          setMembers([]);
-        }
-      })
-      .catch(() => {
-        setMembers([]);
-      });
-  }, []);
+  const members = useMemo<TeamMember[]>(
+    () =>
+      rawMembers.map((m) => ({
+        id: m._id,
+        name: m.name,
+        role: m.role,
+        bio: m.bio,
+        photo: m.photo
+          ? urlFor(m.photo as Parameters<typeof urlFor>[0])
+              .width(700)
+              .url()
+          : null,
+        linkedinUrl: m.linkedinUrl,
+      })),
+    [rawMembers]
+  );
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -200,7 +175,7 @@ export default function Team() {
   }, []);
 
   useEffect(() => {
-    if (!members?.length) return;
+    if (!members.length) return;
     const ctx = gsap.context(() => {
       const cards = cardRefs.current.filter(Boolean);
       if (!cards.length) return;
@@ -264,7 +239,7 @@ export default function Team() {
         </div>
 
         {/* Content */}
-        {members === null ? null : members.length === 0 ? (
+        {members.length === 0 ? (
           <EmptyState />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">

@@ -7,10 +7,14 @@ import Team from "./components/Team";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ServiceModal from "@/components/ServiceModal";
-import { getSiteSettings } from "@/lib/sanity";
+import { getSiteSettings, getFeaturedProjects, getTeamMembers } from "@/lib/sanity";
 
 export default async function Home() {
-  const settings = await getSiteSettings();
+  const [settings, featuredProjects, teamMembers] = await Promise.all([
+    getSiteSettings(),
+    getFeaturedProjects(),
+    getTeamMembers(),
+  ]);
 
   return (
     <>
@@ -49,8 +53,8 @@ export default async function Home() {
           serviceThreeSubtitle={settings?.serviceThreeSubtitle}
           serviceThreeDescription={settings?.serviceThreeDescription}
         />
-        <Projects />
-        <Team />
+        <Projects projects={featuredProjects} />
+        <Team members={teamMembers} />
         <Contact
           contactLabel={settings?.contactLabel}
           contactHeading={settings?.contactHeading}
