@@ -89,18 +89,20 @@ export default function Contact({
   const goldInLine2 = headingLine2.indexOf(contactHeadingGoldWord) !== -1;
 
   useEffect(() => {
+    if (!h2Line1Ref.current) return;
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        [h2Line1Ref.current, h2Line2Ref.current],
-        { yPercent: 110 },
+      gsap.from(
+        [h2Line1Ref.current, h2Line2Ref.current].filter(Boolean),
         {
-          yPercent: 0,
+          opacity: 0,
+          y: 40,
           duration: 1,
           ease: "power3.out",
           stagger: 0.12,
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 78%",
+            trigger: h2Line1Ref.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
           },
         }
       );

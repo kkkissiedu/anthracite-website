@@ -124,6 +124,7 @@ export default function Navbar() {
               <a
                 href={link.href}
                 onClick={handleLinkClick}
+                tabIndex={menuOpen ? 0 : -1}
                 className="text-4xl font-heading text-cream hover:text-gold transition-colors duration-300 tracking-widest uppercase focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
