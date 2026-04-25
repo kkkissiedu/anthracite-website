@@ -35,3 +35,6 @@ Company website for The Anthracite Limited.
 6. Team
 7. Contact
 8. Footer
+
+## Git Workflow
+Always commit changes in the worktree before merging to main. Never push the feature branch before verifying git log shows the new commits on that branch. Use git push origin HEAD:main for all pushes to main, never git push origin main.
