@@ -70,7 +70,6 @@ export default function SculptorPage() {
           },
         }
       );
-      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, gridRef);
 
     return () => {

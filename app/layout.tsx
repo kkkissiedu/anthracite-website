@@ -5,6 +5,7 @@ import { ProjectModalProvider } from "@/context/ProjectModalContext";
 import ProjectModal from "@/components/ProjectModal";
 import { ServiceModalProvider } from "@/context/ServiceModalContext";
 import StructuredData from "@/components/StructuredData";
+import ScrollTriggerInit from "@/app/components/ScrollTriggerInit";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -69,6 +70,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-anthracite text-cream overflow-x-hidden">
         <StructuredData />
+        <ScrollTriggerInit />
         <ProjectModalProvider>
           <ServiceModalProvider>
             {children}

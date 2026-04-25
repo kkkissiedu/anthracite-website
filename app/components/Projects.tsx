@@ -77,7 +77,6 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           },
         }
       );
-      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -103,7 +102,6 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           },
         }
       );
-      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, sectionRef);
 
     return () => ctx.revert();
@@ -116,17 +114,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
       className="relative bg-anthracite text-cream py-20 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
     >
       {/* Decorative section number */}
-      <span
-        aria-hidden
-        className="absolute top-0 right-0 leading-none font-bold text-gold select-none pointer-events-none"
-        style={{
-          fontFamily: "var(--font-heading)",
-          fontSize: "180px",
-          opacity: 0.04,
-        }}
-      >
-        03
-      </span>
+      <div className="section-number" data-number="03" aria-hidden="true" />
 
       <div className="max-w-[1280px] mx-auto">
         {/* Header */}

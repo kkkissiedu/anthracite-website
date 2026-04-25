@@ -73,3 +73,24 @@ h6 {
   background-color: #c9952a;
   color: #0d0d0d;
 }
+
+/* Decorative section numbers — content via ::before so screen readers skip them */
+.section-number {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.04;
+}
+
+.section-number::before {
+  content: attr(data-number);
+  font-family: var(--font-heading);
+  font-size: 180px;
+  font-weight: 700;
+  color: #c9952a;
+  line-height: 1;
+  display: block;
+}

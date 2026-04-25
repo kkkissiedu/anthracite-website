@@ -86,7 +86,6 @@ export default function RealEstatePage() {
           },
         }
       );
-      setTimeout(() => { ScrollTrigger.refresh(); }, 200);
     }, gridRef);
 
     return () => {
