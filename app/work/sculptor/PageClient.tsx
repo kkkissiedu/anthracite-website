@@ -87,6 +87,7 @@ export default function SculptorPage() {
     <>
       <Navbar />
 
+      <main>
       {/* Hero — dramatic dark */}
       <section className="relative bg-anthracite text-cream pt-36 pb-24 px-6 md:px-8 lg:px-16 overflow-hidden">
         {/* Background grid decoration */}
@@ -196,6 +197,7 @@ export default function SculptorPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );

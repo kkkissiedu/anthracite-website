@@ -65,36 +65,35 @@ export default function About({
   const h2Line2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!h2Line1Ref.current) return;
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        [h2Line1Ref.current, h2Line2Ref.current],
-        { yPercent: 110 },
+      gsap.from(
+        [h2Line1Ref.current, h2Line2Ref.current].filter(Boolean),
         {
-          yPercent: 0,
+          opacity: 0,
+          y: 40,
           duration: 1,
           ease: "power3.out",
           stagger: 0.12,
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
+            trigger: h2Line1Ref.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
           },
         }
       );
 
-      gsap.fromTo(
-        rightRef.current,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-          },
-        }
-      );
+      gsap.from(rightRef.current, {
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: rightRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+      });
 
       gsap.fromTo(
         dividerRef.current,
@@ -176,7 +175,7 @@ export default function About({
           {/* Left — large bold statement */}
           <div>
             <p
-              className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
+              className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold-dark mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
               {aboutLabel}
@@ -188,7 +187,7 @@ export default function About({
               <div className="overflow-hidden">
                 <div ref={h2Line1Ref}>
                   {line1Before}
-                  {line1Gold && <span className="text-gold">{line1Gold}</span>}
+                  {line1Gold && <span className="text-gold-heading">{line1Gold}</span>}
                 </div>
               </div>
               {line2 && (
@@ -227,7 +226,7 @@ export default function About({
           {stats.map((stat, i) => (
             <div key={stat.label} className="text-center">
               <p
-                className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold leading-none"
+                className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold-heading leading-none"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 <span

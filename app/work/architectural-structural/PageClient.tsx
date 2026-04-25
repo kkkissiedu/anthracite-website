@@ -84,6 +84,7 @@ export default function ArchitecturalStructuralPage() {
     <>
       <Navbar />
 
+      <main>
       {/* Hero */}
       <section className="bg-anthracite text-cream pt-36 pb-20 px-6 md:px-8 lg:px-16">
         <div className="max-w-[1280px] mx-auto">
@@ -166,6 +167,7 @@ export default function ArchitecturalStructuralPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );

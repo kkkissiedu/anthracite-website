@@ -82,7 +82,7 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
             {member.name}
           </h3>
           <p
-            className="text-gold text-[10px] tracking-[0.25em] uppercase mt-1.5"
+            className="text-gold-dark text-[10px] tracking-[0.25em] uppercase mt-1.5"
             style={{ fontFamily: "var(--font-body)" }}
           >
             {member.role}
@@ -103,7 +103,7 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
             href={member.linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-gold hover:text-gold-highlight transition-colors text-[10px] tracking-[0.2em] uppercase w-fit mt-auto pt-2"
+            className="flex items-center gap-2 text-gold-dark hover:text-gold-heading transition-colors text-[10px] tracking-[0.2em] uppercase w-fit mt-auto pt-2"
             style={{ fontFamily: "var(--font-body)" }}
             aria-label={`${member.name} on LinkedIn`}
           >
@@ -122,7 +122,7 @@ function EmptyState() {
     <div className="flex items-center justify-center py-24">
       <div className="border border-gold px-12 py-8 text-center">
         <p
-          className="text-gold text-sm tracking-[0.2em] uppercase"
+          className="text-gold-dark text-sm tracking-[0.2em] uppercase"
           style={{ fontFamily: "var(--font-body)" }}
         >
           Content coming soon
@@ -222,7 +222,7 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
         {/* Header */}
         <div className="mb-12">
           <p
-            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
+            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold-dark mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
             The People
@@ -233,7 +233,7 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-text"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Meet the <span className="text-gold">Team</span>
+              Meet the <span className="text-gold-heading">Team</span>
             </h2>
           </div>
         </div>

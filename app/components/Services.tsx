@@ -133,20 +133,19 @@ export default function Services({
   const goldIdx = servicesHeading.indexOf(servicesHeadingGoldWord);
 
   useEffect(() => {
+    if (!h2LineRef.current) return;
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        h2LineRef.current,
-        { yPercent: 110 },
-        {
-          yPercent: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-          },
-        }
-      );
+      gsap.from(h2LineRef.current, {
+        opacity: 0,
+        y: 40,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: h2LineRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+      });
 
       gsap.fromTo(
         cardRefs.current.filter(Boolean),

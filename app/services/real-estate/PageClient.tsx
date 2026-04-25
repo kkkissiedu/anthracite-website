@@ -123,6 +123,7 @@ export default function RealEstatePage() {
     <>
       <Navbar />
 
+      <main>
       {/* Hero — light background */}
       <section className="bg-cream text-dark-text pt-36 pb-24 px-6 md:px-8 lg:px-16">
         <div className="max-w-[1280px] mx-auto">
@@ -130,7 +131,7 @@ export default function RealEstatePage() {
             {/* Left: description */}
             <div>
               <p
-                className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
+                className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold-dark mb-4"
                 style={{ fontFamily: "var(--font-body)" }}
               >
                 Services
@@ -140,7 +141,7 @@ export default function RealEstatePage() {
                 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight tracking-tight text-dark-text"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                Real Estate &amp; <span className="text-gold">Construction</span>
+                Real Estate &amp; <span className="text-gold-heading">Construction</span>
               </h1>
 
               <p
@@ -188,7 +189,7 @@ export default function RealEstatePage() {
                 {formStatus === "success" ? (
                   <div className="py-12 text-center">
                     <p
-                      className="text-gold text-sm tracking-[0.15em] uppercase mb-2"
+                      className="text-gold-dark text-sm tracking-[0.15em] uppercase mb-2"
                       style={{ fontFamily: "var(--font-body)" }}
                     >
                       Message Sent
@@ -381,6 +382,7 @@ export default function RealEstatePage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
