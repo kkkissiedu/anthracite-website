@@ -3,8 +3,8 @@ export default function StructuredData() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'The Anthracite Limited',
-    url: 'https://www.theanthracite.com',
-    logo: 'https://www.theanthracite.com/logo-icon.svg',
+    url: 'https://theanthracite.com',
+    logo: 'https://theanthracite.com/logo-icon.svg',
     description:
       'Pioneering AI-driven construction and 3D-printed green buildings to shape a sustainable, modern Ghana.',
     foundingDate: '2024',
@@ -21,10 +21,10 @@ export default function StructuredData() {
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': 'https://www.theanthracite.com/#business',
+    '@id': 'https://theanthracite.com/#business',
     name: 'The Anthracite Limited',
-    image: 'https://www.theanthracite.com/og-image.png',
-    url: 'https://www.theanthracite.com',
+    image: 'https://theanthracite.com/og-image.png',
+    url: 'https://theanthracite.com',
     telephone: '',
     priceRange: '$$$',
     address: {

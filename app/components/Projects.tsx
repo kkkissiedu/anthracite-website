@@ -171,7 +171,8 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                         <div className="absolute inset-0 bg-[#1a1a1a]" />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-                      <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
+                      {/* Mobile overlay: always visible at reduced opacity so image shows through */}
+                      <div className="absolute inset-x-0 bottom-0 bg-black/50">
                         <div className="p-6 flex flex-col gap-3">
                           <span className="text-gold text-[10px] tracking-[0.25em] uppercase" style={{ fontFamily: "var(--font-body)" }}>
                             {CATEGORY_LABELS[cat] ?? cat}
@@ -182,7 +183,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                           <Link
                             href={CATEGORY_HREFS[cat] ?? "/"}
                             onClick={(e) => e.stopPropagation()}
-                            className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+                            className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
                             style={{ fontFamily: "var(--font-body)" }}
                           >
                             VIEW ALL PROJECTS →

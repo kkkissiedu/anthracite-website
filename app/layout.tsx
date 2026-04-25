@@ -22,7 +22,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.theanthracite.com"),
+  metadataBase: new URL("https://theanthracite.com"),
   icons: {
     icon: [{ url: "/logo-icon.svg", type: "image/svg+xml" }],
   },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "The Anthracite Limited | Architectural Design & Construction Ghana",
     description:
       "Pioneering AI-driven construction and 3D-printed green buildings to shape a sustainable, modern Ghana.",
-    url: "https://www.theanthracite.com",
+    url: "https://theanthracite.com",
     siteName: "The Anthracite Limited",
     images: [
       {
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://www.theanthracite.com",
+    canonical: "https://theanthracite.com",
   },
 };
 

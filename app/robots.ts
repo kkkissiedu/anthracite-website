@@ -3,6 +3,6 @@ import { MetadataRoute } from 'next';
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [{ userAgent: '*', allow: '/' }],
-    sitemap: 'https://www.theanthracite.com/sitemap.xml',
+    sitemap: 'https://theanthracite.com/sitemap.xml',
   };
 }
