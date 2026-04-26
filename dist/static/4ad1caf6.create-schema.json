@@ -1,0 +1,708 @@
+[
+  {
+    "fields": [
+      {
+        "initialValue": 99,
+        "description": "Lower numbers appear first. Use gaps like 10, 20, 30 to leave room for future projects.",
+        "name": "order",
+        "type": "number",
+        "title": "Display Order"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Architectural & Structural",
+              "value": "architectural-structural"
+            },
+            {
+              "title": "3D Design",
+              "value": "3d-design"
+            },
+            {
+              "title": "Real Estate & Construction",
+              "value": "real-estate-construction"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "architectural-structural",
+                  "3d-design",
+                  "real-estate-construction"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Residential",
+              "value": "Residential"
+            },
+            {
+              "title": "Commercial",
+              "value": "Commercial"
+            },
+            {
+              "title": "Industrial",
+              "value": "Industrial"
+            },
+            {
+              "title": "Mixed-Use",
+              "value": "Mixed-Use"
+            },
+            {
+              "title": "VR/XR",
+              "value": "vr-xr"
+            },
+            {
+              "title": "Visualization",
+              "value": "visualization"
+            }
+          ]
+        },
+        "name": "subcategory",
+        "type": "string"
+      },
+      {
+        "name": "client",
+        "type": "string"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "name": "year",
+        "type": "number"
+      },
+      {
+        "rows": 4,
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "level": "error",
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "of": [],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "type": "block"
+          }
+        ],
+        "name": "overview",
+        "type": "array"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "mainImage",
+        "type": "image"
+      },
+      {
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "gallery",
+        "type": "array"
+      },
+      {
+        "description": "YouTube or Vimeo URL",
+        "name": "videoUrl",
+        "type": "string",
+        "title": "Video URL"
+      },
+      {
+        "options": {
+          "accept": "video/*"
+        },
+        "name": "videoFile",
+        "type": "file"
+      },
+      {
+        "description": "Equirectangular panorama images",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "panorama",
+        "type": "array",
+        "title": "360° Panorama Images"
+      },
+      {
+        "options": {
+          "accept": ".fbx,.gltf,.glb"
+        },
+        "description": "Accepts .fbx, .gltf, or .glb files",
+        "name": "model3d",
+        "type": "file",
+        "title": "3D Model"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Unreal Engine",
+              "value": "unreal-engine"
+            },
+            {
+              "title": "Unity",
+              "value": "unity"
+            },
+            {
+              "title": "Blender",
+              "value": "blender"
+            },
+            {
+              "title": "ZBrush",
+              "value": "zbrush"
+            },
+            {
+              "title": "Substance Painter",
+              "value": "substance-painter"
+            },
+            {
+              "title": "Marmoset Toolbag",
+              "value": "marmoset-toolbag"
+            },
+            {
+              "title": "Adobe Photoshop",
+              "value": "photoshop"
+            },
+            {
+              "title": "Adobe Illustrator",
+              "value": "illustrator"
+            },
+            {
+              "title": "Adobe Premiere Pro",
+              "value": "premiere-pro"
+            },
+            {
+              "title": "Revit",
+              "value": "revit"
+            },
+            {
+              "title": "AutoCAD",
+              "value": "autocad"
+            },
+            {
+              "title": "ProtaStructure",
+              "value": "protastructure"
+            },
+            {
+              "title": "ABAQUS",
+              "value": "abaqus"
+            },
+            {
+              "title": "ETABS",
+              "value": "etabs"
+            },
+            {
+              "title": "Tekla Structures",
+              "value": "tekla"
+            },
+            {
+              "title": "Midas",
+              "value": "midas"
+            },
+            {
+              "title": "Lumion",
+              "value": "lumion"
+            },
+            {
+              "title": "MS Project",
+              "value": "ms-project"
+            }
+          ]
+        },
+        "description": "Select tools used in this project. Leave empty for Real Estate projects.",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tools",
+        "type": "array",
+        "title": "Software & Tools"
+      },
+      {
+        "initialValue": false,
+        "name": "featured",
+        "type": "boolean",
+        "title": "Featured on Homepage"
+      }
+    ],
+    "name": "project",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "role",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "bio",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "photo",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "name": "linkedinUrl",
+        "type": "url",
+        "title": "LinkedIn URL"
+      }
+    ],
+    "name": "teamMember",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g. \"Building Ghana's Future\"",
+        "name": "heroTagline",
+        "type": "string"
+      },
+      {
+        "description": "The single word rendered in gold (must appear in the tagline)",
+        "name": "heroGoldWord",
+        "type": "string"
+      },
+      {
+        "name": "heroSubtitle",
+        "type": "string"
+      },
+      {
+        "description": "e.g. \"Our Services\"",
+        "name": "heroCtaPrimary",
+        "type": "string",
+        "title": "Hero CTA Primary"
+      },
+      {
+        "description": "e.g. \"View Projects\"",
+        "name": "heroCtaSecondary",
+        "type": "string",
+        "title": "Hero CTA Secondary"
+      },
+      {
+        "description": "e.g. \"About Us\"",
+        "name": "aboutLabel",
+        "type": "string"
+      },
+      {
+        "description": "e.g. \"Ghana's First 3D-Printed Green Estate\"",
+        "name": "aboutHeading",
+        "type": "string"
+      },
+      {
+        "description": "Substring of the heading to render in gold, e.g. \"3D-Printed\"",
+        "name": "aboutHeadingGoldWords",
+        "type": "string"
+      },
+      {
+        "name": "aboutBody",
+        "type": "text"
+      },
+      {
+        "description": "e.g. \"12+\"",
+        "name": "statOneValue",
+        "type": "string",
+        "title": "Stat 1 Value"
+      },
+      {
+        "description": "e.g. \"Projects\"",
+        "name": "statOneLabel",
+        "type": "string",
+        "title": "Stat 1 Label"
+      },
+      {
+        "name": "statTwoValue",
+        "type": "string",
+        "title": "Stat 2 Value"
+      },
+      {
+        "name": "statTwoLabel",
+        "type": "string",
+        "title": "Stat 2 Label"
+      },
+      {
+        "name": "statThreeValue",
+        "type": "string",
+        "title": "Stat 3 Value"
+      },
+      {
+        "name": "statThreeLabel",
+        "type": "string",
+        "title": "Stat 3 Label"
+      },
+      {
+        "description": "e.g. \"What We Do\"",
+        "name": "servicesLabel",
+        "type": "string"
+      },
+      {
+        "description": "e.g. \"Our Services\"",
+        "name": "servicesHeading",
+        "type": "string"
+      },
+      {
+        "name": "servicesHeadingGoldWord",
+        "type": "string"
+      },
+      {
+        "name": "serviceOneTitle",
+        "type": "string",
+        "title": "Service 1 Title"
+      },
+      {
+        "name": "serviceOneSubtitle",
+        "type": "string",
+        "title": "Service 1 Subtitle"
+      },
+      {
+        "name": "serviceOneDescription",
+        "type": "text",
+        "title": "Service 1 Card Description"
+      },
+      {
+        "name": "serviceOneModalDescription",
+        "type": "text",
+        "title": "Service 1 Modal Description"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "serviceOneServices",
+        "type": "array",
+        "title": "Service 1 Services List"
+      },
+      {
+        "name": "serviceTwoTitle",
+        "type": "string",
+        "title": "Service 2 Title"
+      },
+      {
+        "name": "serviceTwoSubtitle",
+        "type": "string",
+        "title": "Service 2 Subtitle"
+      },
+      {
+        "name": "serviceTwoDescription",
+        "type": "text",
+        "title": "Service 2 Card Description"
+      },
+      {
+        "name": "serviceTwoModalDescription",
+        "type": "text",
+        "title": "Service 2 Modal Description"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "serviceTwoServices",
+        "type": "array",
+        "title": "Service 2 Services List"
+      },
+      {
+        "name": "serviceThreeTitle",
+        "type": "string",
+        "title": "Service 3 Title"
+      },
+      {
+        "name": "serviceThreeSubtitle",
+        "type": "string",
+        "title": "Service 3 Subtitle"
+      },
+      {
+        "name": "serviceThreeDescription",
+        "type": "text",
+        "title": "Service 3 Card Description"
+      },
+      {
+        "name": "serviceThreeModalDescription",
+        "type": "text",
+        "title": "Service 3 Modal Description"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "serviceThreeServices",
+        "type": "array",
+        "title": "Service 3 Services List"
+      },
+      {
+        "description": "e.g. \"Get In Touch\"",
+        "name": "contactLabel",
+        "type": "string"
+      },
+      {
+        "description": "e.g. \"Let's Build Together\"",
+        "name": "contactHeading",
+        "type": "string"
+      },
+      {
+        "description": "e.g. \"Together\"",
+        "name": "contactHeadingGoldWord",
+        "type": "string"
+      },
+      {
+        "name": "contactSubtext",
+        "type": "text"
+      },
+      {
+        "name": "contactEmail",
+        "type": "string"
+      },
+      {
+        "name": "contactLocation",
+        "type": "string"
+      },
+      {
+        "description": "e.g. \"© 2025 The Anthracite Limited. All Rights Reserved.\"",
+        "name": "footerCopyright",
+        "type": "string"
+      },
+      {
+        "description": "Optional short tagline shown under the logo or at bottom",
+        "name": "footerTagline",
+        "type": "string"
+      }
+    ],
+    "name": "siteSettings",
+    "type": "document"
+  }
+]
