@@ -227,6 +227,73 @@ export const siteSettings = {
       type: "string",
     },
 
+    // ── Sub-Pages ─────────────────────────────────────────────────────────────
+    {
+      name: "pages",
+      title: "Sub-Pages",
+      type: "object",
+      fields: [
+        {
+          name: "architectural",
+          title: "Architectural & Structural",
+          type: "object",
+          fields: [
+            {
+              name: "heroHeading",
+              title: "Hero Heading",
+              type: "string",
+              initialValue: "Architectural & Structural Design",
+            },
+            {
+              name: "heroSubtitle",
+              title: "Hero Subtitle",
+              type: "string",
+              initialValue:
+                "Precision-engineered designs from concept to construction documentation.",
+            },
+          ],
+        },
+        {
+          name: "sculptor",
+          title: "The Sculptor",
+          type: "object",
+          fields: [
+            {
+              name: "heroHeading",
+              title: "Hero Heading",
+              type: "string",
+              initialValue: "The Sculptor",
+            },
+            {
+              name: "heroSubtitle",
+              title: "Hero Subtitle",
+              type: "string",
+              initialValue: "3D Design & Visualization",
+            },
+          ],
+        },
+        {
+          name: "realEstate",
+          title: "Real Estate",
+          type: "object",
+          fields: [
+            {
+              name: "heroHeading",
+              title: "Hero Heading",
+              type: "string",
+              initialValue: "Luxury Rentals",
+            },
+            {
+              name: "heroSubtitle",
+              title: "Hero Subtitle",
+              type: "string",
+              initialValue: "Curated living spaces in Kumasi.",
+            },
+          ],
+        },
+      ],
+    },
+
     // ── Footer ────────────────────────────────────────────────────────────────
     {
       name: "footerCopyright",

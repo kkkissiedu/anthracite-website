@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, forwardRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { type ServiceId } from "@/context/ServiceModalContext";
@@ -246,10 +247,12 @@ const ServiceCard = forwardRef<
   { service: ServiceItem; href: string }
 >(({ service, href }, ref) => {
   const { Icon, title, subtitle, description } = service;
+  const router = useRouter();
 
   return (
     <div
       ref={ref}
+      onClick={() => router.push(href)}
       className="
         group relative flex flex-col gap-6 p-8 md:p-10
         border border-cream/10
@@ -260,6 +263,7 @@ const ServiceCard = forwardRef<
         before:scale-[0.97] before:transition-all before:duration-500
         hover:before:opacity-100 hover:before:scale-100
         before:pointer-events-none
+        cursor-pointer
       "
     >
       {/* Icon */}
@@ -296,6 +300,7 @@ const ServiceCard = forwardRef<
       {/* CTA — Link navigates to sub-page */}
       <Link
         href={href}
+        onClick={(e) => e.stopPropagation()}
         className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
         style={{ fontFamily: "var(--font-body)" }}
         aria-label={`Explore ${title}`}

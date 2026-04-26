@@ -20,7 +20,17 @@ const QUERY = `*[_type == "project" && category == "architectural-structural"] |
   client, location, year, tools
 }`;
 
-export default function ArchitecturalStructuralPage() {
+const DEFAULT_HEADING = "Architectural & Structural Design";
+const DEFAULT_SUBTITLE =
+  "Precision-engineered designs from concept to construction documentation.";
+
+export default function ArchitecturalStructuralPage({
+  heroHeading,
+  heroSubtitle,
+}: {
+  heroHeading?: string;
+  heroSubtitle?: string;
+}) {
   const [projects, setProjects] = useState<SanityProject[]>([]);
   const [filter, setFilter] = useState<Filter>("All");
   const [loading, setLoading] = useState(true);
@@ -121,17 +131,14 @@ export default function ArchitecturalStructuralPage() {
             className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Architectural &amp; <br />
-            <span className="text-gold">Structural</span> Design
+            {heroHeading ?? DEFAULT_HEADING}
           </h1>
           <p
             data-hero
             className="mt-8 text-cream/55 max-w-2xl text-base leading-relaxed"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Precision-engineered structures informed by physics-based
-            simulations, BIM workflows, and real-world performance targets —
-            from concept to construction documentation.
+            {heroSubtitle ?? DEFAULT_SUBTITLE}
           </p>
 
           {/* Gold accent line */}

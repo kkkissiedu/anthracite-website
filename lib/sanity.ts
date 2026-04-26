@@ -62,9 +62,22 @@ export type SiteSettings = {
   // Footer
   footerCopyright: string;
   footerTagline: string | null;
+  // Sub-pages
+  pages?: {
+    architectural?: { heroHeading?: string; heroSubtitle?: string };
+    sculptor?: { heroHeading?: string; heroSubtitle?: string };
+    realEstate?: { heroHeading?: string; heroSubtitle?: string };
+  };
 };
 
-export const siteSettingsQuery = `*[_type == "siteSettings"][0]`;
+export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
+  ...,
+  pages {
+    architectural { heroHeading, heroSubtitle },
+    sculptor { heroHeading, heroSubtitle },
+    realEstate { heroHeading, heroSubtitle }
+  }
+}`;
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   return client.fetch(siteSettingsQuery);

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import SculptorPageClient from './PageClient';
+import { getSiteSettings } from '@/lib/sanity';
 
 export const metadata: Metadata = {
   title: 'The Sculptor — 3D Design Services | The Anthracite Limited',
@@ -15,6 +16,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SculptorPage() {
-  return <SculptorPageClient />;
+export default async function SculptorPage() {
+  const settings = await getSiteSettings();
+  return (
+    <SculptorPageClient
+      heroHeading={settings?.pages?.sculptor?.heroHeading}
+      heroSubtitle={settings?.pages?.sculptor?.heroSubtitle}
+    />
+  );
 }

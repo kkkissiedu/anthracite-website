@@ -19,7 +19,16 @@ const QUERY = `*[_type == "property" && available == true] | order(_createdAt de
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
-export default function RealEstatePage() {
+const DEFAULT_HEADING = "Luxury Rentals";
+const DEFAULT_SUBTITLE = "Curated living spaces in Kumasi.";
+
+export default function RealEstatePage({
+  heroHeading,
+  heroSubtitle,
+}: {
+  heroHeading?: string;
+  heroSubtitle?: string;
+}) {
   const [properties, setProperties] = useState<SanityProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeProperty, setActiveProperty] = useState<SanityProperty | null>(null);
@@ -108,8 +117,7 @@ export default function RealEstatePage() {
               className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Curated Living <br />
-              <span className="text-gold">Spaces</span>
+              {heroHeading ?? DEFAULT_HEADING}
             </h1>
 
             <p
@@ -117,8 +125,7 @@ export default function RealEstatePage() {
               className="mt-8 text-cream/55 max-w-2xl text-base leading-relaxed"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Hand-picked short-stay apartments and residences across Kumasi and
-              Ghana — designed for comfort, styled for discerning guests.
+              {heroSubtitle ?? DEFAULT_SUBTITLE}
             </p>
 
             <div data-hero className="mt-12 h-px w-24 bg-gold/50" />

@@ -24,7 +24,16 @@ const QUERY = `*[_type == "project" && category == "3d-design"] | order(order as
   client, location, year, tools
 }`;
 
-export default function SculptorPage() {
+const DEFAULT_HEADING = "The Sculptor";
+const DEFAULT_SUBTITLE = "3D Design & Visualization";
+
+export default function SculptorPage({
+  heroHeading,
+  heroSubtitle,
+}: {
+  heroHeading?: string;
+  heroSubtitle?: string;
+}) {
   const [projects, setProjects] = useState<SanityProject[]>([]);
   const [filter, setFilter] = useState<Filter>("All");
   const [loading, setLoading] = useState(true);
@@ -132,12 +141,10 @@ export default function SculptorPage() {
 
           <h1
             data-hero
-            className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[8.5rem] font-bold leading-none tracking-tight"
+            className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[8.5rem] font-bold leading-none tracking-tight text-cream"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            <span className="text-gold">The</span>
-            <br />
-            <span className="text-cream">Sculptor</span>
+            {heroHeading ?? DEFAULT_HEADING}
           </h1>
 
           <div data-hero className="mt-10 max-w-xl">
@@ -145,9 +152,7 @@ export default function SculptorPage() {
               className="text-cream/55 text-base leading-relaxed"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              High-fidelity 3D design, digital twins, and additive
-              manufacturing workflows — bridging the virtual and physical with
-              parametric precision.
+              {heroSubtitle ?? DEFAULT_SUBTITLE}
             </p>
           </div>
 

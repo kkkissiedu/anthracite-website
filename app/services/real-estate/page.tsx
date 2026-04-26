@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import RealEstatePageClient from './PageClient';
+import { getSiteSettings } from '@/lib/sanity';
 
 export const metadata: Metadata = {
   title: 'Real Estate & Construction | The Anthracite Limited',
@@ -15,6 +16,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RealEstatePage() {
-  return <RealEstatePageClient />;
+export default async function RealEstatePage() {
+  const settings = await getSiteSettings();
+  return (
+    <RealEstatePageClient
+      heroHeading={settings?.pages?.realEstate?.heroHeading}
+      heroSubtitle={settings?.pages?.realEstate?.heroSubtitle}
+    />
+  );
 }

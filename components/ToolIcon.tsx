@@ -28,7 +28,7 @@ export default function ToolIcon({ tool }: { tool: string }) {
   return (
     <div
       title={meta.label}
-      className="relative group/tip w-10 h-10 p-2 rounded-lg bg-white/5 border border-white/10 hover:border-gold/40 transition-colors duration-200 flex items-center justify-center cursor-default"
+      className="relative group/tip w-8 h-8 p-1.5 rounded-md bg-white/5 border border-white/10 hover:border-gold/40 transition-colors duration-200 flex items-center justify-center cursor-default"
     >
       <Image
         src={`/icons/tools/${meta.file}`}
