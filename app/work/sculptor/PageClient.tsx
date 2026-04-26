@@ -29,6 +29,7 @@ export default function SculptorPage() {
   const [filter, setFilter] = useState<Filter>("All");
   const [loading, setLoading] = useState(true);
   const { openModal } = useProjectModal();
+  const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const ctxRef = useRef<gsap.Context | null>(null);
 
@@ -38,6 +39,27 @@ export default function SculptorPage() {
       .then((data) => setProjects(data ?? []))
       .catch(() => setProjects([]))
       .finally(() => setLoading(false));
+  }, []);
+
+  // Hero entrance animation
+  useEffect(() => {
+    if (!heroRef.current) return;
+    const ctx = gsap.context(() => {
+      const els = heroRef.current!.querySelectorAll<HTMLElement>("[data-hero]");
+      gsap.fromTo(
+        Array.from(els),
+        { y: 32, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.14,
+          delay: 0.15,
+        }
+      );
+    }, heroRef);
+    return () => ctx.revert();
   }, []);
 
   const filtered =
@@ -99,8 +121,9 @@ export default function SculptorPage() {
           }}
         />
 
-        <div className="relative max-w-[1280px] mx-auto">
+        <div ref={heroRef} className="relative max-w-[1280px] mx-auto">
           <p
+            data-hero
             className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
@@ -108,6 +131,7 @@ export default function SculptorPage() {
           </p>
 
           <h1
+            data-hero
             className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[8.5rem] font-bold leading-none tracking-tight"
             style={{ fontFamily: "var(--font-heading)" }}
           >
@@ -116,7 +140,7 @@ export default function SculptorPage() {
             <span className="text-cream">Sculptor</span>
           </h1>
 
-          <div className="mt-10 max-w-xl">
+          <div data-hero className="mt-10 max-w-xl">
             <p
               className="text-cream/55 text-base leading-relaxed"
               style={{ fontFamily: "var(--font-body)" }}
@@ -128,7 +152,7 @@ export default function SculptorPage() {
           </div>
 
           {/* Decorative element */}
-          <div className="mt-14 flex items-center gap-4">
+          <div data-hero className="mt-14 flex items-center gap-4">
             <div className="h-px w-12 bg-gold/60" />
             <span
               className="text-gold/60 text-[10px] tracking-[0.3em] uppercase"

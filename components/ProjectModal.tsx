@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   useCallback,
+  startTransition,
   Suspense,
   Component,
   type ReactNode,
@@ -348,7 +349,7 @@ export default function ProjectModal() {
   useEffect(() => {
     if (!activeProject) return;
     const first = getTabs(activeProject)[0];
-    if (first) setActiveTab(first);
+    if (first) startTransition(() => setActiveTab(first));
   }, [activeProject]);
 
   // GSAP open animation + body scroll lock

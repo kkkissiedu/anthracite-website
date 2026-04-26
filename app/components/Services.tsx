@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useRef, forwardRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useServiceModal, type ServiceId } from "@/context/ServiceModalContext";
+import { type ServiceId } from "@/context/ServiceModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,6 +87,12 @@ function RealEstateIcon() {
   );
 }
 
+const SERVICE_HREFS: Record<ServiceId, string> = {
+  "architectural-structural": "/work/architectural-structural",
+  "sculptor": "/work/sculptor",
+  "real-estate": "/services/real-estate",
+};
+
 export default function Services({
   servicesLabel = "What We Do",
   servicesHeading = "Our Services",
@@ -100,7 +107,6 @@ export default function Services({
   serviceThreeSubtitle = null,
   serviceThreeDescription = "End-to-end real estate development and construction management, anchored by our flagship 3D-printed Green Building estate — built for durability, sustainability, and scale.",
 }: ServicesProps) {
-  const { openServiceModal } = useServiceModal();
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const h2LineRef = useRef<HTMLDivElement>(null);
@@ -214,7 +220,7 @@ export default function Services({
             <ServiceCard
               key={service.id}
               service={service}
-              onExplore={() => openServiceModal(service.id)}
+              href={SERVICE_HREFS[service.id]}
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
@@ -237,18 +243,13 @@ type ServiceItem = {
 
 const ServiceCard = forwardRef<
   HTMLDivElement,
-  { service: ServiceItem; onExplore: () => void }
->(({ service, onExplore }, ref) => {
+  { service: ServiceItem; href: string }
+>(({ service, href }, ref) => {
   const { Icon, title, subtitle, description } = service;
 
   return (
     <div
       ref={ref}
-      onClick={onExplore}
-      role="button"
-      tabIndex={0}
-      aria-label={`Explore ${title}`}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onExplore(); } }}
       className="
         group relative flex flex-col gap-6 p-8 md:p-10
         border border-cream/10
@@ -259,8 +260,6 @@ const ServiceCard = forwardRef<
         before:scale-[0.97] before:transition-all before:duration-500
         hover:before:opacity-100 hover:before:scale-100
         before:pointer-events-none
-        cursor-pointer
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D0D0D]
       "
     >
       {/* Icon */}
@@ -294,14 +293,15 @@ const ServiceCard = forwardRef<
         {description}
       </p>
 
-      {/* CTA */}
-      <button
-        onClick={(e) => { e.stopPropagation(); onExplore(); }}
+      {/* CTA — Link navigates to sub-page */}
+      <Link
+        href={href}
         className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
         style={{ fontFamily: "var(--font-body)" }}
+        aria-label={`Explore ${title}`}
       >
         Explore →
-      </button>
+      </Link>
 
       {/* Bottom gold accent line */}
       <div

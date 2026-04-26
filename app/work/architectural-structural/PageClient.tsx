@@ -25,6 +25,7 @@ export default function ArchitecturalStructuralPage() {
   const [filter, setFilter] = useState<Filter>("All");
   const [loading, setLoading] = useState(true);
   const { openModal } = useProjectModal();
+  const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const ctxRef = useRef<gsap.Context | null>(null);
 
@@ -34,6 +35,27 @@ export default function ArchitecturalStructuralPage() {
       .then((data) => setProjects(data ?? []))
       .catch(() => setProjects([]))
       .finally(() => setLoading(false));
+  }, []);
+
+  // Hero entrance animation
+  useEffect(() => {
+    if (!heroRef.current) return;
+    const ctx = gsap.context(() => {
+      const els = heroRef.current!.querySelectorAll<HTMLElement>("[data-hero]");
+      gsap.fromTo(
+        Array.from(els),
+        { y: 32, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.14,
+          delay: 0.15,
+        }
+      );
+    }, heroRef);
+    return () => ctx.revert();
   }, []);
 
   const filtered =
@@ -86,21 +108,24 @@ export default function ArchitecturalStructuralPage() {
       <main>
       {/* Hero */}
       <section className="bg-anthracite text-cream pt-36 pb-20 px-6 md:px-8 lg:px-16">
-        <div className="max-w-[1280px] mx-auto">
+        <div ref={heroRef} className="max-w-[1280px] mx-auto">
           <p
+            data-hero
             className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
             style={{ fontFamily: "var(--font-body)" }}
           >
             Our Work
           </p>
           <h1
+            data-hero
             className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             Architectural &amp; <br />
-            <span className="text-gold">Structural</span> Work
+            <span className="text-gold">Structural</span> Design
           </h1>
           <p
+            data-hero
             className="mt-8 text-cream/55 max-w-2xl text-base leading-relaxed"
             style={{ fontFamily: "var(--font-body)" }}
           >
@@ -110,7 +135,7 @@ export default function ArchitecturalStructuralPage() {
           </p>
 
           {/* Gold accent line */}
-          <div className="mt-12 h-px w-24 bg-gold/50" />
+          <div data-hero className="mt-12 h-px w-24 bg-gold/50" />
         </div>
       </section>
 

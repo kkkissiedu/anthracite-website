@@ -119,3 +119,34 @@ export async function getTeamMembers(): Promise<RawTeamMember[]> {
     { next: { revalidate: 60 } }
   );
 }
+
+export type SanityProperty = {
+  _id: string;
+  title: string;
+  slug?: { current: string };
+  description?: string;
+  shortDescription?: string;
+  images?: unknown[];
+  videoUrl?: string;
+  panoramaUrl?: string;
+  location?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  pricePerNight?: number;
+  available?: boolean;
+  amenities?: string[];
+  whatsappNumber?: string;
+  phoneNumber?: string;
+};
+
+export async function getProperties(): Promise<SanityProperty[]> {
+  return client.fetch(
+    `*[_type == "property" && available == true] | order(_createdAt desc) {
+      _id, title, slug, description, shortDescription, images,
+      videoUrl, panoramaUrl, location, bedrooms, bathrooms,
+      pricePerNight, available, amenities, whatsappNumber, phoneNumber
+    }`,
+    {},
+    { next: { revalidate: 60 } }
+  );
+}
