@@ -21,14 +21,15 @@ const TOOL_META: Record<string, { label: string; file: string }> = {
   'ms-project':        { label: 'MS Project',        file: 'ms-project.png' },
 };
 
-export default function ToolIcon({ tool }: { tool: string }) {
+export default function ToolIcon({ tool, size = 32 }: { tool: string; size?: number }) {
   const meta = TOOL_META[tool];
   if (!meta) return null;
 
   return (
     <div
       title={meta.label}
-      className="relative group/tip w-8 h-8 p-1.5 rounded-md bg-white/5 border border-white/10 hover:border-gold/40 transition-colors duration-200 flex items-center justify-center cursor-default"
+      style={{ width: size, height: size }}
+      className="relative group/tip p-1 rounded-md bg-white/5 border border-white/10 hover:border-gold/40 transition-colors duration-200 flex items-center justify-center cursor-default shrink-0"
     >
       <Image
         src={`/icons/tools/${meta.file}`}
