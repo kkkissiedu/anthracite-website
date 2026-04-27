@@ -420,14 +420,12 @@ function PropertyModal({
       init();
     } else {
       const script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js";
+      script.src = "/pannellum/pannellum.js";
       script.onload = init;
       document.head.appendChild(script);
       const link = document.createElement("link");
       link.rel = "stylesheet";
-      link.href =
-        "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css";
+      link.href = "/pannellum/pannellum.css";
       document.head.appendChild(link);
     }
 

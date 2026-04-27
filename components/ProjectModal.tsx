@@ -287,15 +287,13 @@ function PanoramaTab({ panorama }: { panorama: SanityImageSource[] }) {
         const link = document.createElement("link");
         link.id = "pannellum-css";
         link.rel = "stylesheet";
-        link.href =
-          "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css";
+        link.href = "/pannellum/pannellum.css";
         document.head.appendChild(link);
       }
       if (!document.getElementById("pannellum-js")) {
         const script = document.createElement("script");
         script.id = "pannellum-js";
-        script.src =
-          "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js";
+        script.src = "/pannellum/pannellum.js";
         script.onload = initViewer;
         document.head.appendChild(script);
       } else {

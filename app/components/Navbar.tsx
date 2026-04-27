@@ -4,24 +4,51 @@ import { useEffect, useState } from "react";
 import { useBodyScrollLock } from "@/app/hooks/useBodyScrollLock";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { label: "About", href: "/#about" },
-  { label: "Services", href: "/#services" },
-  { label: "Projects", href: "/#projects" },
-  { label: "Team", href: "/#team" },
-  { label: "Contact", href: "/#contact" },
+  { label: "About", href: "/#about", section: "about" },
+  { label: "Services", href: "/#services", section: "services" },
+  { label: "Projects", href: "/#projects", section: "projects" },
+  { label: "Team", href: "/#team", section: "team" },
+  { label: "Contact", href: "/#contact", section: "contact" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (pathname !== "/") {
+      setActiveSection(null);
+      return;
+    }
+    const sectionIds = NAV_LINKS.map((l) => l.section);
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
+        },
+        { threshold: 0.3 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach((obs) => obs.disconnect());
+  }, [pathname]);
 
   useBodyScrollLock(menuOpen);
 
@@ -55,17 +82,26 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <ul className="hidden md:flex items-center gap-12 ml-auto">
-            {NAV_LINKS.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  className="relative text-cream/80 hover:text-cream text-sm tracking-widest uppercase transition-colors duration-300 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite rounded-sm pb-1"
-                >
-                  {link.label}
-                  <span className="absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
-                </a>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = activeSection === link.section;
+              return (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className={`relative text-sm tracking-widest uppercase transition-colors duration-300 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite rounded-sm pb-1 ${
+                      isActive ? "text-gold" : "text-cream/80 hover:text-cream"
+                    }`}
+                  >
+                    {link.label}
+                    <span
+                      className={`absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-gold origin-left transition-transform duration-300 ease-out ${
+                        isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
+                  </a>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Hamburger */}
@@ -104,28 +140,33 @@ export default function Navbar() {
         aria-hidden={!menuOpen}
       >
         <ul className="flex flex-col items-center gap-10">
-          {NAV_LINKS.map((link, i) => (
-            <li
-              key={link.label}
-              style={{
-                transitionDelay: menuOpen ? `${i * 60}ms` : "0ms",
-              }}
-              className={`transition-all duration-400 ${
-                menuOpen
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
-              }`}
-            >
-              <a
-                href={link.href}
-                onClick={handleLinkClick}
-                tabIndex={menuOpen ? 0 : -1}
-                className="text-4xl font-heading text-cream hover:text-gold transition-colors duration-300 tracking-widest uppercase focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+          {NAV_LINKS.map((link, i) => {
+            const isActive = activeSection === link.section;
+            return (
+              <li
+                key={link.label}
+                style={{
+                  transitionDelay: menuOpen ? `${i * 60}ms` : "0ms",
+                }}
+                className={`transition-all duration-400 ${
+                  menuOpen
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                }`}
               >
-                {link.label}
-              </a>
-            </li>
-          ))}
+                <a
+                  href={link.href}
+                  onClick={handleLinkClick}
+                  tabIndex={menuOpen ? 0 : -1}
+                  className={`text-4xl font-heading transition-colors duration-300 tracking-widest uppercase focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm ${
+                    isActive ? "text-gold" : "text-cream hover:text-gold"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
         <div
           className={`mt-16 h-px w-16 bg-gold transition-all duration-700 delay-300 ${
