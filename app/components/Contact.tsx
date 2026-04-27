@@ -11,6 +11,7 @@ type FormState = {
   email: string;
   subject: string;
   message: string;
+  website: string;
 };
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
@@ -74,6 +75,7 @@ export default function Contact({
     email: "",
     subject: "",
     message: "",
+    website: "",
   });
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -136,7 +138,7 @@ export default function Contact({
       }
 
       setStatus("success");
-      setForm({ name: "", email: "", subject: "", message: "" });
+      setForm({ name: "", email: "", subject: "", message: "", website: "" });
     } catch (err) {
       setStatus("error");
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
@@ -291,6 +293,16 @@ export default function Contact({
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={handleChange}
+                  autoComplete="off"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0 }}
+                />
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label
