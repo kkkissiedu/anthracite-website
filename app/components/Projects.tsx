@@ -2,7 +2,6 @@
 
 import { useMemo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { urlFor } from "@/lib/sanity";
@@ -160,7 +159,12 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                     onClick={() => openModal(project)}
                     role="button"
                     tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && openModal(project)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openModal(project);
+                      }
+                    }}
                     aria-label={`Open ${project.title}`}
                   >
                     <div className="relative w-full aspect-[3/4]">
@@ -185,14 +189,13 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                           <h3 className="text-2xl font-bold text-cream leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
                             {project.title}
                           </h3>
-                          <Link
-                            href={CATEGORY_HREFS[cat] ?? "/"}
-                            onClick={(e) => e.stopPropagation()}
-                            className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+                          <span
+                            className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase"
                             style={{ fontFamily: "var(--font-body)" }}
+                            aria-hidden="true"
                           >
-                            VIEW ALL PROJECTS →
-                          </Link>
+                            VIEW DETAILS →
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -247,7 +250,12 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                     onClick={() => openModal(project)}
                     role="button"
                     tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && openModal(project)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openModal(project);
+                      }
+                    }}
                     aria-label={`Open ${project.title}`}
                   >
                     <div className="relative w-full aspect-[3/4]">
@@ -281,14 +289,13 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                           >
                             {project.title}
                           </h3>
-                          <Link
-                            href={CATEGORY_HREFS[cat] ?? "/"}
-                            onClick={(e) => e.stopPropagation()}
-                            className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+                          <span
+                            className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase"
                             style={{ fontFamily: "var(--font-body)" }}
+                            aria-hidden="true"
                           >
-                            VIEW ALL PROJECTS →
-                          </Link>
+                            VIEW DETAILS →
+                          </span>
                         </div>
                       </div>
                     </div>

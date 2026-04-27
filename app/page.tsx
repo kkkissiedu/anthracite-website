@@ -21,7 +21,7 @@ export default async function Home() {
   return (
     <>
       <Navbar />
-      <main>
+      <main id="main-content">
         <Hero
           heroTagline={settings?.heroTagline}
           heroGoldWord={settings?.heroGoldWord}

@@ -106,7 +106,7 @@ export default function ArchitecturalStructuralPage({
     <>
       <Navbar />
 
-      <main>
+      <main id="main-content">
       {/* Hero */}
       <section className="bg-anthracite text-cream pt-36 pb-20 px-6 md:px-8 lg:px-16">
         <div ref={heroRef} className="max-w-[1280px] mx-auto">
@@ -146,6 +146,7 @@ export default function ArchitecturalStructuralPage({
               <button
                 key={f}
                 onClick={() => setFilter(f)}
+                aria-pressed={filter === f}
                 className={`px-5 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-300 border ${
                   filter === f
                     ? "bg-gold text-anthracite border-gold font-semibold"

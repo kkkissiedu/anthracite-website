@@ -108,7 +108,7 @@ export default function SculptorPage({
     <>
       <Navbar />
 
-      <main>
+      <main id="main-content">
       {/* Hero — dramatic dark */}
       <section className="relative bg-anthracite text-cream pt-36 pb-24 px-6 md:px-8 lg:px-16 overflow-hidden">
         {/* Background grid decoration */}
@@ -169,6 +169,7 @@ export default function SculptorPage({
               <button
                 key={value}
                 onClick={() => setFilter(value)}
+                aria-pressed={filter === value}
                 className={`px-5 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-300 border ${
                   filter === value
                     ? "bg-gold text-anthracite border-gold font-semibold"

@@ -54,7 +54,7 @@ export default function Footer({
       <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 pt-16 pb-10">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
+          <Link href="/" className="flex-shrink-0" aria-label="The Anthracite Limited — return to homepage">
             <Image
               src="/logo-dark.svg"
               alt="The Anthracite Limited"
@@ -72,7 +72,7 @@ export default function Footer({
                 <li key={label}>
                   <a
                     href={href}
-                    className="text-cream/40 hover:text-gold transition-colors duration-300 text-xs tracking-widest uppercase focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+                    className="text-[#F5F0E8]/60 hover:text-gold transition-colors duration-300 text-xs tracking-widest uppercase focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
                     style={{ fontFamily: "var(--font-body)" }}
                   >
                     {label}
@@ -91,7 +91,7 @@ export default function Footer({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="text-cream/30 hover:text-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+                className="text-[#F5F0E8]/60 hover:text-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
               >
                 {icon}
               </a>
@@ -108,14 +108,14 @@ export default function Footer({
       {/* Bottom bar */}
       <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p
-          className="text-cream/30 text-xs"
+          className="text-[#F5F0E8]/60 text-xs"
           style={{ fontFamily: "var(--font-body)" }}
         >
           {footerCopyright}
         </p>
         {footerTagline && (
           <p
-            className="text-cream/20 text-xs"
+            className="text-[#F5F0E8]/60 text-xs"
             style={{ fontFamily: "var(--font-body)" }}
           >
             {footerTagline}

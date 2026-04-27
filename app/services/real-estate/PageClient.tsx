@@ -92,7 +92,7 @@ export default function RealEstatePage({
     <>
       <Navbar />
 
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <section className="bg-anthracite text-cream pt-36 pb-20 px-6 md:px-8 lg:px-16">
           <div ref={heroRef} className="max-w-[1280px] mx-auto">
