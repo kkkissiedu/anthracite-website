@@ -55,6 +55,7 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
   ({ member }, ref) => (
     <div
       ref={ref}
+      data-gsap="true"
       className="group flex flex-col border border-dark-text/10 overflow-hidden"
     >
       {/* Photo */}
@@ -155,6 +156,8 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
   );
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         h2LineRef.current,
@@ -175,6 +178,8 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
 
   useEffect(() => {
     if (!members.length) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       const cards = cardRefs.current.filter(Boolean);
       if (!cards.length) return;

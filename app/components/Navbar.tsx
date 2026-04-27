@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useBodyScrollLock } from "@/app/hooks/useBodyScrollLock";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,12 +23,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
+  useBodyScrollLock(menuOpen);
 
   const handleLinkClick = () => setMenuOpen(false);
 

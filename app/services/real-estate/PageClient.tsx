@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useBodyScrollLock } from "@/app/hooks/useBodyScrollLock";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -35,6 +36,8 @@ export default function RealEstatePage({
   // Hero entrance animation
   useEffect(() => {
     if (!heroRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       const els = heroRef.current!.querySelectorAll<HTMLElement>("[data-hero]");
       gsap.fromTo(
@@ -56,6 +59,8 @@ export default function RealEstatePage({
   // Grid cards scroll animation
   useEffect(() => {
     if (!gridRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     ctxRef.current?.revert();
     const cards = gridRef.current.querySelectorAll<HTMLElement>(".prop-card");
     if (!cards.length) return;
@@ -408,12 +413,7 @@ function PropertyModal({
   }, []);
 
   // Body scroll lock
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
+  useBodyScrollLock(true);
 
   // Keyboard navigation
   useEffect(() => {

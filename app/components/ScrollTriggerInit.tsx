@@ -8,8 +8,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ScrollTriggerInit() {
   useEffect(() => {
-    const id = setTimeout(() => ScrollTrigger.refresh(), 300);
-    return () => clearTimeout(id);
+    document.fonts.ready.then(() => {
+      ScrollTrigger.refresh();
+    });
   }, []);
 
   return null;

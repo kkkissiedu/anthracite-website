@@ -40,6 +40,8 @@ export default function SculptorPage({
   // Hero entrance animation
   useEffect(() => {
     if (!heroRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       const els = heroRef.current!.querySelectorAll<HTMLElement>("[data-hero]");
       gsap.fromTo(
@@ -65,6 +67,8 @@ export default function SculptorPage({
 
   useEffect(() => {
     if (!gridRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     ctxRef.current?.revert();
 
     const cards = gridRef.current.querySelectorAll<HTMLElement>(".sculpt-card");

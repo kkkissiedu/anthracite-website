@@ -92,6 +92,8 @@ export default function Contact({
 
   useEffect(() => {
     if (!h2Line1Ref.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       gsap.from(
         [h2Line1Ref.current, h2Line2Ref.current].filter(Boolean),
@@ -169,14 +171,14 @@ export default function Contact({
           >
             {headingLine1 && (
               <div className="overflow-hidden">
-                <div ref={h2Line1Ref}>
+                <div ref={h2Line1Ref} data-gsap="true">
                   {headingLine1}
                 </div>
               </div>
             )}
             {headingLine2 && (
               <div className="overflow-hidden">
-                <div ref={h2Line2Ref}>
+                <div ref={h2Line2Ref} data-gsap="true">
                   {goldInLine2 ? (
                     <>
                       {headingLine2.slice(0, headingLine2.indexOf(contactHeadingGoldWord))}

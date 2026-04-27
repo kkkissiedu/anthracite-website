@@ -66,6 +66,8 @@ export default function About({
 
   useEffect(() => {
     if (!h2Line1Ref.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       gsap.from(
         [h2Line1Ref.current, h2Line2Ref.current].filter(Boolean),
@@ -174,14 +176,14 @@ export default function About({
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <div className="overflow-hidden">
-                <div ref={h2Line1Ref}>
+                <div ref={h2Line1Ref} data-gsap="true">
                   {line1Before}
                   {line1Gold && <span className="text-gold-heading">{line1Gold}</span>}
                 </div>
               </div>
               {line2 && (
                 <div className="overflow-hidden">
-                  <div ref={h2Line2Ref}>
+                  <div ref={h2Line2Ref} data-gsap="true">
                     {line2}
                   </div>
                 </div>
@@ -190,7 +192,7 @@ export default function About({
           </div>
 
           {/* Right — mission paragraph */}
-          <div ref={rightRef}>
+          <div ref={rightRef} data-gsap="true">
             <p
               className="text-dark-text/75 text-base md:text-lg leading-relaxed"
               style={{ fontFamily: "var(--font-body)" }}
@@ -203,6 +205,7 @@ export default function About({
         {/* Gold horizontal divider */}
         <div
           ref={dividerRef}
+          data-gsap="true"
           className="h-px gold-gradient-line mb-12 origin-left"
           aria-hidden
         />
@@ -210,6 +213,7 @@ export default function About({
         {/* Counters */}
         <div
           ref={statsRowRef}
+          data-gsap="true"
           className="grid grid-cols-3 gap-6 md:gap-12"
         >
           {stats.map((stat, i) => (

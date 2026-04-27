@@ -141,6 +141,8 @@ export default function Services({
 
   useEffect(() => {
     if (!h2LineRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       gsap.from(h2LineRef.current, {
         opacity: 0,
@@ -207,6 +209,7 @@ export default function Services({
           <div className="overflow-hidden">
             <h2
               ref={h2LineRef}
+              data-gsap="true"
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream max-w-xl"
               style={{ fontFamily: "var(--font-heading)" }}
             >
@@ -252,6 +255,7 @@ const ServiceCard = forwardRef<
   return (
     <div
       ref={ref}
+      data-gsap="true"
       onClick={() => router.push(href)}
       className="
         group relative flex flex-col gap-6 p-8 md:p-10
@@ -274,7 +278,7 @@ const ServiceCard = forwardRef<
       {/* Title */}
       <div>
         <h3
-          className="text-xl md:text-2xl font-semibold text-cream leading-snug mb-1"
+          className="text-xl md:text-2xl font-bold text-cream leading-snug mb-1"
           style={{ fontFamily: "var(--font-heading)" }}
         >
           {title}

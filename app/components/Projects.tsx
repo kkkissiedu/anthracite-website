@@ -62,6 +62,8 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   }, [projects]);
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       // h2 reveal
       gsap.fromTo(
@@ -83,6 +85,8 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
 
   useEffect(() => {
     if (!featured.length) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       const cardEls = gridRef.current?.querySelectorAll<HTMLElement>(".fw-card");
       if (!cardEls?.length) return;
@@ -151,6 +155,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                   : null;
                 return (
                   <div
+                    data-gsap="true"
                     className="fw-card group relative overflow-hidden cursor-pointer w-full"
                     onClick={() => openModal(project)}
                     role="button"
@@ -237,6 +242,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                 return (
                   <div
                     key={project._id}
+                    data-gsap="true"
                     className="fw-card group relative overflow-hidden cursor-pointer"
                     onClick={() => openModal(project)}
                     role="button"

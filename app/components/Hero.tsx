@@ -28,6 +28,8 @@ export default function Hero({
   const lineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
@@ -67,21 +69,28 @@ export default function Hero({
       ref={containerRef}
       className="relative min-h-screen flex flex-col items-center justify-center bg-anthracite overflow-hidden"
     >
-      {/* Video background */}
+      {/* Desktop only — hide video on mobile to save 3MB on cellular */}
       <video
+        className="hidden md:block absolute inset-0 w-full h-full object-cover z-[0] pointer-events-none"
         autoPlay
         muted
         loop
         playsInline
-        preload="metadata"
         poster="/hero-poster.jpg"
         aria-hidden
-        className="absolute inset-0 w-full h-full object-cover z-[0] pointer-events-none"
         style={{ filter: 'brightness(0.45) saturate(1.2) sepia(0.3) hue-rotate(5deg)' }}
       >
         <source src="/hero.webm" type="video/webm" />
-        <source src="/hero.mp4" type="video/mp4" />
       </video>
+      {/* Mobile only — static poster image */}
+      <div
+        className="md:hidden absolute inset-0 w-full h-full bg-cover bg-center z-[0]"
+        style={{
+          backgroundImage: "url('/hero-poster.jpg')",
+          filter: 'brightness(0.45) saturate(1.2) sepia(0.3) hue-rotate(5deg)',
+        }}
+        aria-hidden
+      />
 
       {/* Dark overlay for legibility */}
       <div className="absolute inset-0 bg-black/60 z-[2]" aria-hidden />
@@ -118,6 +127,7 @@ export default function Hero({
                 ref={(el) => {
                   wordRefs.current[i] = el;
                 }}
+                data-gsap="true"
                 className={`inline-block ${
                   i === goldIndex ? "text-gold" : "text-cream"
                 }`}
@@ -132,6 +142,7 @@ export default function Hero({
         {/* Subheading */}
         <p
           ref={subRef}
+          data-gsap="true"
           className="text-cream/60 text-base md:text-lg lg:text-xl max-w-[600px] mx-auto text-center leading-relaxed mt-6 mb-10 font-body"
           style={{ fontFamily: "var(--font-body)" }}
         >
@@ -141,6 +152,7 @@ export default function Hero({
         {/* CTAs */}
         <div
           ref={ctaRef}
+          data-gsap="true"
           className="flex flex-col sm:flex-row gap-4 items-center justify-center"
         >
           <a
@@ -178,6 +190,7 @@ export default function Hero({
       >
         <div
           ref={lineRef}
+          data-gsap="true"
           className="h-px w-full gold-gradient-line origin-left"
         />
       </div>

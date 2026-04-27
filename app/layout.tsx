@@ -10,8 +10,7 @@ import ScrollTriggerInit from "@/app/components/ScrollTriggerInit";
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
