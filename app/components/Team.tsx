@@ -41,10 +41,7 @@ function AvatarPlaceholder({ name }: { name: string }) {
 
   return (
     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1c1c1c] to-[#2e2e2e]">
-      <span
-        className="text-5xl font-bold text-gold/50"
-        style={{ fontFamily: "var(--font-heading)" }}
-      >
+      <span className="text-5xl font-bold text-gold/50 font-heading">
         {initials}
       </span>
     </div>
@@ -76,26 +73,17 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
       {/* Info */}
       <div className="flex flex-col gap-4 p-8">
         <div>
-          <h3
-            className="text-2xl md:text-3xl font-bold text-dark-text leading-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
+          <h3 className="text-2xl md:text-3xl font-bold text-dark-text leading-tight">
             {member.name}
           </h3>
-          <p
-            className="text-gold-dark text-[10px] tracking-[0.25em] uppercase mt-1.5"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-gold-dark text-[10px] tracking-[0.25em] uppercase mt-1.5">
             {member.role}
           </p>
         </div>
 
         <div className="h-px bg-dark-text/10" />
 
-        <p
-          className="text-dark-text/60 text-sm leading-relaxed"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
+        <p className="text-dark-text/60 text-sm leading-relaxed">
           {member.bio}
         </p>
 
@@ -105,7 +93,6 @@ const MemberCard = forwardRef<HTMLDivElement, { member: TeamMember }>(
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-gold-dark hover:text-gold-heading transition-colors text-[10px] tracking-[0.2em] uppercase w-fit mt-auto pt-2"
-            style={{ fontFamily: "var(--font-body)" }}
             aria-label={`${member.name} on LinkedIn`}
           >
             <LinkedInIcon />
@@ -122,10 +109,7 @@ function EmptyState() {
   return (
     <div className="flex items-center justify-center py-24">
       <div className="border border-gold px-12 py-8 text-center">
-        <p
-          className="text-gold-dark text-sm tracking-[0.2em] uppercase"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
+        <p className="text-gold-dark text-sm tracking-[0.2em] uppercase">
           Content coming soon
         </p>
       </div>
@@ -146,9 +130,7 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
         role: m.role,
         bio: m.bio,
         photo: m.photo
-          ? urlFor(m.photo as Parameters<typeof urlFor>[0])
-              .width(700)
-              .url()
+          ? urlFor(m.photo).width(700).url()
           : null,
         linkedinUrl: m.linkedinUrl,
       })),
@@ -215,17 +197,13 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
       <div className="max-w-[1280px] mx-auto">
         {/* Header */}
         <div className="mb-12">
-          <p
-            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold-dark mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold-dark mb-4">
             The People
           </p>
           <div className="overflow-hidden">
             <h2
               ref={h2LineRef}
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-text"
-              style={{ fontFamily: "var(--font-heading)" }}
             >
               Meet the <span className="text-gold-heading">Team</span>
             </h2>

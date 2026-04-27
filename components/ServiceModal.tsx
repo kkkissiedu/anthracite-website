@@ -179,10 +179,7 @@ export default function ServiceModal({
         </button>
 
         {/* Heading */}
-        <h2
-          className="text-2xl sm:text-3xl font-bold text-cream mb-6 leading-tight pr-8"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
+        <h2 className="text-2xl sm:text-3xl font-bold text-cream mb-6 leading-tight pr-8">
           {content.heading}
         </h2>
 
@@ -190,19 +187,13 @@ export default function ServiceModal({
         <div className="h-px w-12 bg-gold mb-6" />
 
         {/* Description */}
-        <p
-          className="text-cream/70 text-sm leading-relaxed mb-8"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
+        <p className="text-cream/70 text-sm leading-relaxed mb-8">
           {content.description}
         </p>
 
         {/* Services list */}
         <div className="mb-8">
-          <p
-            className="text-gold text-xs tracking-[0.25em] uppercase mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-gold text-xs tracking-[0.25em] uppercase mb-4">
             Services
           </p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -210,7 +201,6 @@ export default function ServiceModal({
               <li
                 key={s}
                 className="flex items-center gap-2 text-cream/60 text-sm"
-                style={{ fontFamily: "var(--font-body)" }}
               >
                 <span className="w-1 h-1 rounded-full bg-gold flex-shrink-0" />
                 {s}
@@ -224,7 +214,6 @@ export default function ServiceModal({
           href={content.ctaHref}
           onClick={handleClose}
           className="inline-block border border-gold text-gold px-6 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-anthracite focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-          style={{ fontFamily: "var(--font-body)" }}
         >
           {content.ctaLabel}
         </Link>

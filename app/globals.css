@@ -105,3 +105,9 @@ h6 {
   line-height: 1;
   display: block;
 }
+
+@media (max-width: 767px) {
+  .section-number::before {
+    display: none;
+  }
+}

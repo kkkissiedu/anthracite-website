@@ -30,10 +30,7 @@ function EmptyState() {
   return (
     <div className="flex items-center justify-center py-24">
       <div className="border border-gold px-12 py-8 text-center">
-        <p
-          className="text-gold text-sm tracking-[0.2em] uppercase"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
+        <p className="text-gold text-sm tracking-[0.2em] uppercase">
           Content coming soon
         </p>
       </div>
@@ -122,17 +119,13 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
       <div className="max-w-[1280px] mx-auto">
         {/* Header */}
         <div className="mb-12">
-          <p
-            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4">
             Featured Projects
           </p>
           <div className="overflow-hidden">
             <h2
               ref={h2LineRef}
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
-              style={{ fontFamily: "var(--font-heading)" }}
             >
               All Featured <span className="text-gold">Projects</span>
             </h2>
@@ -150,7 +143,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                 const project = featured[currentIndex];
                 const cat = project.category as Category;
                 const imgSrc = project.mainImage
-                  ? urlFor(project.mainImage as Parameters<typeof urlFor>[0]).width(800).url()
+                  ? urlFor(project.mainImage).width(800).url()
                   : null;
                 return (
                   <div
@@ -183,15 +176,14 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                       {/* Mobile overlay: always visible at reduced opacity so image shows through */}
                       <div className="absolute inset-x-0 bottom-0 bg-black/50">
                         <div className="p-6 flex flex-col gap-3">
-                          <span className="text-gold text-[10px] tracking-[0.25em] uppercase" style={{ fontFamily: "var(--font-body)" }}>
+                          <span className="text-gold text-[10px] tracking-[0.25em] uppercase">
                             {CATEGORY_LABELS[cat] ?? cat}
                           </span>
-                          <h3 className="text-2xl font-bold text-cream leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                          <h3 className="text-2xl font-bold text-cream leading-tight">
                             {project.title}
                           </h3>
                           <span
                             className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase"
-                            style={{ fontFamily: "var(--font-body)" }}
                             aria-hidden="true"
                           >
                             VIEW DETAILS →
@@ -235,11 +227,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
               {featured.map((project) => {
                 const cat = project.category as Category;
                 const imgSrc = project.mainImage
-                  ? urlFor(
-                      project.mainImage as Parameters<typeof urlFor>[0]
-                    )
-                      .width(1200)
-                      .url()
+                  ? urlFor(project.mainImage).width(1200).url()
                   : null;
 
                 return (
@@ -277,21 +265,14 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                       {/* ADM-style slide-up overlay */}
                       <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
                         <div className="p-6 flex flex-col gap-3">
-                          <span
-                            className="text-gold text-[10px] tracking-[0.25em] uppercase"
-                            style={{ fontFamily: "var(--font-body)" }}
-                          >
+                          <span className="text-gold text-[10px] tracking-[0.25em] uppercase">
                             {CATEGORY_LABELS[cat] ?? cat}
                           </span>
-                          <h3
-                            className="text-2xl md:text-3xl font-bold text-cream leading-tight"
-                            style={{ fontFamily: "var(--font-heading)" }}
-                          >
+                          <h3 className="text-2xl md:text-3xl font-bold text-cream leading-tight">
                             {project.title}
                           </h3>
                           <span
                             className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase"
-                            style={{ fontFamily: "var(--font-body)" }}
                             aria-hidden="true"
                           >
                             VIEW DETAILS →

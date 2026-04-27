@@ -113,21 +113,18 @@ export default function ArchitecturalStructuralPage({
           <p
             data-hero
             className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
           >
             Our Work
           </p>
           <h1
             data-hero
-            className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream"
-            style={{ fontFamily: "var(--font-heading)" }}
+            className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream text-balance"
           >
             {heroHeading ?? DEFAULT_HEADING}
           </h1>
           <p
             data-hero
             className="mt-8 text-cream/55 max-w-2xl text-base leading-relaxed"
-            style={{ fontFamily: "var(--font-body)" }}
           >
             {heroSubtitle ?? DEFAULT_SUBTITLE}
           </p>
@@ -152,7 +149,6 @@ export default function ArchitecturalStructuralPage({
                     ? "bg-gold text-anthracite border-gold font-semibold"
                     : "border-cream/20 text-cream/50 hover:border-gold/60 hover:text-cream"
                 }`}
-                style={{ fontFamily: "var(--font-body)" }}
               >
                 {f}
               </button>
@@ -163,10 +159,7 @@ export default function ArchitecturalStructuralPage({
           {filtered.length === 0 ? (
             <div className="flex items-center justify-center py-24">
               <div className="border border-gold px-12 py-8 text-center">
-                <p
-                  className="text-gold text-sm tracking-[0.2em] uppercase"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="text-gold text-sm tracking-[0.2em] uppercase">
                   {projects.length === 0
                     ? "Projects coming soon"
                     : "No projects in this category"}
@@ -180,7 +173,7 @@ export default function ArchitecturalStructuralPage({
             >
               {filtered.map((project) => {
                 const imgSrc = project.mainImage
-                  ? urlFor(project.mainImage as Parameters<typeof urlFor>[0]).width(800).url()
+                  ? urlFor(project.mainImage).width(800).url()
                   : null;
                 return (
                   <MediaCard

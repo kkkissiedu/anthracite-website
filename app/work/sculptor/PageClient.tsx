@@ -125,24 +125,19 @@ export default function SculptorPage({
           <p
             data-hero
             className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
           >
             3D Design Studio
           </p>
 
           <h1
             data-hero
-            className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[8.5rem] font-bold leading-none tracking-tight text-cream"
-            style={{ fontFamily: "var(--font-heading)" }}
+            className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[8.5rem] font-bold leading-none tracking-tight text-cream text-balance"
           >
             {heroHeading ?? DEFAULT_HEADING}
           </h1>
 
           <div data-hero className="mt-10 max-w-xl">
-            <p
-              className="text-cream/55 text-base leading-relaxed"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <p className="text-cream/55 text-base leading-relaxed">
               {heroSubtitle ?? DEFAULT_SUBTITLE}
             </p>
           </div>
@@ -152,7 +147,6 @@ export default function SculptorPage({
             <div className="h-px w-12 bg-gold/60" />
             <span
               className="text-gold/60 text-[10px] tracking-[0.3em] uppercase"
-              style={{ fontFamily: "var(--font-body)" }}
             >
               A sister studio of The Anthracite Limited
             </span>
@@ -175,7 +169,6 @@ export default function SculptorPage({
                     ? "bg-gold text-anthracite border-gold font-semibold"
                     : "border-cream/20 text-cream/50 hover:border-gold/60 hover:text-cream"
                 }`}
-                style={{ fontFamily: "var(--font-body)" }}
               >
                 {label}
               </button>
@@ -186,10 +179,7 @@ export default function SculptorPage({
           {filtered.length === 0 ? (
             <div className="flex items-center justify-center py-24">
               <div className="border border-gold px-12 py-8 text-center">
-                <p
-                  className="text-gold text-sm tracking-[0.2em] uppercase"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="text-gold text-sm tracking-[0.2em] uppercase">
                   {projects.length === 0
                     ? "Projects coming soon"
                     : "No projects in this category"}
@@ -208,7 +198,7 @@ export default function SculptorPage({
               {filtered.map((project, i) => {
                 const tall = i % 3 === 1;
                 const imgSrc = project.mainImage
-                  ? urlFor(project.mainImage as Parameters<typeof urlFor>[0]).width(900).url()
+                  ? urlFor(project.mainImage).width(900).url()
                   : null;
                 return (
                   <MediaCard

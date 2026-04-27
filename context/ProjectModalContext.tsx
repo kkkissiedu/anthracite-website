@@ -8,25 +8,9 @@ import {
   type ReactNode,
 } from "react";
 
-export type SanityProject = {
-  _id: string;
-  title: string;
-  category: string;
-  subcategory?: string;
-  description?: string;
-  /** Portable Text blocks */
-  overview?: unknown[];
-  mainImage?: unknown;
-  gallery?: unknown[];
-  videoUrl?: string;
-  videoFile?: { asset: { url: string } };
-  model3d?: { asset: { url: string } };
-  panorama?: unknown[];
-  client?: string;
-  location?: string;
-  year?: number;
-  tools?: string[];
-};
+import type { Project } from "@/types/sanity";
+
+export type SanityProject = Project;
 
 type ModalContextType = {
   activeProject: SanityProject | null;

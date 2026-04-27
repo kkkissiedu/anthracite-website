@@ -1,7 +1,9 @@
 import { createClient } from "next-sanity";
 import { createImageUrlBuilder as imageUrlBuilder } from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url";
 import { cache } from "react";
+import type { Project, Property, TeamMember, SanityImageSource } from "@/types/sanity";
+
+export type { SanityImageSource };
 
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -84,24 +86,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings | null> => {
   return client.fetch(siteSettingsQuery);
 });
 
-export type FeaturedProject = {
-  _id: string;
-  title: string;
-  category: string;
-  subcategory?: string;
-  description?: string;
-  overview?: unknown[];
-  mainImage?: unknown;
-  gallery?: unknown[];
-  videoUrl?: string;
-  videoFile?: { asset: { url: string } };
-  model3d?: { asset: { url: string } };
-  panorama?: unknown[];
-  client?: string;
-  location?: string;
-  year?: number;
-  tools?: string[];
-};
+export type FeaturedProject = Project;
 
 export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
   return client.fetch(
@@ -129,14 +114,7 @@ export async function getProjectsByCategory(
   );
 }
 
-export type RawTeamMember = {
-  _id: string;
-  name: string;
-  role: string;
-  bio: string;
-  photo: unknown;
-  linkedinUrl: string | null;
-};
+export type RawTeamMember = TeamMember;
 
 export async function getTeamMembers(): Promise<RawTeamMember[]> {
   return client.fetch(
@@ -148,24 +126,7 @@ export async function getTeamMembers(): Promise<RawTeamMember[]> {
   );
 }
 
-export type SanityProperty = {
-  _id: string;
-  title: string;
-  slug?: { current: string };
-  description?: string;
-  shortDescription?: string;
-  images?: unknown[];
-  videoUrl?: string;
-  panoramaUrl?: string;
-  location?: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  pricePerNight?: number;
-  available?: boolean;
-  amenities?: string[];
-  whatsappNumber?: string;
-  phoneNumber?: string;
-};
+export type SanityProperty = Property;
 
 export async function getProperties(): Promise<SanityProperty[]> {
   return client.fetch(

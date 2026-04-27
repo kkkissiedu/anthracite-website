@@ -99,15 +99,13 @@ export default function RealEstatePage({
             <p
               data-hero
               className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
-              style={{ fontFamily: "var(--font-body)" }}
             >
               Curated Rentals
             </p>
 
             <h1
               data-hero
-              className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream"
-              style={{ fontFamily: "var(--font-heading)" }}
+              className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream text-balance"
             >
               {heroHeading ?? DEFAULT_HEADING}
             </h1>
@@ -115,7 +113,6 @@ export default function RealEstatePage({
             <p
               data-hero
               className="mt-8 text-cream/55 max-w-2xl text-base leading-relaxed"
-              style={{ fontFamily: "var(--font-body)" }}
             >
               {heroSubtitle ?? DEFAULT_SUBTITLE}
             </p>
@@ -130,10 +127,7 @@ export default function RealEstatePage({
             {properties.length === 0 ? (
               <div className="flex items-center justify-center py-24">
                 <div className="border border-gold px-12 py-8 text-center">
-                  <p
-                    className="text-gold text-sm tracking-[0.2em] uppercase"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
+                  <p className="text-gold text-sm tracking-[0.2em] uppercase">
                     Listings coming soon
                   </p>
                 </div>
@@ -172,7 +166,7 @@ function PropertyCard({
 }) {
   const primaryImage = property.images?.[0];
   const imgSrc = primaryImage
-    ? urlFor(primaryImage as Parameters<typeof urlFor>[0])
+    ? urlFor(primaryImage)
         .width(800)
         .height(600)
         .url()
@@ -192,19 +186,13 @@ function PropertyCard({
           />
         ) : (
           <div className="absolute inset-0 bg-[#1a1a1a] flex items-center justify-center">
-            <span
-              className="text-gold/20 text-xs tracking-widest uppercase"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <span className="text-gold/20 text-xs tracking-widest uppercase">
               No image
             </span>
           </div>
         )}
         <div className="absolute top-3 left-3 bg-gold px-2 py-1">
-          <span
-            className="text-anthracite text-[9px] font-bold tracking-widest uppercase"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <span className="text-anthracite text-[9px] font-bold tracking-widest uppercase">
             Available
           </span>
         </div>
@@ -213,17 +201,11 @@ function PropertyCard({
       {/* Card content */}
       <div className="flex flex-col gap-3 p-5 flex-1">
         <div>
-          <h3
-            className="text-lg font-bold text-cream leading-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
+          <h3 className="text-lg font-bold text-cream leading-tight">
             {property.title}
           </h3>
           {property.location && (
-            <p
-              className="text-cream/40 text-xs tracking-wider uppercase mt-1 flex items-center gap-1.5"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <p className="text-cream/40 text-xs tracking-wider uppercase mt-1 flex items-center gap-1.5">
               <svg width="9" height="11" viewBox="0 0 9 11" fill="none" aria-hidden>
                 <path
                   d="M4.5 0C2.29 0 .5 1.79.5 4c0 2.75 4 7 4 7s4-4.25 4-7c0-2.21-1.79-4-4-4zm0 5.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"
@@ -240,10 +222,7 @@ function PropertyCard({
           {property.bedrooms != null && (
             <div className="flex items-center gap-1.5">
               <BedIcon />
-              <span
-                className="text-cream/60 text-xs"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <span className="text-cream/60 text-xs">
                 {property.bedrooms} {property.bedrooms === 1 ? "Bed" : "Beds"}
               </span>
             </div>
@@ -251,10 +230,7 @@ function PropertyCard({
           {property.bathrooms != null && (
             <div className="flex items-center gap-1.5">
               <BathIcon />
-              <span
-                className="text-cream/60 text-xs"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <span className="text-cream/60 text-xs">
                 {property.bathrooms} {property.bathrooms === 1 ? "Bath" : "Baths"}
               </span>
             </div>
@@ -263,10 +239,7 @@ function PropertyCard({
 
         {/* Short description */}
         {property.shortDescription && (
-          <p
-            className="text-cream/45 text-sm leading-relaxed line-clamp-2 flex-1"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-cream/45 text-sm leading-relaxed line-clamp-2 flex-1">
             {property.shortDescription}
           </p>
         )}
@@ -275,31 +248,21 @@ function PropertyCard({
         <div className="flex items-center justify-between pt-3 border-t border-white/5 mt-auto">
           {property.pricePerNight != null ? (
             <div>
-              <span
-                className="text-gold text-base font-semibold"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
+              <span className="text-gold text-base font-semibold font-heading">
                 GHS {property.pricePerNight.toLocaleString()}
               </span>
-              <span
-                className="text-cream/30 text-xs ml-1"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <span className="text-cream/30 text-xs ml-1">
                 /night
               </span>
             </div>
           ) : (
-            <span
-              className="text-cream/30 text-xs italic"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <span className="text-cream/30 text-xs italic">
               Price on enquiry
             </span>
           )}
           <button
             onClick={() => onOpen(property)}
             className="flex items-center gap-1.5 text-gold text-xs tracking-[0.15em] uppercase hover:gap-2.5 transition-all duration-200"
-            style={{ fontFamily: "var(--font-body)" }}
           >
             View Details
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
@@ -377,7 +340,7 @@ function PropertyModal({
   property: SanityProperty;
   onClose: () => void;
 }) {
-  const images = (property.images ?? []) as unknown[];
+  const images = property.images ?? [];
   const hasImages = images.length > 0;
   const hasVideo = !!property.videoUrl;
   const hasPanorama = !!property.panoramaUrl;
@@ -487,15 +450,10 @@ function PropertyModal({
 
   // Build image display URLs
   const imageUrls = images.map((img) =>
-    urlFor(img as Parameters<typeof urlFor>[0])
-      .width(1200)
-      .url()
+    urlFor(img).width(1200).url()
   );
   const thumbUrls = images.map((img) =>
-    urlFor(img as Parameters<typeof urlFor>[0])
-      .width(120)
-      .height(80)
-      .url()
+    urlFor(img).width(120).height(80).url()
   );
 
   // Parse YouTube / Vimeo embed URL
@@ -544,17 +502,11 @@ function PropertyModal({
         {/* Header */}
         <div className="sticky top-0 z-20 flex items-start justify-between gap-4 px-6 py-5 bg-[#0D0D0D] border-b border-white/10">
           <div>
-            <h2
-              className="text-2xl sm:text-3xl font-bold text-cream leading-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
+            <h2 className="text-2xl sm:text-3xl font-bold text-cream leading-tight">
               {property.title}
             </h2>
             {property.location && (
-              <p
-                className="text-cream/40 text-xs mt-1 tracking-wider"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <p className="text-cream/40 text-xs mt-1 tracking-wider">
                 {property.location}
               </p>
             )}
@@ -580,7 +532,6 @@ function PropertyModal({
                     ? "text-gold border-b-2 border-gold -mb-px"
                     : "text-cream/40 hover:text-cream"
                 }`}
-                style={{ fontFamily: "var(--font-body)" }}
               >
                 {tabLabel[tab]}
               </button>
@@ -620,10 +571,7 @@ function PropertyModal({
                   >
                     ›
                   </button>
-                  <div
-                    className="absolute bottom-3 right-3 bg-black/60 px-2 py-1 text-cream/70 text-xs"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
+                  <div className="absolute bottom-3 right-3 bg-black/60 px-2 py-1 text-cream/70 text-xs">
                     {activeImg + 1} / {images.length}
                   </div>
                 </>
@@ -674,7 +622,6 @@ function PropertyModal({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gold underline text-sm"
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   Watch video →
                 </a>
@@ -698,10 +645,7 @@ function PropertyModal({
                 {property.bedrooms != null && (
                   <div className="flex items-center gap-2">
                     <BedIcon />
-                    <span
-                      className="text-cream text-sm"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
+                    <span className="text-cream text-sm">
                       {property.bedrooms} Bedroom
                       {property.bedrooms !== 1 ? "s" : ""}
                     </span>
@@ -710,10 +654,7 @@ function PropertyModal({
                 {property.bathrooms != null && (
                   <div className="flex items-center gap-2">
                     <BathIcon />
-                    <span
-                      className="text-cream text-sm"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
+                    <span className="text-cream text-sm">
                       {property.bathrooms} Bathroom
                       {property.bathrooms !== 1 ? "s" : ""}
                     </span>
@@ -723,10 +664,7 @@ function PropertyModal({
 
               {/* Description */}
               {property.description && (
-                <p
-                  className="text-cream/55 text-sm leading-relaxed"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="text-cream/55 text-sm leading-relaxed">
                   {property.description}
                 </p>
               )}
@@ -734,10 +672,7 @@ function PropertyModal({
               {/* Amenities */}
               {property.amenities && property.amenities.length > 0 && (
                 <div>
-                  <p
-                    className="text-[10px] tracking-[0.25em] uppercase text-gold mb-3"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
+                  <p className="text-[10px] tracking-[0.25em] uppercase text-gold mb-3">
                     Amenities
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -745,7 +680,6 @@ function PropertyModal({
                       <span
                         key={a}
                         className="text-cream/60 text-xs border border-white/10 px-3 py-1"
-                        style={{ fontFamily: "var(--font-body)" }}
                       >
                         {a}
                       </span>
@@ -759,25 +693,16 @@ function PropertyModal({
             <div className="flex flex-col gap-4">
               {property.pricePerNight != null && (
                 <div className="mb-1">
-                  <span
-                    className="text-gold text-2xl font-bold"
-                    style={{ fontFamily: "var(--font-heading)" }}
-                  >
+                  <span className="text-gold text-2xl font-bold font-heading">
                     GHS {property.pricePerNight.toLocaleString()}
                   </span>
-                  <span
-                    className="text-cream/30 text-sm ml-1"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
+                  <span className="text-cream/30 text-sm ml-1">
                     /night
                   </span>
                 </div>
               )}
 
-              <p
-                className="text-[10px] tracking-[0.25em] uppercase text-cream/40"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <p className="text-[10px] tracking-[0.25em] uppercase text-cream/40">
                 Make an Enquiry
               </p>
 
@@ -785,7 +710,6 @@ function PropertyModal({
               <a
                 href={mailtoHref}
                 className="flex items-center justify-center gap-2.5 px-5 py-3.5 bg-gold text-anthracite text-xs tracking-[0.2em] uppercase font-semibold hover:bg-[#D4AF37] transition-colors duration-200"
-                style={{ fontFamily: "var(--font-body)" }}
               >
                 <svg
                   width="15"
@@ -822,10 +746,7 @@ function PropertyModal({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2.5 px-5 py-3.5 text-white text-xs tracking-[0.2em] uppercase font-semibold hover:opacity-90 transition-opacity duration-200"
-                  style={{
-                    backgroundColor: "#25D366",
-                    fontFamily: "var(--font-body)",
-                  }}
+                  style={{ backgroundColor: "#25D366" }}
                 >
                   <svg
                     width="15"
@@ -845,7 +766,6 @@ function PropertyModal({
                 <a
                   href={`tel:${property.phoneNumber}`}
                   className="flex items-center justify-center gap-2.5 px-5 py-3.5 border border-white/20 text-cream text-xs tracking-[0.2em] uppercase font-semibold hover:border-white/40 transition-colors duration-200"
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   <svg
                     width="13"

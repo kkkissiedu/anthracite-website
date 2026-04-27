@@ -159,16 +159,10 @@ export default function Contact({
       <div className="max-w-[1280px] mx-auto">
         {/* Section header */}
         <div className="mb-12">
-          <p
-            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4">
             {contactLabel}
           </p>
-          <h2
-            className="text-cream text-4xl md:text-5xl lg:text-6xl leading-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
+          <h2 className="text-cream text-4xl md:text-5xl lg:text-6xl leading-tight">
             {headingLine1 && (
               <div className="overflow-hidden">
                 <div ref={h2Line1Ref} data-gsap="true">
@@ -198,10 +192,7 @@ export default function Contact({
           {/* Left — company info */}
           <div className="flex flex-col gap-10">
             <div>
-              <p
-                className="text-cream/50 text-sm leading-relaxed max-w-sm"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <p className="text-cream/50 text-sm leading-relaxed max-w-sm">
                 {contactSubtext}
               </p>
             </div>
@@ -209,32 +200,22 @@ export default function Contact({
             {/* Info items */}
             <div className="flex flex-col gap-6">
               <div>
-                <p
-                  className="text-gold text-xs tracking-widest uppercase mb-1"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="text-gold text-xs tracking-widest uppercase mb-1">
                   Email
                 </p>
                 <a
                   href={`mailto:${contactEmail}`}
                   className="text-cream/80 hover:text-gold transition-colors duration-300 text-sm"
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   {contactEmail}
                 </a>
               </div>
 
               <div>
-                <p
-                  className="text-gold text-xs tracking-widest uppercase mb-1"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="text-gold text-xs tracking-widest uppercase mb-1">
                   Location
                 </p>
-                <p
-                  className="text-cream/80 text-sm"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="text-cream/80 text-sm">
                   {contactLocation}
                 </p>
               </div>
@@ -245,10 +226,7 @@ export default function Contact({
 
             {/* Social links */}
             <div>
-              <p
-                className="text-gold text-xs tracking-widest uppercase mb-4"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <p className="text-gold text-xs tracking-widest uppercase mb-4">
                 Follow Us
               </p>
               <div className="flex items-center gap-4">
@@ -273,22 +251,15 @@ export default function Contact({
             {status === "success" ? (
               <div className="flex flex-col items-start gap-4 py-12">
                 <div className="w-12 h-px bg-gold" />
-                <h3
-                  className="text-cream text-2xl"
-                  style={{ fontFamily: "var(--font-heading)" }}
-                >
+                <h3 className="text-cream text-2xl">
                   Message Received
                 </h3>
-                <p
-                  className="text-cream/50 text-sm"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="text-cream/50 text-sm">
                   Thank you for reaching out. We&apos;ll be in touch shortly.
                 </p>
                 <button
                   onClick={() => setStatus("idle")}
                   className="mt-4 text-gold text-sm tracking-widest uppercase border-b border-gold/40 hover:border-gold transition-colors duration-300 pb-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   Send Another
                 </button>
@@ -310,7 +281,6 @@ export default function Contact({
                     <label
                       htmlFor="name"
                       className="block text-cream/50 text-xs tracking-widest uppercase mb-2"
-                      style={{ fontFamily: "var(--font-body)" }}
                     >
                       Name
                     </label>
@@ -323,14 +293,12 @@ export default function Contact({
                       onChange={handleChange}
                       placeholder="Your name"
                       className={INPUT_CLASS}
-                      style={{ fontFamily: "var(--font-body)" }}
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="email"
                       className="block text-cream/50 text-xs tracking-widest uppercase mb-2"
-                      style={{ fontFamily: "var(--font-body)" }}
                     >
                       Email
                     </label>
@@ -343,7 +311,6 @@ export default function Contact({
                       onChange={handleChange}
                       placeholder="your@email.com"
                       className={INPUT_CLASS}
-                      style={{ fontFamily: "var(--font-body)" }}
                     />
                   </div>
                 </div>
@@ -352,7 +319,6 @@ export default function Contact({
                   <label
                     htmlFor="subject"
                     className="block text-cream/50 text-xs tracking-widest uppercase mb-2"
-                    style={{ fontFamily: "var(--font-body)" }}
                   >
                     Subject
                   </label>
@@ -365,7 +331,6 @@ export default function Contact({
                     onChange={handleChange}
                     placeholder="How can we help?"
                     className={INPUT_CLASS}
-                    style={{ fontFamily: "var(--font-body)" }}
                   />
                 </div>
 
@@ -373,7 +338,6 @@ export default function Contact({
                   <label
                     htmlFor="message"
                     className="block text-cream/50 text-xs tracking-widest uppercase mb-2"
-                    style={{ fontFamily: "var(--font-body)" }}
                   >
                     Message
                   </label>
@@ -386,15 +350,11 @@ export default function Contact({
                     onChange={handleChange}
                     placeholder="Tell us about your project..."
                     className={`${INPUT_CLASS} resize-none`}
-                    style={{ fontFamily: "var(--font-body)" }}
                   />
                 </div>
 
                 {status === "error" && (
-                  <p
-                    className="text-red-400 text-sm"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
+                  <p className="text-red-400 text-sm">
                     {errorMsg}
                   </p>
                 )}
@@ -403,7 +363,6 @@ export default function Contact({
                   type="submit"
                   disabled={status === "loading"}
                   className="w-full bg-gold text-anthracite hover:bg-gold-highlight disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 px-8 py-4 text-sm tracking-widest uppercase font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite"
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   {status === "loading" ? "Sending…" : "Send Message"}
                 </button>

@@ -60,7 +60,6 @@ export default function Navbar() {
                 <a
                   href={link.href}
                   className="relative text-cream/80 hover:text-cream text-sm tracking-widest uppercase transition-colors duration-300 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-anthracite rounded-sm pb-1"
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   {link.label}
                   <span className="absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
@@ -122,7 +121,6 @@ export default function Navbar() {
                 onClick={handleLinkClick}
                 tabIndex={menuOpen ? 0 : -1}
                 className="text-4xl font-heading text-cream hover:text-gold transition-colors duration-300 tracking-widest uppercase focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-                style={{ fontFamily: "var(--font-heading)" }}
               >
                 {link.label}
               </a>

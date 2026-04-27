@@ -75,24 +75,15 @@ export default function MediaCard({
         <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
           <div className="p-5 flex flex-col gap-2">
             {subcategory && (
-              <span
-                className="text-gold text-[10px] tracking-[0.2em] uppercase"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <span className="text-gold text-[10px] tracking-[0.2em] uppercase">
                 {subcategory}
               </span>
             )}
-            <h3
-              className="text-xl md:text-2xl font-bold text-cream leading-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
+            <h3 className="text-xl md:text-2xl font-bold text-cream leading-tight">
               {title}
             </h3>
             {filteredMeta.length > 0 && (
-              <div
-                className="flex flex-wrap gap-x-4 gap-y-0.5 text-[10px] text-cream/50 tracking-[0.12em] uppercase"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[10px] text-cream/50 tracking-[0.12em] uppercase">
                 {filteredMeta.map((m, i) => (
                   <span key={i}>{m}</span>
                 ))}

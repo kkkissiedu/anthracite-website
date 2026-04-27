@@ -200,10 +200,7 @@ export default function Services({
 
         {/* Section header */}
         <div className="mb-12">
-          <p
-            className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4">
             {servicesLabel}
           </p>
           <div className="overflow-hidden">
@@ -211,7 +208,6 @@ export default function Services({
               ref={h2LineRef}
               data-gsap="true"
               className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream max-w-xl"
-              style={{ fontFamily: "var(--font-heading)" }}
             >
               {headingNode}
             </h2>
@@ -277,27 +273,18 @@ const ServiceCard = forwardRef<
 
       {/* Title */}
       <div>
-        <h3
-          className="text-xl md:text-2xl font-bold text-cream leading-snug mb-1"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
+        <h3 className="text-xl md:text-2xl font-bold text-cream leading-snug mb-1">
           {title}
         </h3>
         {subtitle && (
-          <p
-            className="text-gold text-xs tracking-widest uppercase"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-gold text-xs tracking-widest uppercase">
             {subtitle}
           </p>
         )}
       </div>
 
       {/* Description */}
-      <p
-        className="text-cream/55 text-sm leading-relaxed flex-1"
-        style={{ fontFamily: "var(--font-body)" }}
-      >
+      <p className="text-cream/55 text-sm leading-relaxed flex-1">
         {description}
       </p>
 
@@ -306,7 +293,6 @@ const ServiceCard = forwardRef<
         href={href}
         onClick={(e) => e.stopPropagation()}
         className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-        style={{ fontFamily: "var(--font-body)" }}
         aria-label={`Explore ${title}`}
       >
         Explore →

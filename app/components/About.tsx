@@ -165,16 +165,10 @@ export default function About({
 
           {/* Left — large bold statement */}
           <div>
-            <p
-              className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold-dark mb-4"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <p className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold-dark mb-4">
               {aboutLabel}
             </p>
-            <h2
-              className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-dark-text"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
+            <h2 className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-dark-text">
               <div className="overflow-hidden">
                 <div ref={h2Line1Ref} data-gsap="true">
                   {line1Before}
@@ -193,10 +187,7 @@ export default function About({
 
           {/* Right — mission paragraph */}
           <div ref={rightRef} data-gsap="true">
-            <p
-              className="text-dark-text/75 text-base md:text-lg leading-relaxed"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <p className="text-dark-text/75 text-base md:text-lg leading-relaxed">
               {aboutBody}
             </p>
           </div>
@@ -218,10 +209,7 @@ export default function About({
         >
           {stats.map((stat, i) => (
             <div key={stat.label} className="text-center">
-              <p
-                className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold-heading leading-none"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
+              <p className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold-heading leading-none font-heading">
                 <span
                   ref={(el) => {
                     counterRefs.current[i] = el;
@@ -230,10 +218,7 @@ export default function About({
                   0{stat.suffix}
                 </span>
               </p>
-              <p
-                className="mt-3 text-xs uppercase tracking-[0.2em] text-dark-text/55"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <p className="mt-3 text-xs uppercase tracking-[0.2em] text-dark-text/55">
                 {stat.label}
               </p>
             </div>

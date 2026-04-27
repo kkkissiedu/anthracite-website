@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
-import { urlFor } from "@/lib/sanity";
+import { urlFor, type SanityImageSource } from "@/lib/sanity";
 import {
   useProjectModal,
   type SanityProject,
@@ -90,8 +90,8 @@ function extractText(blocks: unknown[]): string {
     .join("\n\n");
 }
 
-function sanityImageSrc(img: unknown, width: number): string {
-  return urlFor(img as Parameters<typeof urlFor>[0]).width(width).url();
+function sanityImageSrc(img: SanityImageSource, width: number): string {
+  return urlFor(img).width(width).url();
 }
 
 // ─── Spinner ──────────────────────────────────────────────────────────────────
@@ -109,7 +109,7 @@ function GoldSpinner() {
 
 // ─── Images tab ───────────────────────────────────────────────────────────────
 
-function ImagesTab({ gallery }: { gallery: unknown[] }) {
+function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
   const [current, setCurrent] = useState(0);
   const total = gallery.length;
 
@@ -137,7 +137,6 @@ function ImagesTab({ gallery }: { gallery: unknown[] }) {
         {/* Counter */}
         <div
           className="absolute top-4 right-4 bg-black/60 text-cream text-xs px-3 py-1.5 tracking-[0.15em]"
-          style={{ fontFamily: "var(--font-body)" }}
         >
           {current + 1} / {total}
         </div>
@@ -216,7 +215,6 @@ function VideoTab({ project }: { project: SanityProject }) {
           target="_blank"
           rel="noopener noreferrer"
           className="text-gold text-xs tracking-[0.15em] uppercase hover:underline shrink-0"
-          style={{ fontFamily: "var(--font-body)" }}
         >
           Watch on external platform →
         </a>
@@ -240,7 +238,6 @@ function VideoTab({ project }: { project: SanityProject }) {
             target="_blank"
             rel="noopener noreferrer"
             className="border border-gold text-gold px-8 py-4 text-sm tracking-[0.2em] uppercase hover:bg-gold/10 transition-colors"
-            style={{ fontFamily: "var(--font-body)" }}
           >
             Watch Video →
           </a>
@@ -263,7 +260,7 @@ declare global {
   }
 }
 
-function PanoramaTab({ panorama }: { panorama: unknown[] }) {
+function PanoramaTab({ panorama }: { panorama: SanityImageSource[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<{ destroy(): void } | null>(null);
   const [currentPano, setCurrentPano] = useState(0);
@@ -437,10 +434,7 @@ export default function ProjectModal() {
           {/* ── Header ── */}
           <div className="shrink-0 border-b border-white/10 px-6 py-5">
             <div className="flex items-start justify-between gap-4">
-              <h2
-                className="text-2xl sm:text-3xl md:text-4xl font-bold text-cream leading-tight"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cream leading-tight">
                 {activeProject.title}
               </h2>
               <button
@@ -453,10 +447,7 @@ export default function ProjectModal() {
             </div>
 
             {/* Meta row */}
-            <div
-              className="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-[10px] tracking-[0.18em] uppercase"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <div className="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-[10px] tracking-[0.18em] uppercase">
               {activeProject.client && (
                 <span className="text-cream/40">
                   Client:{" "}
@@ -492,10 +483,7 @@ export default function ProjectModal() {
           {/* ── Overview ── */}
           {overviewText && (
             <div className="shrink-0 px-6 py-5 border-b border-white/10 max-h-40 overflow-y-auto">
-              <p
-                className="text-cream/60 text-sm leading-relaxed whitespace-pre-line"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <p className="text-cream/60 text-sm leading-relaxed whitespace-pre-line">
                 {overviewText}
               </p>
             </div>
@@ -504,10 +492,7 @@ export default function ProjectModal() {
           {/* ── Tools & Software ── */}
           {activeProject.tools && activeProject.tools.length > 0 && activeProject.category !== 'real-estate-construction' && (
             <div className="shrink-0 px-6 pt-4 pb-5 border-b border-white/10">
-              <h4
-                className="text-[10px] uppercase tracking-[0.2em] text-gold mb-4"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
+              <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold mb-4">
                 Tools &amp; Software
               </h4>
               <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
@@ -530,7 +515,6 @@ export default function ProjectModal() {
                       ? "text-gold border-b-2 border-gold -mb-px"
                       : "text-cream/40 hover:text-cream/70"
                   }`}
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   {TAB_LABELS[tab]}
                 </button>
@@ -567,10 +551,7 @@ export default function ProjectModal() {
                 <ErrorBoundary
                   fallback={
                     <div className="flex items-center justify-center h-full">
-                      <p
-                        className="text-cream/40 text-sm"
-                        style={{ fontFamily: "var(--font-body)" }}
-                      >
+                      <p className="text-cream/40 text-sm">
                         Failed to load 3D model
                       </p>
                     </div>

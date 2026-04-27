@@ -73,7 +73,6 @@ export default function Footer({
                   <a
                     href={href}
                     className="text-[#F5F0E8]/60 hover:text-gold transition-colors duration-300 text-xs tracking-widest uppercase focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
-                    style={{ fontFamily: "var(--font-body)" }}
                   >
                     {label}
                   </a>
@@ -107,17 +106,11 @@ export default function Footer({
 
       {/* Bottom bar */}
       <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-16 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p
-          className="text-[#F5F0E8]/60 text-xs"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
+        <p className="text-[#F5F0E8]/60 text-xs">
           {footerCopyright}
         </p>
         {footerTagline && (
-          <p
-            className="text-[#F5F0E8]/60 text-xs"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="text-[#F5F0E8]/60 text-xs">
             {footerTagline}
           </p>
         )}
