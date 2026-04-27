@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import RealEstatePageClient from './PageClient';
-import { getSiteSettings } from '@/lib/sanity';
+import { getSiteSettings, getProperties } from '@/lib/sanity';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Real Estate & Construction | The Anthracite Limited',
@@ -17,11 +19,15 @@ export const metadata: Metadata = {
 };
 
 export default async function RealEstatePage() {
-  const settings = await getSiteSettings();
+  const [settings, properties] = await Promise.all([
+    getSiteSettings(),
+    getProperties(),
+  ]);
   return (
     <RealEstatePageClient
       heroHeading={settings?.pages?.realEstate?.heroHeading}
       heroSubtitle={settings?.pages?.realEstate?.heroSubtitle}
+      properties={properties}
     />
   );
 }

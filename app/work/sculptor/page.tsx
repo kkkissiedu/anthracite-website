@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import SculptorPageClient from './PageClient';
-import { getSiteSettings } from '@/lib/sanity';
+import { getSiteSettings, getProjectsByCategory } from '@/lib/sanity';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'The Sculptor — 3D Design Services | The Anthracite Limited',
@@ -17,11 +19,15 @@ export const metadata: Metadata = {
 };
 
 export default async function SculptorPage() {
-  const settings = await getSiteSettings();
+  const [settings, projects] = await Promise.all([
+    getSiteSettings(),
+    getProjectsByCategory('3d-design'),
+  ]);
   return (
     <SculptorPageClient
       heroHeading={settings?.pages?.sculptor?.heroHeading}
       heroSubtitle={settings?.pages?.sculptor?.heroSubtitle}
+      projects={projects}
     />
   );
 }

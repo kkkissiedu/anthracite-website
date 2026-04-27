@@ -4,18 +4,12 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { client, urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity";
 import type { SanityProperty } from "@/lib/sanity";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const QUERY = `*[_type == "property" && available == true] | order(_createdAt desc) {
-  _id, title, slug, description, shortDescription, images,
-  videoUrl, panoramaUrl, location, bedrooms, bathrooms,
-  pricePerNight, available, amenities, whatsappNumber, phoneNumber
-}`;
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
@@ -25,25 +19,18 @@ const DEFAULT_SUBTITLE = "Curated living spaces in Kumasi.";
 export default function RealEstatePage({
   heroHeading,
   heroSubtitle,
+  properties: initialProperties,
 }: {
   heroHeading?: string;
   heroSubtitle?: string;
+  properties: SanityProperty[];
 }) {
-  const [properties, setProperties] = useState<SanityProperty[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [properties] = useState<SanityProperty[]>(initialProperties);
   const [activeProperty, setActiveProperty] = useState<SanityProperty | null>(null);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const ctxRef = useRef<gsap.Context | null>(null);
-
-  useEffect(() => {
-    client
-      .fetch<SanityProperty[]>(QUERY)
-      .then((data) => setProperties(data ?? []))
-      .catch(() => setProperties([]))
-      .finally(() => setLoading(false));
-  }, []);
 
   // Hero entrance animation
   useEffect(() => {
@@ -135,7 +122,7 @@ export default function RealEstatePage({
         {/* Listings grid */}
         <section className="bg-anthracite pb-28 px-6 md:px-8 lg:px-16">
           <div className="max-w-[1280px] mx-auto">
-            {loading ? null : properties.length === 0 ? (
+            {properties.length === 0 ? (
               <div className="flex items-center justify-center py-24">
                 <div className="border border-gold px-12 py-8 text-center">
                   <p
@@ -149,7 +136,7 @@ export default function RealEstatePage({
             ) : (
               <div
                 ref={gridRef}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]"
               >
                 {properties.map((p) => (
                   <PropertyCard key={p._id} property={p} onOpen={openProperty} />

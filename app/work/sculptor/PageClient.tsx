@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { client, urlFor } from "@/lib/sanity";
+import { urlFor, type FeaturedProject } from "@/lib/sanity";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import MediaCard from "@/app/components/MediaCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,37 +18,24 @@ const FILTERS: { value: Filter; label: string }[] = [
   { value: "visualization", label: "Visualization" },
 ];
 
-const QUERY = `*[_type == "project" && category == "3d-design"] | order(order asc) {
-  _id, title, category, subcategory, description, overview,
-  mainImage, gallery, videoUrl, videoFile, panorama, model3d,
-  client, location, year, tools
-}`;
-
 const DEFAULT_HEADING = "The Sculptor";
 const DEFAULT_SUBTITLE = "3D Design & Visualization";
 
 export default function SculptorPage({
   heroHeading,
   heroSubtitle,
+  projects: initialProjects,
 }: {
   heroHeading?: string;
   heroSubtitle?: string;
+  projects: FeaturedProject[];
 }) {
-  const [projects, setProjects] = useState<SanityProject[]>([]);
+  const [projects] = useState<FeaturedProject[]>(initialProjects);
   const [filter, setFilter] = useState<Filter>("All");
-  const [loading, setLoading] = useState(true);
   const { openModal } = useProjectModal();
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const ctxRef = useRef<gsap.Context | null>(null);
-
-  useEffect(() => {
-    client
-      .fetch<SanityProject[]>(QUERY)
-      .then((data) => setProjects(data ?? []))
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false));
-  }, []);
 
   // Hero entrance animation
   useEffect(() => {
@@ -109,7 +96,7 @@ export default function SculptorPage({
   }, [filtered.length, filter]);
 
   const handleOpen = useCallback(
-    (p: SanityProject) => openModal(p),
+    (p: FeaturedProject) => openModal(p as unknown as SanityProject),
     [openModal]
   );
 
@@ -191,7 +178,7 @@ export default function SculptorPage({
           </div>
 
           {/* Masonry grid */}
-          {loading ? null : filtered.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="flex items-center justify-center py-24">
               <div className="border border-gold px-12 py-8 text-center">
                 <p
@@ -210,16 +197,30 @@ export default function SculptorPage({
               style={{
                 columns: "300px",
                 columnGap: "24px",
+                minHeight: "400px",
               }}
             >
-              {filtered.map((project, i) => (
-                <SculptorCard
-                  key={project._id}
-                  project={project}
-                  onOpen={handleOpen}
-                  tall={i % 3 === 1}
-                />
-              ))}
+              {filtered.map((project, i) => {
+                const tall = i % 3 === 1;
+                const imgSrc = project.mainImage
+                  ? urlFor(project.mainImage as Parameters<typeof urlFor>[0]).width(900).url()
+                  : null;
+                return (
+                  <MediaCard
+                    key={project._id}
+                    image={imgSrc}
+                    title={project.title}
+                    subcategory={project.subcategory}
+                    metadata={[project.client, project.year]}
+                    onClick={() => handleOpen(project)}
+                    aspectRatio={tall ? "3/4" : "4/3"}
+                    cardClassName="sculpt-card mb-6"
+                    wrapperStyle={{ breakInside: "avoid" }}
+                    showAccent
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                );
+              })}
             </div>
           )}
         </div>
@@ -231,94 +232,3 @@ export default function SculptorPage({
   );
 }
 
-function SculptorCard({
-  project,
-  onOpen,
-  tall,
-}: {
-  project: SanityProject;
-  onOpen: (p: SanityProject) => void;
-  tall?: boolean;
-}) {
-  const imgSrc = project.mainImage
-    ? urlFor(project.mainImage as Parameters<typeof urlFor>[0])
-        .width(900)
-        .url()
-    : null;
-
-  return (
-    <div
-      className="sculpt-card group relative overflow-hidden cursor-pointer mb-6"
-      style={{
-        breakInside: "avoid",
-      }}
-      onClick={() => onOpen(project)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onOpen(project)}
-      aria-label={`View ${project.title}`}
-    >
-      <div
-        className="relative w-full"
-        style={{ aspectRatio: tall ? "3/4" : "4/3" }}
-      >
-        {imgSrc ? (
-          <Image
-            src={imgSrc}
-            alt={project.title}
-            fill
-            className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[#111]" />
-        )}
-
-        {/* Subtle vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-
-        {/* Gold diagonal accent */}
-        <div
-          className="absolute top-0 right-0 w-16 h-16 pointer-events-none opacity-60"
-          style={{
-            background:
-              "linear-gradient(135deg, transparent 50%, rgba(201,149,42,0.15) 50%)",
-          }}
-        />
-
-        {/* ADM-style slide-up overlay */}
-        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
-          <div className="p-5 flex flex-col gap-2">
-            {project.subcategory && (
-              <span
-                className="text-gold text-[10px] tracking-[0.25em] uppercase"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
-                {project.subcategory}
-              </span>
-            )}
-            <h3
-              className="text-lg md:text-xl font-bold text-cream leading-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              {project.title}
-            </h3>
-            <div
-              className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-cream/45 tracking-[0.12em] uppercase"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              {project.client && <span>{project.client}</span>}
-              {project.year && <span>{project.year}</span>}
-            </div>
-            <div className="flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase mt-1">
-              View Project
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="#C9952A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

@@ -1,6 +1,7 @@
 import { createClient } from "next-sanity";
 import { createImageUrlBuilder as imageUrlBuilder } from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url";
+import { cache } from "react";
 
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -79,9 +80,9 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   }
 }`;
 
-export async function getSiteSettings(): Promise<SiteSettings | null> {
+export const getSiteSettings = cache(async (): Promise<SiteSettings | null> => {
   return client.fetch(siteSettingsQuery);
-}
+});
 
 export type FeaturedProject = {
   _id: string;
@@ -110,6 +111,20 @@ export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
       client, location, year, tools
     }`,
     {},
+    { next: { revalidate: 60 } }
+  );
+}
+
+export async function getProjectsByCategory(
+  category: string
+): Promise<FeaturedProject[]> {
+  return client.fetch(
+    `*[_type == "project" && category == $category] | order(order asc) {
+      _id, title, category, subcategory, description, overview,
+      mainImage, gallery, videoUrl, videoFile, panorama, model3d,
+      client, location, year, tools
+    }`,
+    { category },
     { next: { revalidate: 60 } }
   );
 }

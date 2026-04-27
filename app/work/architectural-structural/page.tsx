@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import ArchitecturalPageClient from './PageClient';
-import { getSiteSettings } from '@/lib/sanity';
+import { getSiteSettings, getProjectsByCategory } from '@/lib/sanity';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Architectural & Structural Design | The Anthracite Limited',
@@ -17,11 +19,15 @@ export const metadata: Metadata = {
 };
 
 export default async function ArchitecturalPage() {
-  const settings = await getSiteSettings();
+  const [settings, projects] = await Promise.all([
+    getSiteSettings(),
+    getProjectsByCategory('architectural-structural'),
+  ]);
   return (
     <ArchitecturalPageClient
       heroHeading={settings?.pages?.architectural?.heroHeading}
       heroSubtitle={settings?.pages?.architectural?.heroSubtitle}
+      projects={projects}
     />
   );
 }

@@ -1,24 +1,18 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { client, urlFor } from "@/lib/sanity";
+import { urlFor, type FeaturedProject } from "@/lib/sanity";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import MediaCard from "@/app/components/MediaCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
 type Filter = "All" | "Residential" | "Commercial" | "Industrial";
 const FILTERS: Filter[] = ["All", "Residential", "Commercial", "Industrial"];
-
-const QUERY = `*[_type == "project" && category == "architectural-structural"] | order(order asc) {
-  _id, title, category, subcategory, description, overview,
-  mainImage, gallery, videoUrl, videoFile, panorama, model3d,
-  client, location, year, tools
-}`;
 
 const DEFAULT_HEADING = "Architectural & Structural Design";
 const DEFAULT_SUBTITLE =
@@ -27,25 +21,18 @@ const DEFAULT_SUBTITLE =
 export default function ArchitecturalStructuralPage({
   heroHeading,
   heroSubtitle,
+  projects: initialProjects,
 }: {
   heroHeading?: string;
   heroSubtitle?: string;
+  projects: FeaturedProject[];
 }) {
-  const [projects, setProjects] = useState<SanityProject[]>([]);
+  const [projects] = useState<FeaturedProject[]>(initialProjects);
   const [filter, setFilter] = useState<Filter>("All");
-  const [loading, setLoading] = useState(true);
   const { openModal } = useProjectModal();
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const ctxRef = useRef<gsap.Context | null>(null);
-
-  useEffect(() => {
-    client
-      .fetch<SanityProject[]>(QUERY)
-      .then((data) => setProjects(data ?? []))
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false));
-  }, []);
 
   // Hero entrance animation
   useEffect(() => {
@@ -107,7 +94,7 @@ export default function ArchitecturalStructuralPage({
   }, [filtered.length, filter]);
 
   const handleOpen = useCallback(
-    (p: SanityProject) => openModal(p),
+    (p: FeaturedProject) => openModal(p as unknown as SanityProject),
     [openModal]
   );
 
@@ -168,7 +155,7 @@ export default function ArchitecturalStructuralPage({
           </div>
 
           {/* Grid */}
-          {loading ? null : filtered.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="flex items-center justify-center py-24">
               <div className="border border-gold px-12 py-8 text-center">
                 <p
@@ -184,15 +171,25 @@ export default function ArchitecturalStructuralPage({
           ) : (
             <div
               ref={gridRef}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]"
             >
-              {filtered.map((project) => (
-                <ProjectCard
-                  key={project._id}
-                  project={project}
-                  onOpen={handleOpen}
-                />
-              ))}
+              {filtered.map((project) => {
+                const imgSrc = project.mainImage
+                  ? urlFor(project.mainImage as Parameters<typeof urlFor>[0]).width(800).url()
+                  : null;
+                return (
+                  <MediaCard
+                    key={project._id}
+                    image={imgSrc}
+                    title={project.title}
+                    subcategory={project.subcategory}
+                    metadata={[project.client, project.location, project.year]}
+                    onClick={() => handleOpen(project)}
+                    aspectRatio="4/3"
+                    cardClassName="proj-card"
+                  />
+                );
+              })}
             </div>
           )}
         </div>
@@ -204,78 +201,3 @@ export default function ArchitecturalStructuralPage({
   );
 }
 
-function ProjectCard({
-  project,
-  onOpen,
-}: {
-  project: SanityProject;
-  onOpen: (p: SanityProject) => void;
-}) {
-  const imgSrc = project.mainImage
-    ? urlFor(project.mainImage as Parameters<typeof urlFor>[0])
-        .width(800)
-        .url()
-    : null;
-
-  return (
-    <div
-      className="proj-card group relative overflow-hidden cursor-pointer"
-      onClick={() => onOpen(project)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onOpen(project)}
-      aria-label={`View ${project.title}`}
-    >
-      <div className="relative w-full aspect-[4/3]">
-        {imgSrc ? (
-          <Image
-            src={imgSrc}
-            alt={project.title}
-            fill
-            className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[#1a1a1a]" />
-        )}
-
-        {/* Subtle vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-
-        {/* ADM-style slide-up overlay */}
-        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[400ms] ease-out bg-black/85">
-          <div className="p-5 flex flex-col gap-2">
-            {project.subcategory && (
-              <span
-                className="text-gold text-[10px] tracking-[0.2em] uppercase"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
-                {project.subcategory}
-              </span>
-            )}
-            <h3
-              className="text-xl md:text-2xl font-bold text-cream leading-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              {project.title}
-            </h3>
-            <div
-              className="flex flex-wrap gap-x-4 gap-y-0.5 text-[10px] text-cream/50 tracking-[0.12em] uppercase"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              {project.client && <span>{project.client}</span>}
-              {project.location && <span>{project.location}</span>}
-              {project.year && <span>{project.year}</span>}
-            </div>
-            <div className="flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase mt-1">
-              View Project
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="#C9952A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
