@@ -493,7 +493,7 @@ export default function ProjectModal() {
               <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold mb-4">
                 Tools &amp; Software
               </h4>
-              <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
+              <div className="flex flex-wrap gap-3">
                 {activeProject.tools.map((tool: string) => (
                   <ToolIcon key={tool} tool={tool} />
                 ))}
