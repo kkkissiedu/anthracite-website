@@ -7,7 +7,7 @@ export default defineConfig({
   name: "default",
   title: "The Anthracite Limited",
 
-  projectId: "x9ubqazh",
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: "production",
 
   plugins: [structureTool(), visionTool()],

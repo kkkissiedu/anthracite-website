@@ -29,3 +29,9 @@ Thumbs.db
 .claude/
 
 .vercel
+
+# Build outputs
+dist/
+
+# Sanity Studio runtime
+.sanity/
