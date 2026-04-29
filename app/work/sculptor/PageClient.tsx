@@ -34,6 +34,10 @@ export default function SculptorPage({
   const [projects] = useState<FeaturedProject[]>(initialProjects);
   const [filter, setFilter] = useState<Filter>("All");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const { openModal } = useProjectModal();
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -111,10 +115,15 @@ export default function SculptorPage({
     [openModal]
   );
 
-  const { onTouchStart, onTouchEnd } = useSwipe(
-    () => setCurrentIndex(i => (i + 1) % filtered.length),
-    () => setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length)
-  );
+  const goToNext = () => {
+    setDirection('next');
+    setCurrentIndex(i => (i + 1) % filtered.length);
+  };
+  const goToPrev = () => {
+    setDirection('prev');
+    setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length);
+  };
+  const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   return (
     <>
@@ -206,23 +215,28 @@ export default function SculptorPage({
                     ? urlFor(project.mainImage).width(900).url()
                     : null;
                   return (
-                    <MediaCard
-                      image={imgSrc}
-                      title={project.title}
-                      subcategory={project.subcategory}
-                      metadata={[project.client, project.year]}
-                      onClick={() => handleOpen(project)}
-                      aspectRatio={tall ? "3/4" : "4/3"}
-                      cardClassName="sculpt-card w-full"
-                      showAccent
-                      sizes="100vw"
-                    />
+                    <div
+                      key={currentIndex}
+                      className={prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}
+                    >
+                      <MediaCard
+                        image={imgSrc}
+                        title={project.title}
+                        subcategory={project.subcategory}
+                        metadata={[project.client, project.year]}
+                        onClick={() => handleOpen(project)}
+                        aspectRatio={tall ? "3/4" : "4/3"}
+                        cardClassName="sculpt-card w-full"
+                        showAccent
+                        sizes="100vw"
+                      />
+                    </div>
                   );
                 })()}
                 {filtered.length > 1 && (
                   <div className="flex items-center justify-center gap-4 mt-6">
                     <button
-                      onClick={() => setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length)}
+                      onClick={goToPrev}
                       className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                       aria-label="Previous project"
                     >
@@ -237,7 +251,7 @@ export default function SculptorPage({
                       ))}
                     </div>
                     <button
-                      onClick={() => setCurrentIndex(i => (i + 1) % filtered.length)}
+                      onClick={goToNext}
                       className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                       aria-label="Next project"
                     >

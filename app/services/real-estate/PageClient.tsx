@@ -30,6 +30,10 @@ export default function RealEstatePage({
   const [properties] = useState<SanityProperty[]>(initialProperties);
   const [activeProperty, setActiveProperty] = useState<SanityProperty | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -90,10 +94,15 @@ export default function RealEstatePage({
   const openProperty = useCallback((p: SanityProperty) => setActiveProperty(p), []);
   const closeProperty = useCallback(() => setActiveProperty(null), []);
 
-  const { onTouchStart, onTouchEnd } = useSwipe(
-    () => setCurrentIndex(i => (i + 1) % properties.length),
-    () => setCurrentIndex(i => (i - 1 + properties.length) % properties.length)
-  );
+  const goToNext = () => {
+    setDirection('next');
+    setCurrentIndex(i => (i + 1) % properties.length);
+  };
+  const goToPrev = () => {
+    setDirection('prev');
+    setCurrentIndex(i => (i - 1 + properties.length) % properties.length);
+  };
+  const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   return (
     <>
@@ -143,14 +152,19 @@ export default function RealEstatePage({
               <>
                 {/* Mobile: single-item slideshow */}
                 <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-                  <PropertyCard
-                    property={properties[currentIndex] ?? properties[0]}
-                    onOpen={openProperty}
-                  />
+                  <div
+                    key={currentIndex}
+                    className={prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}
+                  >
+                    <PropertyCard
+                      property={properties[currentIndex] ?? properties[0]}
+                      onOpen={openProperty}
+                    />
+                  </div>
                   {properties.length > 1 && (
                     <div className="flex items-center justify-center gap-4 mt-6">
                       <button
-                        onClick={() => setCurrentIndex(i => (i - 1 + properties.length) % properties.length)}
+                        onClick={goToPrev}
                         className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                         aria-label="Previous property"
                       >
@@ -165,7 +179,7 @@ export default function RealEstatePage({
                         ))}
                       </div>
                       <button
-                        onClick={() => setCurrentIndex(i => (i + 1) % properties.length)}
+                        onClick={goToNext}
                         className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                         aria-label="Next property"
                       >

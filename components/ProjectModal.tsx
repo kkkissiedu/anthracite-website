@@ -19,6 +19,7 @@ import {
   type SanityProject,
 } from "@/context/ProjectModalContext";
 import ToolIcon from "./ToolIcon";
+import { useSwipe } from "@/app/hooks/useSwipe";
 
 // ─── Lazy-load 3D viewer (avoids SSR issues with WebGL) ───────────────────────
 
@@ -111,23 +112,44 @@ function GoldSpinner() {
 
 function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
   const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const total = gallery.length;
+
+  const goToNext = () => {
+    setDirection('next');
+    setCurrent(c => Math.min(total - 1, c + 1));
+  };
+  const goToPrev = () => {
+    setDirection('prev');
+    setCurrent(c => Math.max(0, c - 1));
+  };
+
+  const { onTouchStart, onTouchEnd } = useSwipe(
+    () => goToNext(),
+    () => goToPrev(),
+  );
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") setCurrent((c) => Math.max(0, c - 1));
-      if (e.key === "ArrowRight") setCurrent((c) => Math.min(total - 1, c + 1));
+      if (e.key === "ArrowLeft") goToPrev();
+      if (e.key === "ArrowRight") goToNext();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [total]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       {/* Main image */}
-      <div className="relative flex-1 min-h-0 bg-black">
+      <div
+        key={current}
+        className={`relative flex-1 min-h-0 bg-black ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`}
+      >
         <Image
-          key={current}
           src={sanityImageSrc(gallery[current], 1600)}
           alt={`Image ${current + 1} of ${total}`}
           fill
@@ -143,7 +165,7 @@ function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
         {/* Prev arrow */}
         {current > 0 && (
           <button
-            onClick={() => setCurrent((c) => c - 1)}
+            onClick={goToPrev}
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-cream w-10 h-10 flex items-center justify-center transition-colors"
             aria-label="Previous image"
           >
@@ -153,7 +175,7 @@ function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
         {/* Next arrow */}
         {current < total - 1 && (
           <button
-            onClick={() => setCurrent((c) => c + 1)}
+            onClick={goToNext}
             className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-cream w-10 h-10 flex items-center justify-center transition-colors"
             aria-label="Next image"
           >
@@ -167,7 +189,10 @@ function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
           {gallery.map((img, i) => (
             <button
               key={i}
-              onClick={() => setCurrent(i)}
+              onClick={() => {
+                setDirection(i > current ? 'next' : 'prev');
+                setCurrent(i);
+              }}
               className={`relative w-16 h-12 shrink-0 overflow-hidden transition-opacity ${
                 i === current
                   ? "opacity-100 ring-1 ring-gold"

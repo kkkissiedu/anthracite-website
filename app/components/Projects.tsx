@@ -45,6 +45,10 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   const gridRef = useRef<HTMLDivElement>(null);
   const h2LineRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
   const featured = useMemo(() => {
     const seen = new Set<string>();
@@ -58,10 +62,15 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
     return deduped;
   }, [projects]);
 
-  const { onTouchStart, onTouchEnd } = useSwipe(
-    () => setCurrentIndex(i => (i + 1) % featured.length),
-    () => setCurrentIndex(i => (i - 1 + featured.length) % featured.length)
-  );
+  const goToNext = () => {
+    setDirection('next');
+    setCurrentIndex(i => (i + 1) % featured.length);
+  };
+  const goToPrev = () => {
+    setDirection('prev');
+    setCurrentIndex(i => (i - 1 + featured.length) % featured.length);
+  };
+  const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -153,8 +162,9 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                   : null;
                 return (
                   <div
+                    key={currentIndex}
                     data-gsap="true"
-                    className="fw-card group relative overflow-hidden cursor-pointer w-full"
+                    className={`fw-card group relative overflow-hidden cursor-pointer w-full ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`}
                     onClick={() => openModal(project)}
                     role="button"
                     tabIndex={0}
@@ -203,7 +213,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
               {featured.length > 1 && (
                 <div className="flex items-center justify-center gap-4 mt-6">
                   <button
-                    onClick={() => setCurrentIndex(i => (i - 1 + featured.length) % featured.length)}
+                    onClick={goToPrev}
                     className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                     aria-label="Previous project"
                   >
@@ -218,7 +228,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                     ))}
                   </div>
                   <button
-                    onClick={() => setCurrentIndex(i => (i + 1) % featured.length)}
+                    onClick={goToNext}
                     className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                     aria-label="Next project"
                   >

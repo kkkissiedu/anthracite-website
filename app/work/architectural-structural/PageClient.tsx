@@ -31,6 +31,10 @@ export default function ArchitecturalStructuralPage({
   const [projects] = useState<FeaturedProject[]>(initialProjects);
   const [filter, setFilter] = useState<Filter>("All");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const { openModal } = useProjectModal();
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -109,10 +113,15 @@ export default function ArchitecturalStructuralPage({
     [openModal]
   );
 
-  const { onTouchStart, onTouchEnd } = useSwipe(
-    () => setCurrentIndex(i => (i + 1) % filtered.length),
-    () => setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length)
-  );
+  const goToNext = () => {
+    setDirection('next');
+    setCurrentIndex(i => (i + 1) % filtered.length);
+  };
+  const goToPrev = () => {
+    setDirection('prev');
+    setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length);
+  };
+  const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   return (
     <>
@@ -185,21 +194,26 @@ export default function ArchitecturalStructuralPage({
                     ? urlFor(project.mainImage).width(800).url()
                     : null;
                   return (
-                    <MediaCard
-                      image={imgSrc}
-                      title={project.title}
-                      subcategory={project.subcategory}
-                      metadata={[project.client, project.location, project.year]}
-                      onClick={() => handleOpen(project)}
-                      aspectRatio="4/3"
-                      cardClassName="proj-card w-full"
-                    />
+                    <div
+                      key={currentIndex}
+                      className={prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}
+                    >
+                      <MediaCard
+                        image={imgSrc}
+                        title={project.title}
+                        subcategory={project.subcategory}
+                        metadata={[project.client, project.location, project.year]}
+                        onClick={() => handleOpen(project)}
+                        aspectRatio="4/3"
+                        cardClassName="proj-card w-full"
+                      />
+                    </div>
                   );
                 })()}
                 {filtered.length > 1 && (
                   <div className="flex items-center justify-center gap-4 mt-6">
                     <button
-                      onClick={() => setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length)}
+                      onClick={goToPrev}
                       className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                       aria-label="Previous project"
                     >
@@ -214,7 +228,7 @@ export default function ArchitecturalStructuralPage({
                       ))}
                     </div>
                     <button
-                      onClick={() => setCurrentIndex(i => (i + 1) % filtered.length)}
+                      onClick={goToNext}
                       className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
                       aria-label="Next project"
                     >
