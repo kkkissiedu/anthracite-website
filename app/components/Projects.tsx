@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -49,17 +49,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
 
-  const featured = useMemo(() => {
-    const seen = new Set<string>();
-    const deduped: SanityProject[] = [];
-    for (const p of projects) {
-      if (!seen.has(p.category)) {
-        seen.add(p.category);
-        deduped.push(p);
-      }
-    }
-    return deduped;
-  }, [projects]);
+  const featured = projects;
 
   const goToNext = () => {
     setDirection('next');

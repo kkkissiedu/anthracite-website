@@ -90,7 +90,7 @@ export type FeaturedProject = Project;
 
 export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
   return client.fetch(
-    `*[_type == "project" && featured == true] | order(displayOrder asc) [0...6] {
+    `*[_type == "project" && featured == true] | order(order asc) [0...6] {
       _id,
       title,
       slug,
@@ -99,7 +99,7 @@ export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
       overview,
       category,
       subcategory,
-      displayOrder,
+      "displayOrder": order,
       client,
       location,
       year,
