@@ -157,8 +157,8 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
               {(() => {
                 const project = featured[currentIndex];
                 const cat = project.category as Category;
-                const imgSrc = project.mainImage
-                  ? urlFor(project.mainImage).width(800).url()
+                const imgSrc = project.images?.[0]
+                  ? urlFor(project.images[0]).width(800).url()
                   : null;
                 return (
                   <div
@@ -242,8 +242,8 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
             <div ref={gridRef} className="hidden md:grid md:grid-cols-3 gap-6">
               {featured.map((project) => {
                 const cat = project.category as Category;
-                const imgSrc = project.mainImage
-                  ? urlFor(project.mainImage).width(1200).url()
+                const imgSrc = project.images?.[0]
+                  ? urlFor(project.images[0]).width(1200).url()
                   : null;
 
                 return (

@@ -19,7 +19,6 @@ export type Project = {
   description?: string;
   overview?: SanityPortableTextBlock[];
   images?: SanityImageSource[];
-  mainImage?: SanityImageSource;
   gallery?: SanityImageSource[];
   displayOrder?: number;
   videoUrl?: string;

@@ -190,8 +190,8 @@ export default function ArchitecturalStructuralPage({
               <>
                 {(() => {
                   const project = filtered[currentIndex] ?? filtered[0];
-                  const imgSrc = project.mainImage
-                    ? urlFor(project.mainImage).width(800).url()
+                  const imgSrc = project.images?.[0]
+                    ? urlFor(project.images[0]).width(800).url()
                     : null;
                   return (
                     <div
@@ -258,8 +258,8 @@ export default function ArchitecturalStructuralPage({
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]"
               >
                 {filtered.map((project) => {
-                  const imgSrc = project.mainImage
-                    ? urlFor(project.mainImage).width(800).url()
+                  const imgSrc = project.images?.[0]
+                    ? urlFor(project.images[0]).width(800).url()
                     : null;
                   return (
                     <MediaCard

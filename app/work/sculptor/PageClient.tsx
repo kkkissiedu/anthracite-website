@@ -211,8 +211,8 @@ export default function SculptorPage({
                 {(() => {
                   const project = filtered[currentIndex] ?? filtered[0];
                   const tall = currentIndex % 3 === 1;
-                  const imgSrc = project.mainImage
-                    ? urlFor(project.mainImage).width(900).url()
+                  const imgSrc = project.images?.[0]
+                    ? urlFor(project.images[0]).width(900).url()
                     : null;
                   return (
                     <div
@@ -286,8 +286,8 @@ export default function SculptorPage({
               >
                 {filtered.map((project, i) => {
                   const tall = i % 3 === 1;
-                  const imgSrc = project.mainImage
-                    ? urlFor(project.mainImage).width(900).url()
+                  const imgSrc = project.images?.[0]
+                    ? urlFor(project.images[0]).width(900).url()
                     : null;
                   return (
                     <MediaCard
