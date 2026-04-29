@@ -125,9 +125,10 @@ export async function getProjectsByCategory(
   category: string
 ): Promise<FeaturedProject[]> {
   return client.fetch(
-    `*[_type == "project" && category == $category] | order(order asc) {
-      _id, title, category, subcategory, description, overview,
-      mainImage {
+    `*[_type == "project" && category == $category] | order(displayOrder asc) {
+      _id, title, slug, category, subcategory, description, shortDescription,
+      client, location, year, projectType, tools, videoUrl, panoramaUrl, displayOrder,
+      images[] {
         asset-> {
           _id,
           url,
@@ -136,19 +137,7 @@ export async function getProjectsByCategory(
           }
         },
         alt
-      },
-      gallery[] {
-        asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions
-          }
-        },
-        alt
-      },
-      videoUrl, videoFile, panorama, model3d,
-      client, location, year, tools
+      }
     }`,
     { category },
     { next: { revalidate: 60 } }
