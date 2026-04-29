@@ -45,6 +45,31 @@ h6 {
   font-family: var(--font-heading);
 }
 
+/* Custom scrollbar — WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0D0D0D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C9952A;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37;
+}
+
+/* Custom scrollbar — Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #C9952A #0D0D0D;
+}
+
 /* Gold gradient line animation */
 @keyframes gold-line-sweep {
   0% {
