@@ -445,7 +445,7 @@ export default function ProjectModal() {
             </div>
 
             {/* Meta row */}
-            <div className="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-[10px] tracking-[0.18em] uppercase">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3 text-[10px] tracking-[0.18em] uppercase">
               {activeProject.client && (
                 <span className="text-cream/40">
                   Client:{" "}
@@ -475,6 +475,16 @@ export default function ProjectModal() {
                   {activeProject.subcategory}
                 </span>
               )}
+              {activeProject.tools && activeProject.tools.length > 0 && activeProject.category !== 'real-estate-construction' && (
+                <>
+                  <span className="hidden md:block w-px h-4 bg-white/20 mx-3" />
+                  <div className="flex flex-wrap items-center gap-2">
+                    {activeProject.tools.map((tool: string) => (
+                      <ToolIcon key={tool} tool={tool} size={24} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -484,20 +494,6 @@ export default function ProjectModal() {
               <p className="text-cream/60 text-sm leading-relaxed whitespace-pre-line">
                 {overviewText}
               </p>
-            </div>
-          )}
-
-          {/* ── Tools & Software ── */}
-          {activeProject.tools && activeProject.tools.length > 0 && activeProject.category !== 'real-estate-construction' && (
-            <div className="shrink-0 px-6 pt-4 pb-5 border-b border-white/10">
-              <h4 className="text-[10px] uppercase tracking-[0.2em] text-gold mb-4">
-                Tools &amp; Software
-              </h4>
-              <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
-                {activeProject.tools.map((tool: string) => (
-                  <ToolIcon key={tool} tool={tool} />
-                ))}
-              </div>
             </div>
           )}
 

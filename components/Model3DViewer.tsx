@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import type { Group } from "three";
 
 function GoldSpinnerOverlay() {
@@ -23,11 +22,15 @@ function GLTFScene({ url, onLoad }: { url: string; onLoad: () => void }) {
   return <primitive object={scene} />;
 }
 
-function FBXScene({ url, onLoad }: { url: string; onLoad: () => void }) {
-  const fbx = useLoader(FBXLoader, url) as Group;
-  useEffect(() => { onLoad(); }, [onLoad]);
-  return <primitive object={fbx} />;
-}
+const LazyFBXScene = lazy(async () => {
+  const { FBXLoader } = await import("three/examples/jsm/loaders/FBXLoader.js");
+  function FBXScene({ url, onLoad }: { url: string; onLoad: () => void }) {
+    const fbx = useLoader(FBXLoader, url) as Group;
+    useEffect(() => { onLoad(); }, [onLoad]);
+    return <primitive object={fbx} />;
+  }
+  return { default: FBXScene };
+});
 
 interface Props {
   url: string;
@@ -46,7 +49,7 @@ export default function Model3DViewer({ url }: Props) {
         <directionalLight position={[-5, 3, -5]} intensity={0.3} color="#D4AF37" />
         <Suspense fallback={null}>
           {ext === "fbx" ? (
-            <FBXScene url={url} onLoad={() => setLoaded(true)} />
+            <LazyFBXScene url={url} onLoad={() => setLoaded(true)} />
           ) : (
             <GLTFScene url={url} onLoad={() => setLoaded(true)} />
           )}

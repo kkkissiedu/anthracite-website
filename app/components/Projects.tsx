@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { urlFor } from "@/lib/sanity";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
+import { useSwipe } from "@/app/hooks/useSwipe";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,6 +57,11 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
     }
     return deduped;
   }, [projects]);
+
+  const { onTouchStart, onTouchEnd } = useSwipe(
+    () => setCurrentIndex(i => (i + 1) % featured.length),
+    () => setCurrentIndex(i => (i - 1 + featured.length) % featured.length)
+  );
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -138,7 +144,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         ) : (
           <>
             {/* Mobile: carousel — one card at a time */}
-            <div className="md:hidden">
+            <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
               {(() => {
                 const project = featured[currentIndex];
                 const cat = project.category as Category;
