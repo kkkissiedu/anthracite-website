@@ -69,28 +69,19 @@ export default function Hero({
       ref={containerRef}
       className="relative min-h-screen flex flex-col items-center justify-center bg-anthracite overflow-hidden"
     >
-      {/* Desktop only — hide video on mobile to save 3MB on cellular */}
       <video
-        className="hidden md:block absolute inset-0 w-full h-full object-cover z-[0] pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover z-[0] pointer-events-none"
         autoPlay
         muted
         loop
         playsInline
+        preload="none"
         poster="/hero-poster.jpg"
         aria-hidden
         style={{ filter: 'brightness(0.45) saturate(1.2) sepia(0.3) hue-rotate(5deg)' }}
       >
         <source src="/hero.webm" type="video/webm" />
       </video>
-      {/* Mobile only — static poster image */}
-      <div
-        className="md:hidden absolute inset-0 w-full h-full bg-cover bg-center z-[0]"
-        style={{
-          backgroundImage: "url('/hero-poster.jpg')",
-          filter: 'brightness(0.45) saturate(1.2) sepia(0.3) hue-rotate(5deg)',
-        }}
-        aria-hidden
-      />
 
       {/* Dark overlay for legibility */}
       <div className="absolute inset-0 bg-black/60 z-[2]" aria-hidden />

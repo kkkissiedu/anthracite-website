@@ -111,6 +111,7 @@ export default function Services({
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const h2LineRef = useRef<HTMLDivElement>(null);
+  const exploreButtonRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   const services = [
     {
@@ -171,6 +172,25 @@ export default function Services({
           },
         }
       );
+
+      // Pulse animation on explore buttons when section enters viewport
+      gsap.fromTo(
+        exploreButtonRefs.current.filter(Boolean),
+        { scale: 1 },
+        {
+          scale: 1.08,
+          duration: 0.4,
+          ease: 'power1.inOut',
+          yoyo: true,
+          repeat: 2,
+          delay: 0.6,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%',
+            once: true,
+          }
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -224,6 +244,9 @@ export default function Services({
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
+              buttonRef={(el) => {
+                exploreButtonRefs.current[i] = el;
+              }}
             />
           ))}
         </div>
@@ -243,8 +266,8 @@ type ServiceItem = {
 
 const ServiceCard = forwardRef<
   HTMLDivElement,
-  { service: ServiceItem; href: string }
->(({ service, href }, ref) => {
+  { service: ServiceItem; href: string; buttonRef?: (el: HTMLAnchorElement | null) => void }
+>(({ service, href, buttonRef }, ref) => {
   const { Icon, title, subtitle, description } = service;
   const router = useRouter();
 
@@ -290,12 +313,13 @@ const ServiceCard = forwardRef<
 
       {/* CTA — Link navigates to sub-page */}
       <Link
+        ref={buttonRef}
         href={href}
         onClick={(e) => e.stopPropagation()}
-        className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm"
+        className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm min-h-[48px] px-6 text-sm"
         aria-label={`Explore ${title}`}
       >
-        Explore →
+        EXPLORE PROJECTS →
       </Link>
 
       {/* Bottom gold accent line */}

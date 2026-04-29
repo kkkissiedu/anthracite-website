@@ -9,6 +9,7 @@ import { urlFor } from "@/lib/sanity";
 import type { SanityProperty } from "@/lib/sanity";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { useSwipe } from "@/app/hooks/useSwipe";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +29,7 @@ export default function RealEstatePage({
 }) {
   const [properties] = useState<SanityProperty[]>(initialProperties);
   const [activeProperty, setActiveProperty] = useState<SanityProperty | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -88,6 +90,11 @@ export default function RealEstatePage({
   const openProperty = useCallback((p: SanityProperty) => setActiveProperty(p), []);
   const closeProperty = useCallback(() => setActiveProperty(null), []);
 
+  const { onTouchStart, onTouchEnd } = useSwipe(
+    () => setCurrentIndex(i => (i + 1) % properties.length),
+    () => setCurrentIndex(i => (i - 1 + properties.length) % properties.length)
+  );
+
   return (
     <>
       <Navbar />
@@ -133,14 +140,51 @@ export default function RealEstatePage({
                 </div>
               </div>
             ) : (
-              <div
-                ref={gridRef}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]"
-              >
-                {properties.map((p) => (
-                  <PropertyCard key={p._id} property={p} onOpen={openProperty} />
-                ))}
-              </div>
+              <>
+                {/* Mobile: single-item slideshow */}
+                <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+                  <PropertyCard
+                    property={properties[currentIndex] ?? properties[0]}
+                    onOpen={openProperty}
+                  />
+                  {properties.length > 1 && (
+                    <div className="flex items-center justify-center gap-4 mt-6">
+                      <button
+                        onClick={() => setCurrentIndex(i => (i - 1 + properties.length) % properties.length)}
+                        className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                        aria-label="Previous property"
+                      >
+                        ←
+                      </button>
+                      <div className="flex gap-2">
+                        {properties.map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
+                          />
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => setCurrentIndex(i => (i + 1) % properties.length)}
+                        className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                        aria-label="Next property"
+                      >
+                        →
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Desktop: keep existing grid — unchanged */}
+                <div
+                  ref={gridRef}
+                  className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]"
+                >
+                  {properties.map((p) => (
+                    <PropertyCard key={p._id} property={p} onOpen={openProperty} />
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </section>

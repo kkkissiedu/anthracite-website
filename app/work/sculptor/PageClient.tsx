@@ -8,6 +8,7 @@ import { useProjectModal, type SanityProject } from "@/context/ProjectModalConte
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import MediaCard from "@/app/components/MediaCard";
+import { useSwipe } from "@/app/hooks/useSwipe";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +33,7 @@ export default function SculptorPage({
 }) {
   const [projects] = useState<FeaturedProject[]>(initialProjects);
   const [filter, setFilter] = useState<Filter>("All");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const { openModal } = useProjectModal();
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -99,9 +101,19 @@ export default function SculptorPage({
     };
   }, [filtered.length, filter]);
 
+  // Reset carousel index when filter changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [filter]);
+
   const handleOpen = useCallback(
     (p: FeaturedProject) => openModal(p as unknown as SanityProject),
     [openModal]
+  );
+
+  const { onTouchStart, onTouchEnd } = useSwipe(
+    () => setCurrentIndex(i => (i + 1) % filtered.length),
+    () => setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length)
   );
 
   return (
@@ -175,49 +187,113 @@ export default function SculptorPage({
             ))}
           </div>
 
-          {/* Masonry grid */}
-          {filtered.length === 0 ? (
-            <div className="flex items-center justify-center py-24">
-              <div className="border border-gold px-12 py-8 text-center">
-                <p className="text-gold text-sm tracking-[0.2em] uppercase">
-                  {projects.length === 0
-                    ? "Projects coming soon"
-                    : "No projects in this category"}
-                </p>
+          {/* Mobile: single-item slideshow */}
+          <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+            {filtered.length === 0 ? (
+              <div className="flex items-center justify-center py-24">
+                <div className="border border-gold px-12 py-8 text-center">
+                  <p className="text-gold text-sm tracking-[0.2em] uppercase">
+                    {projects.length === 0 ? "Projects coming soon" : "No projects in this category"}
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div
-              ref={gridRef}
-              style={{
-                columns: "300px",
-                columnGap: "24px",
-                minHeight: "400px",
-              }}
-            >
-              {filtered.map((project, i) => {
-                const tall = i % 3 === 1;
-                const imgSrc = project.mainImage
-                  ? urlFor(project.mainImage).width(900).url()
-                  : null;
-                return (
-                  <MediaCard
-                    key={project._id}
-                    image={imgSrc}
-                    title={project.title}
-                    subcategory={project.subcategory}
-                    metadata={[project.client, project.year]}
-                    onClick={() => handleOpen(project)}
-                    aspectRatio={tall ? "3/4" : "4/3"}
-                    cardClassName="sculpt-card mb-6"
-                    wrapperStyle={{ breakInside: "avoid" }}
-                    showAccent
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                );
-              })}
-            </div>
-          )}
+            ) : (
+              <>
+                {(() => {
+                  const project = filtered[currentIndex] ?? filtered[0];
+                  const tall = currentIndex % 3 === 1;
+                  const imgSrc = project.mainImage
+                    ? urlFor(project.mainImage).width(900).url()
+                    : null;
+                  return (
+                    <MediaCard
+                      image={imgSrc}
+                      title={project.title}
+                      subcategory={project.subcategory}
+                      metadata={[project.client, project.year]}
+                      onClick={() => handleOpen(project)}
+                      aspectRatio={tall ? "3/4" : "4/3"}
+                      cardClassName="sculpt-card w-full"
+                      showAccent
+                      sizes="100vw"
+                    />
+                  );
+                })()}
+                {filtered.length > 1 && (
+                  <div className="flex items-center justify-center gap-4 mt-6">
+                    <button
+                      onClick={() => setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length)}
+                      className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                      aria-label="Previous project"
+                    >
+                      ←
+                    </button>
+                    <div className="flex gap-2">
+                      {filtered.map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
+                        />
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setCurrentIndex(i => (i + 1) % filtered.length)}
+                      className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                      aria-label="Next project"
+                    >
+                      →
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Desktop: masonry grid — unchanged */}
+          <div className="hidden md:block">
+            {filtered.length === 0 ? (
+              <div className="flex items-center justify-center py-24">
+                <div className="border border-gold px-12 py-8 text-center">
+                  <p className="text-gold text-sm tracking-[0.2em] uppercase">
+                    {projects.length === 0
+                      ? "Projects coming soon"
+                      : "No projects in this category"}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div
+                ref={gridRef}
+                style={{
+                  columns: "300px",
+                  columnGap: "24px",
+                  minHeight: "400px",
+                }}
+              >
+                {filtered.map((project, i) => {
+                  const tall = i % 3 === 1;
+                  const imgSrc = project.mainImage
+                    ? urlFor(project.mainImage).width(900).url()
+                    : null;
+                  return (
+                    <MediaCard
+                      key={project._id}
+                      image={imgSrc}
+                      title={project.title}
+                      subcategory={project.subcategory}
+                      metadata={[project.client, project.year]}
+                      onClick={() => handleOpen(project)}
+                      aspectRatio={tall ? "3/4" : "4/3"}
+                      cardClassName="sculpt-card mb-6"
+                      wrapperStyle={{ breakInside: "avoid" }}
+                      showAccent
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
