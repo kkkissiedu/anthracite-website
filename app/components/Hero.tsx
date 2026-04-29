@@ -78,13 +78,13 @@ export default function Hero({
         preload="none"
         poster="/hero-poster.jpg"
         aria-hidden
-        style={{ filter: 'brightness(0.45) saturate(1.2) sepia(0.3) hue-rotate(5deg)' }}
+        style={{ filter: 'brightness(0.65) saturate(1.2) sepia(0.3) hue-rotate(5deg)' }}
       >
         <source src="/hero.webm" type="video/webm" />
       </video>
 
       {/* Dark overlay for legibility */}
-      <div className="absolute inset-0 bg-black/60 z-[2]" aria-hidden />
+      <div className="absolute inset-0 bg-black/40 z-[2]" aria-hidden />
 
       {/* Subtle radial glow */}
       <div
