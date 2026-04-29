@@ -122,9 +122,9 @@ export async function getProjectsByCategory(
   category: string
 ): Promise<FeaturedProject[]> {
   return client.fetch(
-    `*[_type == "project" && category == $category] | order(displayOrder asc) {
+    `*[_type == "project" && category == $category] | order(order asc) {
       _id, title, slug, category, subcategory, description, shortDescription,
-      overview, client, location, year, projectType, tools, videoUrl, panoramaUrl, displayOrder,
+      overview, client, location, year, projectType, tools, videoUrl, panoramaUrl, "displayOrder": order,
       videoFile { asset-> { url } },
       model3d { asset-> { url } },
       mainImage { asset-> { _id, url, metadata { dimensions } } },
