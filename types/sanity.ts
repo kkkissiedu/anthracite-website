@@ -12,12 +12,16 @@ export type SanityPortableTextBlock = {
 export type Project = {
   _id: string;
   title: string;
+  slug?: { current: string };
   category: string;
   subcategory?: string;
+  shortDescription?: string;
   description?: string;
   overview?: SanityPortableTextBlock[];
+  images?: SanityImageSource[];
   mainImage?: SanityImageSource;
   gallery?: SanityImageSource[];
+  displayOrder?: number;
   videoUrl?: string;
   videoFile?: { asset: { url: string } };
   model3d?: { asset: { url: string } };

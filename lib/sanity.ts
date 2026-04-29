@@ -90,10 +90,8 @@ export type FeaturedProject = Project;
 
 export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
   return client.fetch(
-    `*[_type == "project" && featured == true] | order(order asc) {
-      _id, title, category, subcategory, description, overview,
-      mainImage, gallery, videoUrl, videoFile, panorama, model3d,
-      client, location, year, tools
+    `*[_type == "project" && featured == true] | order(displayOrder asc) [0...6] {
+      _id, title, slug, shortDescription, images, category, displayOrder
     }`,
     {},
     { next: { revalidate: 60 } }
