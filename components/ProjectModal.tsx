@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
-import { urlFor, type SanityImageSource } from "@/lib/sanity";
+import type { ResolvedImage } from "@/types/sanity";
 import {
   useProjectModal,
   type SanityProject,
@@ -91,8 +91,8 @@ function extractText(blocks: unknown[]): string {
     .join("\n\n");
 }
 
-function sanityImageSrc(img: SanityImageSource, width: number): string {
-  return urlFor(img).width(width).url();
+function sanityImageSrc(img: ResolvedImage): string {
+  return img.asset.url;
 }
 
 // ─── Spinner ──────────────────────────────────────────────────────────────────
@@ -110,7 +110,7 @@ function GoldSpinner() {
 
 // ─── Images tab ───────────────────────────────────────────────────────────────
 
-function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
+function ImagesTab({ gallery }: { gallery: ResolvedImage[] }) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState<'next' | 'prev'>('next');
   const [prefersReducedMotion] = useState(() =>
@@ -150,7 +150,7 @@ function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
         className={`relative flex-1 min-h-0 bg-black ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`}
       >
         <Image
-          src={sanityImageSrc(gallery[current], 1600)}
+          src={sanityImageSrc(gallery[current])}
           alt={`Image ${current + 1} of ${total}`}
           fill
           className="object-contain"
@@ -201,7 +201,7 @@ function ImagesTab({ gallery }: { gallery: SanityImageSource[] }) {
               aria-label={`Go to image ${i + 1}`}
             >
               <Image
-                src={sanityImageSrc(img, 200)}
+                src={sanityImageSrc(img)}
                 alt={`Thumbnail ${i + 1}`}
                 fill
                 className="object-cover"
@@ -285,13 +285,13 @@ declare global {
   }
 }
 
-function PanoramaTab({ panorama }: { panorama: SanityImageSource[] }) {
+function PanoramaTab({ panorama }: { panorama: ResolvedImage[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<{ destroy(): void } | null>(null);
   const [currentPano, setCurrentPano] = useState(0);
 
   useEffect(() => {
-    const imageUrl = sanityImageSrc(panorama[currentPano], 4096);
+    const imageUrl = sanityImageSrc(panorama[currentPano]);
 
     const initViewer = () => {
       if (!containerRef.current || !window.pannellum) return;

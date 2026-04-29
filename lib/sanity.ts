@@ -96,7 +96,9 @@ export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
       slug,
       shortDescription,
       description,
+      overview,
       category,
+      subcategory,
       displayOrder,
       client,
       location,
@@ -105,16 +107,11 @@ export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
       tools,
       videoUrl,
       panoramaUrl,
-      images[] {
-        asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions
-          }
-        },
-        alt
-      }
+      videoFile { asset-> { url } },
+      model3d { asset-> { url } },
+      mainImage { asset-> { _id, url, metadata { dimensions } } },
+      gallery[] { asset-> { _id, url, metadata { dimensions } } },
+      panorama[] { asset-> { _id, url, metadata { dimensions } } }
     }`,
     {},
     { next: { revalidate: 60 } }
@@ -127,17 +124,12 @@ export async function getProjectsByCategory(
   return client.fetch(
     `*[_type == "project" && category == $category] | order(displayOrder asc) {
       _id, title, slug, category, subcategory, description, shortDescription,
-      client, location, year, projectType, tools, videoUrl, panoramaUrl, displayOrder,
-      images[] {
-        asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions
-          }
-        },
-        alt
-      }
+      overview, client, location, year, projectType, tools, videoUrl, panoramaUrl, displayOrder,
+      videoFile { asset-> { url } },
+      model3d { asset-> { url } },
+      mainImage { asset-> { _id, url, metadata { dimensions } } },
+      gallery[] { asset-> { _id, url, metadata { dimensions } } },
+      panorama[] { asset-> { _id, url, metadata { dimensions } } }
     }`,
     { category },
     { next: { revalidate: 60 } }

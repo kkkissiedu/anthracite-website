@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { urlFor, type FeaturedProject } from "@/lib/sanity";
+import { type FeaturedProject } from "@/lib/sanity";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -211,9 +211,7 @@ export default function SculptorPage({
                 {(() => {
                   const project = filtered[currentIndex] ?? filtered[0];
                   const tall = currentIndex % 3 === 1;
-                  const imgSrc = project.images?.[0]
-                    ? urlFor(project.images[0]).width(900).url()
-                    : null;
+                  const imgSrc = project.mainImage?.asset?.url ?? null;
                   return (
                     <div
                       key={currentIndex}
@@ -286,9 +284,7 @@ export default function SculptorPage({
               >
                 {filtered.map((project, i) => {
                   const tall = i % 3 === 1;
-                  const imgSrc = project.images?.[0]
-                    ? urlFor(project.images[0]).width(900).url()
-                    : null;
+                  const imgSrc = project.mainImage?.asset?.url ?? null;
                   return (
                     <MediaCard
                       key={project._id}

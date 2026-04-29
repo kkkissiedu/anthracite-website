@@ -4,7 +4,7 @@ import { useMemo, useEffect, useRef, forwardRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { urlFor, type RawTeamMember } from "@/lib/sanity";
+import { type RawTeamMember } from "@/lib/sanity";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,9 +129,7 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
         name: m.name,
         role: m.role,
         bio: m.bio,
-        photo: m.photo
-          ? urlFor(m.photo).width(700).url()
-          : null,
+        photo: m.photo?.asset?.url ?? null,
         linkedinUrl: m.linkedinUrl,
       })),
     [rawMembers]

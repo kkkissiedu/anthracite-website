@@ -5,7 +5,6 @@ import { useBodyScrollLock } from "@/app/hooks/useBodyScrollLock";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { urlFor } from "@/lib/sanity";
 import type { SanityProperty } from "@/lib/sanity";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -223,12 +222,7 @@ function PropertyCard({
   onOpen: (p: SanityProperty) => void;
 }) {
   const primaryImage = property.images?.[0];
-  const imgSrc = primaryImage
-    ? urlFor(primaryImage)
-        .width(800)
-        .height(600)
-        .url()
-    : null;
+  const imgSrc = primaryImage?.asset?.url ?? null;
 
   return (
     <div className="prop-card group flex flex-col bg-[#111] border border-white/5 hover:border-gold/30 transition-colors duration-300">
@@ -505,12 +499,8 @@ function PropertyModal({
   }
 
   // Build image display URLs
-  const imageUrls = images.map((img) =>
-    urlFor(img).width(1200).url()
-  );
-  const thumbUrls = images.map((img) =>
-    urlFor(img).width(120).height(80).url()
-  );
+  const imageUrls = images.map((img) => img.asset.url);
+  const thumbUrls = images.map((img) => img.asset.url);
 
   // Parse YouTube / Vimeo embed URL
   function getEmbedUrl(url: string): string | null {

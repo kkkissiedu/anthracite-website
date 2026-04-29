@@ -4,7 +4,6 @@ import { useMemo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { urlFor } from "@/lib/sanity";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
 import { useSwipe } from "@/app/hooks/useSwipe";
 
@@ -157,9 +156,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
               {(() => {
                 const project = featured[currentIndex];
                 const cat = project.category as Category;
-                const imgSrc = project.images?.[0]
-                  ? urlFor(project.images[0]).width(800).url()
-                  : null;
+                const imgSrc = project.mainImage?.asset?.url ?? null;
                 return (
                   <div
                     key={currentIndex}
@@ -242,9 +239,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
             <div ref={gridRef} className="hidden md:grid md:grid-cols-3 gap-6">
               {featured.map((project) => {
                 const cat = project.category as Category;
-                const imgSrc = project.images?.[0]
-                  ? urlFor(project.images[0]).width(1200).url()
-                  : null;
+                const imgSrc = project.mainImage?.asset?.url ?? null;
 
                 return (
                   <div

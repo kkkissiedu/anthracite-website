@@ -9,6 +9,17 @@ export type SanityPortableTextBlock = {
   children?: { _type: string; text: string; marks?: string[] }[];
 };
 
+export type ResolvedImage = {
+  asset: {
+    _id: string;
+    url: string;
+    metadata?: {
+      dimensions?: { width: number; height: number; aspectRatio: number };
+    };
+  };
+  alt?: string;
+};
+
 export type Project = {
   _id: string;
   title: string;
@@ -18,13 +29,13 @@ export type Project = {
   shortDescription?: string;
   description?: string;
   overview?: SanityPortableTextBlock[];
-  images?: SanityImageSource[];
-  gallery?: SanityImageSource[];
+  mainImage?: ResolvedImage;
+  gallery?: ResolvedImage[];
+  panorama?: ResolvedImage[];
   displayOrder?: number;
   videoUrl?: string;
   videoFile?: { asset: { url: string } };
   model3d?: { asset: { url: string } };
-  panorama?: SanityImageSource[];
   panoramaUrl?: string;
   client?: string;
   location?: string;
@@ -39,7 +50,7 @@ export type Property = {
   slug?: { current: string };
   description?: string;
   shortDescription?: string;
-  images?: SanityImageSource[];
+  images?: ResolvedImage[];
   videoUrl?: string;
   panoramaUrl?: string;
   location?: string;
@@ -57,6 +68,6 @@ export type TeamMember = {
   name: string;
   role: string;
   bio: string;
-  photo: SanityImageSource | null;
+  photo: ResolvedImage | null;
   linkedinUrl: string | null;
 };
