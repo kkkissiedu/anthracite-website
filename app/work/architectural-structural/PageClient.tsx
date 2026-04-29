@@ -129,7 +129,7 @@ export default function ArchitecturalStructuralPage({
 
       <main id="main-content">
       {/* Hero */}
-      <section className="bg-anthracite text-cream pt-36 pb-20 px-6 md:px-8 lg:px-16">
+      <section className="bg-anthracite text-cream pt-24 pb-4 md:pt-36 md:pb-20 px-6 md:px-8 lg:px-16">
         <div ref={heroRef} className="max-w-[1280px] mx-auto">
           <p
             data-hero
@@ -139,19 +139,19 @@ export default function ArchitecturalStructuralPage({
           </p>
           <h1
             data-hero
-            className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream text-balance"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold leading-none tracking-tight text-cream text-balance"
           >
             {heroHeading ?? DEFAULT_HEADING}
           </h1>
           <p
             data-hero
-            className="mt-8 text-cream/55 max-w-2xl text-base leading-relaxed"
+            className="mt-2 md:mt-8 text-sm md:text-base text-cream/55 max-w-2xl leading-relaxed"
           >
             {heroSubtitle ?? DEFAULT_SUBTITLE}
           </p>
 
           {/* Gold accent line */}
-          <div data-hero className="mt-12 h-px w-24 bg-gold/50" />
+          <div data-hero className="my-3 md:my-6 md:mt-12 h-px w-24 bg-gold/50" />
         </div>
       </section>
 
@@ -159,13 +159,13 @@ export default function ArchitecturalStructuralPage({
       <section className="bg-anthracite pb-28 px-6 md:px-8 lg:px-16">
         <div className="max-w-[1280px] mx-auto">
           {/* Filter bar */}
-          <div className="flex flex-wrap gap-3 mb-12">
+          <div className="flex overflow-x-auto gap-2 pb-2 mb-6 md:mb-12 md:flex-wrap md:gap-3 md:pb-0 scrollbar-hide">
             {FILTERS.map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 aria-pressed={filter === f}
-                className={`px-5 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-300 border ${
+                className={`flex-shrink-0 px-5 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-300 border ${
                   filter === f
                     ? "bg-gold text-anthracite border-gold font-semibold"
                     : "border-cream/20 text-cream/50 hover:border-gold/60 hover:text-cream"

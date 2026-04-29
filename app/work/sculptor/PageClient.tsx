@@ -131,7 +131,7 @@ export default function SculptorPage({
 
       <main id="main-content">
       {/* Hero — dramatic dark */}
-      <section className="relative bg-anthracite text-cream pt-36 pb-24 px-6 md:px-8 lg:px-16 overflow-hidden">
+      <section className="relative bg-anthracite text-cream pt-24 pb-4 md:pt-36 md:pb-24 px-6 md:px-8 lg:px-16 overflow-hidden">
         {/* Background grid decoration */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.04]"
@@ -152,19 +152,19 @@ export default function SculptorPage({
 
           <h1
             data-hero
-            className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[8.5rem] font-bold leading-none tracking-tight text-cream text-balance"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold leading-none tracking-tight text-cream text-balance"
           >
             {heroHeading ?? DEFAULT_HEADING}
           </h1>
 
-          <div data-hero className="mt-10 max-w-xl">
-            <p className="text-cream/55 text-base leading-relaxed">
+          <div data-hero className="mt-2 md:mt-10 max-w-xl">
+            <p className="text-sm md:text-base text-cream/55 leading-relaxed">
               {heroSubtitle ?? DEFAULT_SUBTITLE}
             </p>
           </div>
 
           {/* Decorative element */}
-          <div data-hero className="mt-14 flex items-center gap-4">
+          <div data-hero className="my-3 md:my-6 md:mt-14 flex items-center gap-4">
             <div className="h-px w-12 bg-gold/60" />
             <span
               className="text-gold/60 text-[10px] tracking-[0.3em] uppercase"
@@ -179,13 +179,13 @@ export default function SculptorPage({
       <section className="bg-anthracite pb-28 px-6 md:px-8 lg:px-16">
         <div className="max-w-[1280px] mx-auto">
           {/* Filter bar */}
-          <div className="flex flex-wrap gap-3 mb-12">
+          <div className="flex overflow-x-auto gap-2 pb-2 mb-6 md:mb-12 md:flex-wrap md:gap-3 md:pb-0 scrollbar-hide">
             {FILTERS.map(({ value, label }) => (
               <button
                 key={value}
                 onClick={() => setFilter(value)}
                 aria-pressed={filter === value}
-                className={`px-5 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-300 border ${
+                className={`flex-shrink-0 px-5 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-300 border ${
                   filter === value
                     ? "bg-gold text-anthracite border-gold font-semibold"
                     : "border-cream/20 text-cream/50 hover:border-gold/60 hover:text-cream"

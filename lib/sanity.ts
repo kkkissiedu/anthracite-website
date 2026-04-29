@@ -91,7 +91,30 @@ export type FeaturedProject = Project;
 export async function getFeaturedProjects(): Promise<FeaturedProject[]> {
   return client.fetch(
     `*[_type == "project" && featured == true] | order(displayOrder asc) [0...6] {
-      _id, title, slug, shortDescription, images, category, displayOrder
+      _id,
+      title,
+      slug,
+      shortDescription,
+      description,
+      category,
+      displayOrder,
+      client,
+      location,
+      year,
+      projectType,
+      tools,
+      videoUrl,
+      panoramaUrl,
+      images[] {
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions
+          }
+        },
+        alt
+      }
     }`,
     {},
     { next: { revalidate: 60 } }
@@ -104,7 +127,27 @@ export async function getProjectsByCategory(
   return client.fetch(
     `*[_type == "project" && category == $category] | order(order asc) {
       _id, title, category, subcategory, description, overview,
-      mainImage, gallery, videoUrl, videoFile, panorama, model3d,
+      mainImage {
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions
+          }
+        },
+        alt
+      },
+      gallery[] {
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions
+          }
+        },
+        alt
+      },
+      videoUrl, videoFile, panorama, model3d,
       client, location, year, tools
     }`,
     { category },
@@ -117,7 +160,21 @@ export type RawTeamMember = TeamMember;
 export async function getTeamMembers(): Promise<RawTeamMember[]> {
   return client.fetch(
     `*[_type == "teamMember"] | order(_createdAt asc) {
-      _id, name, role, bio, photo, linkedinUrl
+      _id,
+      name,
+      role,
+      bio,
+      photo {
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions
+          }
+        },
+        alt
+      },
+      linkedinUrl
     }`,
     {},
     { next: { revalidate: 60 } }
@@ -129,7 +186,17 @@ export type SanityProperty = Property;
 export async function getProperties(): Promise<SanityProperty[]> {
   return client.fetch(
     `*[_type == "property" && available == true] | order(_createdAt desc) {
-      _id, title, slug, description, shortDescription, images,
+      _id, title, slug, description, shortDescription,
+      images[] {
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions
+          }
+        },
+        alt
+      },
       videoUrl, panoramaUrl, location, bedrooms, bathrooms,
       pricePerNight, available, amenities, whatsappNumber, phoneNumber
     }`,

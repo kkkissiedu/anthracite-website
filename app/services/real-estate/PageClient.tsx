@@ -110,7 +110,7 @@ export default function RealEstatePage({
 
       <main id="main-content">
         {/* Hero */}
-        <section className="bg-anthracite text-cream pt-36 pb-20 px-6 md:px-8 lg:px-16">
+        <section className="bg-anthracite text-cream pt-24 pb-4 md:pt-36 md:pb-20 px-6 md:px-8 lg:px-16">
           <div ref={heroRef} className="max-w-[1280px] mx-auto">
             <p
               data-hero
@@ -121,19 +121,19 @@ export default function RealEstatePage({
 
             <h1
               data-hero
-              className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] font-bold leading-none tracking-tight text-cream text-balance"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold leading-none tracking-tight text-cream text-balance"
             >
               {heroHeading ?? DEFAULT_HEADING}
             </h1>
 
             <p
               data-hero
-              className="mt-8 text-cream/55 max-w-2xl text-base leading-relaxed"
+              className="mt-2 md:mt-8 text-sm md:text-base text-cream/55 max-w-2xl leading-relaxed"
             >
               {heroSubtitle ?? DEFAULT_SUBTITLE}
             </p>
 
-            <div data-hero className="mt-12 h-px w-24 bg-gold/50" />
+            <div data-hero className="my-3 md:my-6 md:mt-12 h-px w-24 bg-gold/50" />
           </div>
         </section>
 

@@ -26,9 +26,11 @@ export type Project = {
   videoFile?: { asset: { url: string } };
   model3d?: { asset: { url: string } };
   panorama?: SanityImageSource[];
+  panoramaUrl?: string;
   client?: string;
   location?: string;
   year?: number;
+  projectType?: string;
   tools?: string[];
 };
 

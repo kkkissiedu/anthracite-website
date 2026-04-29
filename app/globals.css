@@ -112,6 +112,14 @@ h6 {
   }
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .slide-enter-left {
     animation: slideInLeft 0.35s ease forwards;

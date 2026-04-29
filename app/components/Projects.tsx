@@ -126,21 +126,21 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative bg-anthracite text-cream py-20 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
+      className="relative bg-anthracite text-cream py-10 md:py-24 lg:py-28 px-6 md:px-8 lg:px-16 overflow-hidden"
     >
       {/* Decorative section number */}
       <div className="section-number" data-number="03" aria-hidden="true" />
 
       <div className="max-w-[1280px] mx-auto">
         {/* Header */}
-        <div className="mb-12">
+        <div className="mb-6 md:mb-12">
           <p className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4">
             Featured Projects
           </p>
           <div className="overflow-hidden">
             <h2
               ref={h2LineRef}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-cream"
+              className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-cream"
             >
               All Featured <span className="text-gold">Projects</span>
             </h2>
@@ -188,9 +188,9 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                       ) : (
                         <div className="absolute inset-0 bg-[#1a1a1a]" />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-                      {/* Mobile overlay: always visible at reduced opacity so image shows through */}
-                      <div className="absolute inset-x-0 bottom-0 bg-black/50">
+                      {/* Mobile overlay: gradient so image shows through, always visible */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+                      <div className="absolute inset-x-0 bottom-0 opacity-100">
                         <div className="p-6 flex flex-col gap-3">
                           <span className="text-gold text-[10px] tracking-[0.25em] uppercase">
                             {CATEGORY_LABELS[cat] ?? cat}
@@ -199,7 +199,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                             {project.title}
                           </h3>
                           <span
-                            className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase"
+                            className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase self-start"
                             aria-hidden="true"
                           >
                             VIEW DETAILS →
