@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, forwardRef } from "react";
+import React, { useEffect, useRef, useState, forwardRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { type ServiceId } from "@/context/ServiceModalContext";
+import { useSwipe } from "@/app/hooks/useSwipe";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -111,7 +111,14 @@ export default function Services({
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const h2LineRef = useRef<HTMLDivElement>(null);
-  const exploreButtonRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<"next" | "prev">("next");
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false
+  );
 
   const services = [
     {
@@ -137,12 +144,23 @@ export default function Services({
     },
   ];
 
+  const goToNext = () => {
+    setDirection("next");
+    setCurrentIndex((i) => (i + 1) % services.length);
+  };
+  const goToPrev = () => {
+    setDirection("prev");
+    setCurrentIndex((i) => (i - 1 + services.length) % services.length);
+  };
+
+  const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
+
   // Split heading at gold word
   const goldIdx = servicesHeading.indexOf(servicesHeadingGoldWord);
 
   useEffect(() => {
     if (!h2LineRef.current) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
     const ctx = gsap.context(() => {
       gsap.from(h2LineRef.current, {
@@ -170,25 +188,6 @@ export default function Services({
             trigger: sectionRef.current,
             start: "top 70%",
           },
-        }
-      );
-
-      // Pulse animation on explore buttons when section enters viewport
-      gsap.fromTo(
-        exploreButtonRefs.current.filter(Boolean),
-        { scale: 1 },
-        {
-          scale: 1.08,
-          duration: 0.4,
-          ease: 'power1.inOut',
-          yoyo: true,
-          repeat: 2,
-          delay: 0.6,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            once: true,
-          }
         }
       );
     }, sectionRef);
@@ -219,7 +218,7 @@ export default function Services({
       <div className="max-w-[1280px] mx-auto">
 
         {/* Section header */}
-        <div className="mb-12">
+        <div className="mb-10 md:mb-12">
           <p className="text-sm md:text-base tracking-[0.4em] font-semibold uppercase text-gold mb-4">
             {servicesLabel}
           </p>
@@ -234,19 +233,63 @@ export default function Services({
           </div>
         </div>
 
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        {/* Mobile: carousel */}
+        <div
+          className="md:hidden"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          {(() => {
+            const service = services[currentIndex];
+            return (
+              <div
+                key={currentIndex}
+                className={`fw-card ${prefersReducedMotion ? "" : direction === "next" ? "slide-enter-left" : "slide-enter-right"}`}
+              >
+                <ServiceCard
+                  service={service}
+                  href={SERVICE_HREFS[service.id]}
+                  ref={(el) => { cardRefs.current[currentIndex] = el; }}
+                />
+              </div>
+            );
+          })()}
+
+          {/* Carousel controls */}
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <button
+              onClick={goToPrev}
+              className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+              aria-label="Previous service"
+            >
+              ←
+            </button>
+            <div className="flex gap-2">
+              {services.map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={goToNext}
+              className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+              aria-label="Next service"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        {/* Desktop: grid */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6 md:gap-8">
           {services.map((service, i) => (
             <ServiceCard
               key={service.id}
               service={service}
               href={SERVICE_HREFS[service.id]}
-              ref={(el) => {
-                cardRefs.current[i] = el;
-              }}
-              buttonRef={(el) => {
-                exploreButtonRefs.current[i] = el;
-              }}
+              ref={(el) => { cardRefs.current[i] = el; }}
             />
           ))}
         </div>
@@ -266,16 +309,14 @@ type ServiceItem = {
 
 const ServiceCard = forwardRef<
   HTMLDivElement,
-  { service: ServiceItem; href: string; buttonRef?: (el: HTMLAnchorElement | null) => void }
->(({ service, href, buttonRef }, ref) => {
+  { service: ServiceItem; href: string }
+>(({ service, href }, ref) => {
   const { Icon, title, subtitle, description } = service;
-  const router = useRouter();
 
   return (
     <div
       ref={ref}
       data-gsap="true"
-      onClick={() => router.push(href)}
       className="
         group relative flex flex-col gap-6 p-8 md:p-10
         border border-cream/10
@@ -286,7 +327,6 @@ const ServiceCard = forwardRef<
         before:scale-[0.97] before:transition-all before:duration-500
         hover:before:opacity-100 hover:before:scale-100
         before:pointer-events-none
-        cursor-pointer
       "
     >
       {/* Icon */}
@@ -311,12 +351,18 @@ const ServiceCard = forwardRef<
         {description}
       </p>
 
-      {/* CTA — Link navigates to sub-page */}
+      {/* CTA */}
       <Link
-        ref={buttonRef}
         href={href}
-        onClick={(e) => e.stopPropagation()}
-        className="inline-flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase hover:gap-3 transition-all duration-300 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm min-h-[48px] px-6 text-sm"
+        className="
+          mt-2 flex items-center justify-center gap-3
+          border-2 border-gold bg-gold/10
+          hover:bg-gold hover:text-anthracite
+          text-gold font-semibold
+          px-6 py-4 text-sm tracking-[0.2em] uppercase
+          transition-colors duration-300
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold
+        "
         aria-label={`Explore ${title}`}
       >
         EXPLORE PROJECTS →
