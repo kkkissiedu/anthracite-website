@@ -188,26 +188,31 @@ export default function ArchitecturalStructuralPage({
               </div>
             ) : (
               <>
-                {(() => {
-                  const project = filtered[currentIndex] ?? filtered[0];
-                  const imgSrc = project.mainImage?.asset?.url ?? null;
-                  return (
-                    <div
-                      key={currentIndex}
-                      className={prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}
-                    >
-                      <MediaCard
-                        image={imgSrc}
-                        title={project.title}
-                        subcategory={project.subcategory}
-                        metadata={[project.client, project.location, project.year]}
-                        onClick={() => handleOpen(project)}
-                        aspectRatio="4/3"
-                        cardClassName="proj-card w-full"
-                      />
-                    </div>
-                  );
-                })()}
+                <div className="grid">
+                  {filtered.map((project, i) => {
+                    const imgSrc = project.mainImage?.asset?.url ?? null;
+                    return (
+                      <div
+                        key={project._id}
+                        className={`col-start-1 row-start-1 ${
+                          i === currentIndex
+                            ? `pointer-events-auto ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`
+                            : 'opacity-0 pointer-events-none'
+                        }`}
+                      >
+                        <MediaCard
+                          image={imgSrc}
+                          title={project.title}
+                          subcategory={project.subcategory}
+                          metadata={[project.client, project.location, project.year]}
+                          onClick={() => handleOpen(project)}
+                          aspectRatio="4/3"
+                          cardClassName="proj-card w-full"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
                 {filtered.length > 1 && (
                   <div className="flex items-center justify-center gap-4 mt-6">
                     <button

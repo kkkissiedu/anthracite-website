@@ -143,60 +143,65 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           <>
             {/* Mobile: carousel — one card at a time */}
             <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-              {(() => {
-                const project = featured[currentIndex];
-                const cat = project.category as Category;
-                const imgSrc = project.mainImage?.asset?.url ?? null;
-                return (
-                  <div
-                    key={currentIndex}
-                    data-gsap="true"
-                    className={`fw-card group relative overflow-hidden cursor-pointer w-full ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`}
-                    onClick={() => openModal(project)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        openModal(project);
-                      }
-                    }}
-                    aria-label={`Open ${project.title}`}
-                  >
-                    <div className="relative w-full aspect-[3/4]">
-                      {imgSrc ? (
-                        <Image
-                          src={imgSrc}
-                          alt={project.title}
-                          fill
-                          className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
-                          sizes="100vw"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-[#1a1a1a]" />
-                      )}
-                      {/* Mobile overlay: gradient so image shows through, always visible */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
-                      <div className="absolute inset-x-0 bottom-0 opacity-100">
-                        <div className="p-6 flex flex-col gap-3">
-                          <span className="text-gold text-[10px] tracking-[0.25em] uppercase">
-                            {CATEGORY_LABELS[cat] ?? cat}
-                          </span>
-                          <h3 className="text-2xl font-bold text-cream leading-tight">
-                            {project.title}
-                          </h3>
-                          <span
-                            className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase self-start"
-                            aria-hidden="true"
-                          >
-                            VIEW DETAILS →
-                          </span>
+              <div className="grid">
+                {featured.map((project, i) => {
+                  const cat = project.category as Category;
+                  const imgSrc = project.mainImage?.asset?.url ?? null;
+                  return (
+                    <div
+                      key={project._id}
+                      data-gsap="true"
+                      className={`col-start-1 row-start-1 fw-card group relative overflow-hidden cursor-pointer w-full ${
+                        i === currentIndex
+                          ? `pointer-events-auto ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`
+                          : 'opacity-0 pointer-events-none'
+                      }`}
+                      onClick={() => i === currentIndex && openModal(project)}
+                      role="button"
+                      tabIndex={i === currentIndex ? 0 : -1}
+                      onKeyDown={(e) => {
+                        if (i === currentIndex && (e.key === "Enter" || e.key === " ")) {
+                          e.preventDefault();
+                          openModal(project);
+                        }
+                      }}
+                      aria-label={`Open ${project.title}`}
+                      aria-hidden={i !== currentIndex}
+                    >
+                      <div className="relative w-full aspect-[3/4]">
+                        {imgSrc ? (
+                          <Image
+                            src={imgSrc}
+                            alt={project.title}
+                            fill
+                            className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105"
+                            sizes="100vw"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-[#1a1a1a]" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+                        <div className="absolute inset-x-0 bottom-0 opacity-100">
+                          <div className="p-6 flex flex-col gap-3">
+                            <span className="text-gold text-[10px] tracking-[0.25em] uppercase">
+                              {CATEGORY_LABELS[cat] ?? cat}
+                            </span>
+                            <h3 className="text-2xl font-bold text-cream leading-tight">
+                              {project.title}
+                            </h3>
+                            <span
+                              className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase self-start"
+                              aria-hidden="true"
+                            >
+                              VIEW DETAILS →
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })()}
+                  );
+                })}
+              </div>
               {featured.length > 1 && (
                 <div className="flex items-center justify-center gap-4 mt-6">
                   <button

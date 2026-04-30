@@ -239,21 +239,28 @@ export default function Services({
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
-          {(() => {
-            const service = services[currentIndex];
-            return (
+          {/*
+            Grid-stack: all cards share col-start-1 row-start-1 so the container
+            height is always the tallest card — no layout shift when cycling.
+          */}
+          <div className="grid">
+            {services.map((service, i) => (
               <div
-                key={currentIndex}
-                className={`fw-card ${prefersReducedMotion ? "" : direction === "next" ? "slide-enter-left" : "slide-enter-right"}`}
+                key={i}
+                className={`col-start-1 row-start-1 ${
+                  i === currentIndex
+                    ? `pointer-events-auto ${prefersReducedMotion ? "" : direction === "next" ? "slide-enter-left" : "slide-enter-right"}`
+                    : "opacity-0 pointer-events-none"
+                }`}
               >
                 <ServiceCard
                   service={service}
                   href={SERVICE_HREFS[service.id]}
-                  ref={(el) => { cardRefs.current[currentIndex] = el; }}
+                  ref={(el) => { cardRefs.current[i] = el; }}
                 />
               </div>
-            );
-          })()}
+            ))}
+          </div>
 
           {/* Carousel controls */}
           <div className="flex items-center justify-center gap-4 mt-6">
