@@ -112,20 +112,21 @@ function GoldSpinner() {
 
 function ImagesTab({ gallery }: { gallery: ResolvedImage[] }) {
   const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
   const total = gallery.length;
 
-  const goToNext = () => {
-    setDirection('next');
-    setCurrent(c => Math.min(total - 1, c + 1));
+  const goToIndex = (index: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrent(index);
+    setTimeout(() => setIsTransitioning(false), 700);
   };
-  const goToPrev = () => {
-    setDirection('prev');
-    setCurrent(c => Math.max(0, c - 1));
-  };
+
+  const goToNext = () => goToIndex(Math.min(total - 1, current + 1));
+  const goToPrev = () => goToIndex(Math.max(0, current - 1));
 
   const { onTouchStart, onTouchEnd } = useSwipe(
     () => goToNext(),
@@ -147,7 +148,7 @@ function ImagesTab({ gallery }: { gallery: ResolvedImage[] }) {
       {/* Main image */}
       <div
         key={current}
-        className={`relative flex-1 min-h-0 bg-black ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`}
+        className={`relative flex-1 min-h-0 bg-black ${prefersReducedMotion ? '' : 'slide-enter'}`}
       >
         <Image
           src={sanityImageSrc(gallery[current])}
@@ -189,10 +190,7 @@ function ImagesTab({ gallery }: { gallery: ResolvedImage[] }) {
           {gallery.map((img, i) => (
             <button
               key={i}
-              onClick={() => {
-                setDirection(i > current ? 'next' : 'prev');
-                setCurrent(i);
-              }}
+              onClick={() => goToIndex(i)}
               className={`relative w-16 h-12 shrink-0 overflow-hidden transition-opacity ${
                 i === current
                   ? "opacity-100 ring-1 ring-gold"

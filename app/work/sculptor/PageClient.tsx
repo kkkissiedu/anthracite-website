@@ -34,7 +34,7 @@ export default function SculptorPage({
   const [projects] = useState<FeaturedProject[]>(initialProjects);
   const [filter, setFilter] = useState<Filter>("All");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
@@ -115,14 +115,15 @@ export default function SculptorPage({
     [openModal]
   );
 
-  const goToNext = () => {
-    setDirection('next');
-    setCurrentIndex(i => (i + 1) % filtered.length);
+  const goToIndex = (index: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 700);
   };
-  const goToPrev = () => {
-    setDirection('prev');
-    setCurrentIndex(i => (i - 1 + filtered.length) % filtered.length);
-  };
+
+  const goToNext = () => goToIndex((currentIndex + 1) % filtered.length);
+  const goToPrev = () => goToIndex((currentIndex - 1 + filtered.length) % filtered.length);
   const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   return (
@@ -216,7 +217,7 @@ export default function SculptorPage({
                         key={project._id}
                         className={`col-start-1 row-start-1 ${
                           i === currentIndex
-                            ? `pointer-events-auto ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`
+                            ? `pointer-events-auto ${prefersReducedMotion ? '' : 'slide-enter'}`
                             : 'opacity-0 pointer-events-none'
                         }`}
                       >

@@ -44,21 +44,22 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   const gridRef = useRef<HTMLDivElement>(null);
   const h2LineRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
 
   const featured = projects;
 
-  const goToNext = () => {
-    setDirection('next');
-    setCurrentIndex(i => (i + 1) % featured.length);
+  const goToIndex = (index: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 700);
   };
-  const goToPrev = () => {
-    setDirection('prev');
-    setCurrentIndex(i => (i - 1 + featured.length) % featured.length);
-  };
+
+  const goToNext = () => goToIndex((currentIndex + 1) % featured.length);
+  const goToPrev = () => goToIndex((currentIndex - 1 + featured.length) % featured.length);
   const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   useEffect(() => {
@@ -153,7 +154,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                       data-gsap="true"
                       className={`col-start-1 row-start-1 fw-card group relative overflow-hidden cursor-pointer w-full ${
                         i === currentIndex
-                          ? `pointer-events-auto ${prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}`
+                          ? `pointer-events-auto ${prefersReducedMotion ? '' : 'slide-enter'}`
                           : 'opacity-0 pointer-events-none'
                       }`}
                       onClick={() => i === currentIndex && openModal(project)}

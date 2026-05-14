@@ -29,7 +29,7 @@ export default function RealEstatePage({
   const [properties] = useState<SanityProperty[]>(initialProperties);
   const [activeProperty, setActiveProperty] = useState<SanityProperty | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
@@ -93,14 +93,15 @@ export default function RealEstatePage({
   const openProperty = useCallback((p: SanityProperty) => setActiveProperty(p), []);
   const closeProperty = useCallback(() => setActiveProperty(null), []);
 
-  const goToNext = () => {
-    setDirection('next');
-    setCurrentIndex(i => (i + 1) % properties.length);
+  const goToIndex = (index: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 700);
   };
-  const goToPrev = () => {
-    setDirection('prev');
-    setCurrentIndex(i => (i - 1 + properties.length) % properties.length);
-  };
+
+  const goToNext = () => goToIndex((currentIndex + 1) % properties.length);
+  const goToPrev = () => goToIndex((currentIndex - 1 + properties.length) % properties.length);
   const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   return (
@@ -153,7 +154,7 @@ export default function RealEstatePage({
                 <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
                   <div
                     key={currentIndex}
-                    className={prefersReducedMotion ? '' : direction === 'next' ? 'slide-enter-left' : 'slide-enter-right'}
+                    className={prefersReducedMotion ? '' : 'slide-enter'}
                   >
                     <PropertyCard
                       property={properties[currentIndex] ?? properties[0]}
