@@ -113,7 +113,6 @@ export default function Services({
   const h2LineRef = useRef<HTMLDivElement>(null);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<"next" | "prev">("next");
   const [prefersReducedMotion] = useState(() =>
     typeof window !== "undefined"
       ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -144,14 +143,8 @@ export default function Services({
     },
   ];
 
-  const goToNext = () => {
-    setDirection("next");
-    setCurrentIndex((i) => (i + 1) % services.length);
-  };
-  const goToPrev = () => {
-    setDirection("prev");
-    setCurrentIndex((i) => (i - 1 + services.length) % services.length);
-  };
+  const goToNext = () => setCurrentIndex((i) => (i + 1) % services.length);
+  const goToPrev = () => setCurrentIndex((i) => (i - 1 + services.length) % services.length);
 
   const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
@@ -250,7 +243,7 @@ export default function Services({
                   key={i}
                   className={`col-start-1 row-start-1 ${
                     i === currentIndex
-                      ? `pointer-events-auto ${prefersReducedMotion ? "" : direction === "next" ? "slide-enter-left" : "slide-enter-right"}`
+                      ? `pointer-events-auto ${prefersReducedMotion ? "" : "slide-enter"}`
                       : "opacity-0 pointer-events-none"
                   }`}
                 >
@@ -266,14 +259,14 @@ export default function Services({
             {/* Side arrows */}
             <button
               onClick={goToPrev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/70 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+              className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/40 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
               aria-label="Previous service"
             >
               ←
             </button>
             <button
               onClick={goToNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/70 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+              className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/40 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
               aria-label="Next service"
             >
               →
@@ -327,7 +320,7 @@ const ServiceCard = forwardRef<
       ref={ref}
       data-gsap="true"
       className="
-        group relative flex flex-col gap-6 p-8 md:p-10
+        group relative flex h-full flex-col gap-6 p-8 md:p-10
         border border-cream/10
         transition-all duration-500 ease-out
         hover:border-gold
@@ -374,7 +367,7 @@ const ServiceCard = forwardRef<
         "
         aria-label={`Explore ${title}`}
       >
-        EXPLORE PROJECTS →
+        EXPLORE PROJECTS
       </Link>
 
       {/* Bottom gold accent line */}

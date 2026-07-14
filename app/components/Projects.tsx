@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
@@ -43,6 +44,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const h2LineRef = useRef<HTMLDivElement>(null);
+  const ctaRowRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion] = useState(() =>
@@ -80,6 +82,25 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           },
         }
       );
+
+      // Category CTA buttons reveal
+      if (ctaRowRef.current) {
+        gsap.fromTo(
+          Array.from(ctaRowRef.current.children),
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.15,
+            scrollTrigger: {
+              trigger: ctaRowRef.current,
+              start: "top 92%",
+            },
+          }
+        );
+      }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -144,7 +165,8 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
           <>
             {/* Mobile: carousel — one card at a time */}
             <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-              <div className="grid">
+              <div className="relative">
+                <div className="grid">
                 {featured.map((project, i) => {
                   const cat = project.category as Category;
                   const imgSrc = project.mainImage?.asset?.url ?? null;
@@ -191,7 +213,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                               {project.title}
                             </h3>
                             <span
-                              className="mt-3 flex items-center justify-center gap-3 min-h-[44px] border-2 border-gold bg-gold/10 text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase w-full"
+                              className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase self-start"
                               aria-hidden="true"
                             >
                               VIEW DETAILS →
@@ -202,31 +224,36 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                     </div>
                   );
                 })}
+                </div>
+
+                {featured.length > 1 && (
+                  <>
+                    <button
+                      onClick={goToPrev}
+                      className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/40 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                      aria-label="Previous project"
+                    >
+                      ←
+                    </button>
+                    <button
+                      onClick={goToNext}
+                      className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/40 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+                      aria-label="Next project"
+                    >
+                      →
+                    </button>
+                  </>
+                )}
               </div>
+
               {featured.length > 1 && (
-                <div className="flex items-center justify-center gap-4 mt-6">
-                  <button
-                    onClick={goToPrev}
-                    className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
-                    aria-label="Previous project"
-                  >
-                    ←
-                  </button>
-                  <div className="flex gap-2">
-                    {featured.map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    onClick={goToNext}
-                    className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
-                    aria-label="Next project"
-                  >
-                    →
-                  </button>
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  {featured.map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
+                    />
+                  ))}
                 </div>
               )}
             </div>
@@ -279,7 +306,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                             {project.title}
                           </h3>
                           <span
-                            className="mt-3 flex items-center justify-center gap-3 border-2 border-gold bg-gold/10 text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase w-full group-hover:bg-gold group-hover:text-anthracite transition-colors duration-300"
+                            className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase"
                             aria-hidden="true"
                           >
                             VIEW DETAILS →
@@ -293,6 +320,25 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
             </div>
           </>
         )}
+
+        {/* Category page links */}
+        <div
+          ref={ctaRowRef}
+          className="mt-10 md:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4"
+        >
+          <Link
+            href="/work/architectural-structural"
+            className="flex items-center justify-center gap-3 border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+          >
+            ARCHITECTURAL &amp; STRUCTURAL PROJECTS →
+          </Link>
+          <Link
+            href="/work/sculptor"
+            className="flex items-center justify-center gap-3 border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+          >
+            3D DESIGN PROJECTS →
+          </Link>
+        </div>
       </div>
     </section>
   );
