@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { type ServiceId } from "@/context/ServiceModalContext";
 import { useSwipe } from "@/app/hooks/useSwipe";
+import CtaRing from "./CtaRing";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -183,6 +184,36 @@ export default function Services({
           },
         }
       );
+
+      // EXPLORE PROJECTS buttons: gradient gold ring draws around each,
+      // led by a glowing head, then fades
+      const rings = sectionRef.current?.querySelectorAll<SVGRectElement>(".cta-ring");
+      const heads = sectionRef.current?.querySelectorAll<SVGRectElement>(".cta-ring-head");
+      if (rings?.length && heads?.length) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 55%",
+            toggleActions: "restart none restart none",
+          },
+        });
+        tl.fromTo(
+          rings,
+          { strokeDashoffset: 1, opacity: 1 },
+          { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", stagger: 0.2 }
+        )
+          .fromTo(
+            heads,
+            { strokeDashoffset: 1, opacity: 1 },
+            { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", stagger: 0.2 },
+            0
+          )
+          .to(
+            [...Array.from(rings), ...Array.from(heads)],
+            { opacity: 0, duration: 0.6, ease: "power2.out" },
+            "-=0.15"
+          );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -357,8 +388,8 @@ const ServiceCard = forwardRef<
       <Link
         href={href}
         className="
-          mt-2 flex items-center justify-center gap-3
-          border-2 border-gold bg-gold/10
+          relative mt-2 flex items-center justify-center gap-3
+          border border-gold bg-gold/10
           hover:bg-gold hover:text-anthracite
           text-gold font-semibold
           px-6 py-4 text-sm tracking-[0.2em] uppercase
@@ -367,6 +398,7 @@ const ServiceCard = forwardRef<
         "
         aria-label={`Explore ${title}`}
       >
+        <CtaRing />
         EXPLORE PROJECTS
       </Link>
 

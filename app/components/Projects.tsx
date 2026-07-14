@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useProjectModal, type SanityProject } from "@/context/ProjectModalContext";
 import { useSwipe } from "@/app/hooks/useSwipe";
+import CtaRing from "./CtaRing";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -83,23 +84,36 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         }
       );
 
-      // Category CTA buttons reveal
+      // Category CTA buttons: gradient gold ring draws around each button,
+      // led by a glowing head, then fades
       if (ctaRowRef.current) {
-        gsap.fromTo(
-          Array.from(ctaRowRef.current.children),
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: "power3.out",
-            stagger: 0.15,
+        const rings = ctaRowRef.current.querySelectorAll<SVGRectElement>(".cta-ring");
+        const heads = ctaRowRef.current.querySelectorAll<SVGRectElement>(".cta-ring-head");
+        if (rings.length) {
+          const tl = gsap.timeline({
             scrollTrigger: {
               trigger: ctaRowRef.current,
               start: "top 92%",
+              toggleActions: "restart none restart none",
             },
-          }
-        );
+          });
+          tl.fromTo(
+            rings,
+            { strokeDashoffset: 1, opacity: 1 },
+            { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", stagger: 0.35 }
+          )
+            .fromTo(
+              heads,
+              { strokeDashoffset: 1, opacity: 1 },
+              { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", stagger: 0.35 },
+              0
+            )
+            .to(
+              [...Array.from(rings), ...Array.from(heads)],
+              { opacity: 0, duration: 0.6, ease: "power2.out" },
+              "-=0.15"
+            );
+        }
       }
     }, sectionRef);
     return () => ctx.revert();
@@ -328,14 +342,16 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         >
           <Link
             href="/work/architectural-structural"
-            className="flex items-center justify-center gap-3 text-center border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            className="relative flex items-center justify-center gap-3 text-center border border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
           >
+            <CtaRing />
             ARCHITECTURAL &amp; STRUCTURAL PROJECTS →
           </Link>
           <Link
             href="/work/sculptor"
-            className="flex items-center justify-center gap-3 text-center border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            className="relative flex items-center justify-center gap-3 text-center border border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
           >
+            <CtaRing />
             3D DESIGN PROJECTS →
           </Link>
         </div>
