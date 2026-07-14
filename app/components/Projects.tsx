@@ -191,7 +191,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                               {project.title}
                             </h3>
                             <span
-                              className="mt-3 inline-flex items-center justify-center min-h-[44px] border border-gold text-gold px-4 text-xs tracking-widest uppercase self-start"
+                              className="mt-3 flex items-center justify-center gap-3 min-h-[44px] border-2 border-gold bg-gold/10 text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase w-full"
                               aria-hidden="true"
                             >
                               VIEW DETAILS →
@@ -279,7 +279,7 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
                             {project.title}
                           </h3>
                           <span
-                            className="mt-3 inline-block border border-gold text-gold px-4 py-2 text-xs tracking-widest uppercase"
+                            className="mt-3 flex items-center justify-center gap-3 border-2 border-gold bg-gold/10 text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase w-full group-hover:bg-gold group-hover:text-anthracite transition-colors duration-300"
                             aria-hidden="true"
                           >
                             VIEW DETAILS →

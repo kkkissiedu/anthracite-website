@@ -243,49 +243,51 @@ export default function Services({
             Grid-stack: all cards share col-start-1 row-start-1 so the container
             height is always the tallest card — no layout shift when cycling.
           */}
-          <div className="grid">
-            {services.map((service, i) => (
-              <div
-                key={i}
-                className={`col-start-1 row-start-1 ${
-                  i === currentIndex
-                    ? `pointer-events-auto ${prefersReducedMotion ? "" : direction === "next" ? "slide-enter-left" : "slide-enter-right"}`
-                    : "opacity-0 pointer-events-none"
-                }`}
-              >
-                <ServiceCard
-                  service={service}
-                  href={SERVICE_HREFS[service.id]}
-                  ref={(el) => { cardRefs.current[i] = el; }}
-                />
-              </div>
-            ))}
-          </div>
+          <div className="relative">
+            <div className="grid">
+              {services.map((service, i) => (
+                <div
+                  key={i}
+                  className={`col-start-1 row-start-1 ${
+                    i === currentIndex
+                      ? `pointer-events-auto ${prefersReducedMotion ? "" : direction === "next" ? "slide-enter-left" : "slide-enter-right"}`
+                      : "opacity-0 pointer-events-none"
+                  }`}
+                >
+                  <ServiceCard
+                    service={service}
+                    href={SERVICE_HREFS[service.id]}
+                    ref={(el) => { cardRefs.current[i] = el; }}
+                  />
+                </div>
+              ))}
+            </div>
 
-          {/* Carousel controls */}
-          <div className="flex items-center justify-center gap-4 mt-6">
+            {/* Side arrows */}
             <button
               onClick={goToPrev}
-              className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/70 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
               aria-label="Previous service"
             >
               ←
             </button>
-            <div className="flex gap-2">
-              {services.map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
-                />
-              ))}
-            </div>
             <button
               onClick={goToNext}
-              className="w-10 h-10 border border-gold/40 text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 border border-gold/40 bg-anthracite/70 backdrop-blur-sm text-gold hover:bg-gold hover:text-anthracite transition-colors flex items-center justify-center"
               aria-label="Next service"
             >
               →
             </button>
+          </div>
+
+          {/* Pagination dots */}
+          <div className="flex items-center justify-center gap-2 mt-6">
+            {services.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
+              />
+            ))}
           </div>
         </div>
 
