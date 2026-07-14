@@ -328,13 +328,13 @@ export default function Projects({ projects }: { projects: SanityProject[] }) {
         >
           <Link
             href="/work/architectural-structural"
-            className="flex items-center justify-center gap-3 border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            className="flex items-center justify-center gap-3 text-center border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
           >
             ARCHITECTURAL &amp; STRUCTURAL PROJECTS →
           </Link>
           <Link
             href="/work/sculptor"
-            className="flex items-center justify-center gap-3 border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            className="flex items-center justify-center gap-3 text-center border-2 border-gold bg-gold/10 hover:bg-gold hover:text-anthracite text-gold font-semibold px-6 py-4 text-sm tracking-[0.2em] uppercase transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
           >
             3D DESIGN PROJECTS →
           </Link>
