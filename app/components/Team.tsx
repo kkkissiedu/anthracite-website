@@ -151,7 +151,7 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
                 className="flex items-center gap-6 py-5 border-t border-gold/20 hover:bg-dark-text/[0.02] transition-colors duration-300 cursor-default"
               >
                 {/* Photo */}
-                <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-sm overflow-hidden bg-[#1a1a1a]">
+                <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-sm overflow-hidden bg-[#1a1a1a]">
                   {member.photo ? (
                     <Image
                       src={member.photo}
@@ -195,7 +195,7 @@ export default function Team({ members: rawMembers }: { members: RawTeamMember[]
                     {member.role}
                   </p>
                   {member.bio && (
-                    <p className="text-sm text-dark-text/60 mt-1 line-clamp-1">
+                    <p className="text-sm text-dark-text/60 mt-1 line-clamp-2">
                       {member.bio}
                     </p>
                   )}

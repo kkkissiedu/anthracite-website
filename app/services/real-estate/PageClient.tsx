@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useBodyScrollLock } from "@/app/hooks/useBodyScrollLock";
 import Image from "next/image";
 import gsap from "gsap";
@@ -30,6 +30,29 @@ export default function RealEstatePage({
   const [activeProperty, setActiveProperty] = useState<SanityProperty | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [locationFilter, setLocationFilter] = useState<string>("all");
+  const [minBeds, setMinBeds] = useState(0);
+
+  const locations = useMemo(
+    () =>
+      [...new Set(properties.map((p) => p.location).filter((l): l is string => !!l))].sort(),
+    [properties]
+  );
+
+  const filtered = useMemo(
+    () =>
+      properties.filter(
+        (p) =>
+          (locationFilter === "all" || p.location === locationFilter) &&
+          (minBeds === 0 || (p.bedrooms ?? 0) >= minBeds)
+      ),
+    [properties, locationFilter, minBeds]
+  );
+
+  // Keep the mobile slideshow index valid when filters change
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [locationFilter, minBeds]);
   const [prefersReducedMotion] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
@@ -88,7 +111,7 @@ export default function RealEstatePage({
       );
     }, gridRef);
     return () => ctxRef.current?.revert();
-  }, [properties.length]);
+  }, [filtered.length]);
 
   const openProperty = useCallback((p: SanityProperty) => setActiveProperty(p), []);
   const closeProperty = useCallback(() => setActiveProperty(null), []);
@@ -100,8 +123,8 @@ export default function RealEstatePage({
     setTimeout(() => setIsTransitioning(false), 700);
   };
 
-  const goToNext = () => goToIndex((currentIndex + 1) % properties.length);
-  const goToPrev = () => goToIndex((currentIndex - 1 + properties.length) % properties.length);
+  const goToNext = () => goToIndex((currentIndex + 1) % filtered.length);
+  const goToPrev = () => goToIndex((currentIndex - 1 + filtered.length) % filtered.length);
   const { onTouchStart, onTouchEnd } = useSwipe(goToNext, goToPrev);
 
   return (
@@ -150,6 +173,62 @@ export default function RealEstatePage({
               </div>
             ) : (
               <>
+                {/* Filters */}
+                <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-8 md:mb-10">
+                  <span className="text-cream/40 text-[10px] tracking-[0.25em] uppercase">
+                    Filter
+                  </span>
+                  <select
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    className="bg-anthracite border border-gold/40 text-cream text-xs tracking-wider uppercase px-3 py-2.5 focus:outline-none focus:border-gold cursor-pointer"
+                    aria-label="Filter by location"
+                  >
+                    <option value="all">All Locations</option>
+                    {locations.map((loc) => (
+                      <option key={loc} value={loc}>
+                        {loc}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={minBeds}
+                    onChange={(e) => setMinBeds(Number(e.target.value))}
+                    className="bg-anthracite border border-gold/40 text-cream text-xs tracking-wider uppercase px-3 py-2.5 focus:outline-none focus:border-gold cursor-pointer"
+                    aria-label="Filter by minimum bedrooms"
+                  >
+                    <option value={0}>Any Bedrooms</option>
+                    <option value={1}>1+ Bedrooms</option>
+                    <option value={2}>2+ Bedrooms</option>
+                    <option value={3}>3+ Bedrooms</option>
+                    <option value={4}>4+ Bedrooms</option>
+                  </select>
+                  {(locationFilter !== "all" || minBeds > 0) && (
+                    <button
+                      onClick={() => {
+                        setLocationFilter("all");
+                        setMinBeds(0);
+                      }}
+                      className="text-gold text-xs tracking-wider uppercase underline underline-offset-4 hover:text-gold-highlight transition-colors"
+                    >
+                      Clear
+                    </button>
+                  )}
+                  <span className="ml-auto text-cream/30 text-xs">
+                    {filtered.length} {filtered.length === 1 ? "listing" : "listings"}
+                  </span>
+                </div>
+
+                {filtered.length === 0 ? (
+                  <div className="flex items-center justify-center py-24">
+                    <div className="border border-gold/40 px-12 py-8 text-center">
+                      <p className="text-cream/60 text-sm tracking-[0.2em] uppercase">
+                        No listings match these filters
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
                 {/* Mobile: single-item slideshow */}
                 <div className="md:hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
                   <div
@@ -157,11 +236,11 @@ export default function RealEstatePage({
                     className={prefersReducedMotion ? '' : 'slide-enter'}
                   >
                     <PropertyCard
-                      property={properties[currentIndex] ?? properties[0]}
+                      property={filtered[currentIndex] ?? filtered[0]}
                       onOpen={openProperty}
                     />
                   </div>
-                  {properties.length > 1 && (
+                  {filtered.length > 1 && (
                     <div className="flex items-center justify-center gap-4 mt-6">
                       <button
                         onClick={goToPrev}
@@ -171,7 +250,7 @@ export default function RealEstatePage({
                         ←
                       </button>
                       <div className="flex gap-2">
-                        {properties.map((_, i) => (
+                        {filtered.map((_, i) => (
                           <div
                             key={i}
                             className={`w-2 h-2 rounded-full transition-colors ${i === currentIndex ? "bg-gold" : "bg-gold/30"}`}
@@ -194,10 +273,12 @@ export default function RealEstatePage({
                   ref={gridRef}
                   className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]"
                 >
-                  {properties.map((p) => (
+                  {filtered.map((p) => (
                     <PropertyCard key={p._id} property={p} onOpen={openProperty} />
                   ))}
                 </div>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -226,7 +307,19 @@ function PropertyCard({
   const imgSrc = primaryImage?.asset?.url ?? null;
 
   return (
-    <div className="prop-card group flex flex-col bg-[#111] border border-white/5 hover:border-gold/30 transition-colors duration-300">
+    <div
+      className="prop-card group flex flex-col bg-[#111] border border-white/5 hover:border-gold/30 transition-colors duration-300 cursor-pointer"
+      onClick={() => onOpen(property)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen(property);
+        }
+      }}
+      aria-label={`View details for ${property.title}`}
+    >
       {/* Cover image */}
       <div className="relative w-full aspect-[4/3] overflow-hidden flex-shrink-0">
         {imgSrc ? (
@@ -314,7 +407,10 @@ function PropertyCard({
             </span>
           )}
           <button
-            onClick={() => onOpen(property)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(property);
+            }}
             className="flex items-center gap-1.5 text-gold text-xs tracking-[0.15em] uppercase hover:gap-2.5 transition-all duration-200"
           >
             View Details
@@ -540,14 +636,14 @@ function PropertyModal({
       {/* Panel */}
       <div
         ref={panelRef}
-        className="relative z-10 w-full sm:max-w-4xl max-h-[92vh] sm:max-h-[90vh] overflow-y-auto bg-[#0D0D0D] border border-white/10 sm:rounded-none"
+        className="relative z-10 w-full sm:max-w-4xl lg:max-w-6xl max-h-[92vh] sm:max-h-[90vh] lg:h-[88vh] overflow-y-auto lg:overflow-hidden bg-[#0D0D0D] border border-white/10 sm:rounded-none lg:flex lg:flex-col"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal
         aria-label={property.title}
       >
         {/* Header */}
-        <div className="sticky top-0 z-20 flex items-start justify-between gap-4 px-6 py-5 bg-[#0D0D0D] border-b border-white/10">
+        <div className="sticky lg:static top-0 z-20 flex items-start justify-between gap-4 px-6 py-5 bg-[#0D0D0D] border-b border-white/10 lg:flex-shrink-0">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-cream leading-tight">
               {property.title}
@@ -567,9 +663,13 @@ function PropertyModal({
           </button>
         </div>
 
+        {/* Body: media left / details right on desktop */}
+        <div className="lg:flex lg:flex-1 lg:min-h-0">
+          {/* Media column */}
+          <div className="lg:w-[58%] lg:flex lg:flex-col lg:min-h-0 lg:border-r lg:border-white/10">
         {/* Tab bar — only if multiple media types */}
         {tabs.length > 1 && (
-          <div className="flex border-b border-white/10">
+          <div className="flex border-b border-white/10 lg:flex-shrink-0">
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -588,8 +688,8 @@ function PropertyModal({
 
         {/* ── Images tab ── */}
         {activeTab === "images" && hasImages && (
-          <div>
-            <div className="relative w-full aspect-video bg-[#111]">
+          <div className="lg:flex lg:flex-col lg:flex-1 lg:min-h-0">
+            <div className="relative w-full aspect-video lg:aspect-auto lg:flex-1 lg:min-h-0 bg-[#111]">
               <Image
                 src={imageUrls[activeImg]}
                 alt={`${property.title} — photo ${activeImg + 1}`}
@@ -625,7 +725,7 @@ function PropertyModal({
               )}
             </div>
             {images.length > 1 && (
-              <div className="flex gap-2 px-4 py-3 overflow-x-auto bg-[#0a0a0a]">
+              <div className="flex gap-2 px-4 py-3 overflow-x-auto bg-[#0a0a0a] lg:flex-shrink-0">
                 {thumbUrls.map((src, i) => (
                   <button
                     key={i}
@@ -653,7 +753,7 @@ function PropertyModal({
 
         {/* ── Video tab ── */}
         {activeTab === "video" && hasVideo && (
-          <div className="aspect-video bg-[#111]">
+          <div className="aspect-video lg:aspect-auto lg:flex-1 bg-[#111]">
             {getEmbedUrl(property.videoUrl!) ? (
               <iframe
                 src={getEmbedUrl(property.videoUrl!)!}
@@ -679,12 +779,13 @@ function PropertyModal({
 
         {/* ── Panorama tab ── */}
         {activeTab === "panorama" && hasPanorama && (
-          <div ref={pannellumRef} className="w-full aspect-video bg-[#111]" />
+          <div ref={pannellumRef} className="w-full aspect-video lg:aspect-auto lg:flex-1 bg-[#111]" />
         )}
+          </div>{/* /media column */}
 
         {/* ── Details + Enquiry ── */}
-        <div className="p-6 border-t border-white/10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div className="p-6 border-t border-white/10 lg:border-t-0 lg:w-[42%] lg:overflow-y-auto lg:flex-shrink-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:grid-cols-1 lg:gap-6">
             {/* Left: stats + description + amenities */}
             <div className="flex flex-col gap-5">
               {/* Bed / Bath */}
@@ -835,6 +936,7 @@ function PropertyModal({
             </div>
           </div>
         </div>
+        </div>{/* /body */}
       </div>
     </div>
   );

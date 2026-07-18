@@ -95,6 +95,12 @@ const SERVICE_HREFS: Record<ServiceId, string> = {
   "real-estate": "/services/real-estate",
 };
 
+const SERVICE_CTA_LABELS: Record<ServiceId, string> = {
+  "architectural-structural": "EXPLORE PROJECTS",
+  "sculptor": "EXPLORE PROJECTS",
+  "real-estate": "EXPLORE PROJECTS AND LISTINGS",
+};
+
 export default function Services({
   servicesLabel = "What We Do",
   servicesHeading = "Our Services",
@@ -399,7 +405,7 @@ const ServiceCard = forwardRef<
         aria-label={`Explore ${title}`}
       >
         <CtaRing />
-        EXPLORE PROJECTS
+        {SERVICE_CTA_LABELS[service.id]}
       </Link>
 
       {/* Bottom gold accent line */}
