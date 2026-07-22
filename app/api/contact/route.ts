@@ -66,9 +66,9 @@ export async function POST(req: NextRequest) {
     const safeMessage = escapeHtml(message);
 
     const { error } = await resend.emails.send({
-      // Update DNS records in Resend dashboard before going live with custom domain
       from: "Contact Form <hello@theanthracite.com>",
       to: [process.env.RESEND_TO_EMAIL ?? "hello@theanthracite.com"],
+      replyTo: email,
       subject: `[Contact] ${safeSubject}`,
       html: `
         <h2 style="font-family:sans-serif">New message from ${safeName}</h2>
