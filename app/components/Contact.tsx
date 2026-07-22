@@ -3,12 +3,18 @@
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ENQUIRY_TYPES,
+  DEFAULT_ENQUIRY_TYPE,
+  type EnquiryType,
+} from "@/lib/enquiry";
 
 gsap.registerPlugin(ScrollTrigger);
 
 type FormState = {
   name: string;
   email: string;
+  enquiryType: EnquiryType;
   subject: string;
   message: string;
   website: string;
@@ -73,6 +79,7 @@ export default function Contact({
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
+    enquiryType: DEFAULT_ENQUIRY_TYPE,
     subject: "",
     message: "",
     website: "",
@@ -116,7 +123,9 @@ export default function Contact({
   }, []);
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
@@ -140,7 +149,14 @@ export default function Contact({
       }
 
       setStatus("success");
-      setForm({ name: "", email: "", subject: "", message: "", website: "" });
+      setForm({
+        name: "",
+        email: "",
+        enquiryType: DEFAULT_ENQUIRY_TYPE,
+        subject: "",
+        message: "",
+        website: "",
+      });
     } catch (err) {
       setStatus("error");
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
@@ -313,6 +329,28 @@ export default function Contact({
                       className={INPUT_CLASS}
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="enquiryType"
+                    className="block text-cream/50 text-xs tracking-widest uppercase mb-2"
+                  >
+                    Type of Enquiry
+                  </label>
+                  <select
+                    id="enquiryType"
+                    name="enquiryType"
+                    value={form.enquiryType}
+                    onChange={handleChange}
+                    className={`${INPUT_CLASS} cursor-pointer`}
+                  >
+                    {ENQUIRY_TYPES.map((type) => (
+                      <option key={type} value={type} className="bg-[#141414]">
+                        {type}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>

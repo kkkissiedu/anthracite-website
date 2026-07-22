@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { NextRequest, NextResponse } from "next/server";
+import { DEFAULT_ENQUIRY_TYPE, isEnquiryType } from "@/lib/enquiry";
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 5;
@@ -36,6 +37,8 @@ function renderContactEmail({
   safeEmail,
   safeSubject,
   safeMessage,
+  safeCategory,
+  safeProperty,
   replyHref,
   receivedAt,
 }: {
@@ -43,6 +46,8 @@ function renderContactEmail({
   safeEmail: string;
   safeSubject: string;
   safeMessage: string;
+  safeCategory: string;
+  safeProperty: string | null;
   replyHref: string;
   receivedAt: string;
 }): string {
@@ -77,7 +82,7 @@ function renderContactEmail({
         <tr>
           <td style="padding:26px 32px 22px;border-bottom:1px solid rgba(201,149,42,0.20);">
             <p style="margin:0;font-family:${serif};font-size:14px;letter-spacing:0.26em;text-transform:uppercase;color:${GOLD};">The Anthracite Limited</p>
-            <p style="margin:7px 0 0;font-family:${sans};font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(245,240,232,0.42);">New website enquiry</p>
+            <p style="margin:7px 0 0;font-family:${sans};font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(245,240,232,0.42);">${safeCategory}</p>
           </td>
         </tr>
 
@@ -90,6 +95,7 @@ function renderContactEmail({
         <tr>
           <td style="padding:0 32px;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              ${safeProperty ? field("Property", safeProperty) : ""}
               ${field("Email", `<a href="mailto:${safeEmail}" style="color:${GOLD};text-decoration:none;">${safeEmail}</a>`)}
               ${field("Subject", safeSubject)}
             </table>
@@ -141,7 +147,8 @@ export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const body = await req.json();
-    const { name, email, subject, message, website } = body ?? {};
+    const { name, email, subject, message, website, enquiryType, property } =
+      body ?? {};
 
     if (typeof website === 'string' && website.trim() !== '') {
       return NextResponse.json({ success: true });
@@ -163,10 +170,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Falls back to the default rather than rejecting, so an unknown value
+    // can never drop an otherwise valid enquiry.
+    const category = isEnquiryType(enquiryType)
+      ? enquiryType
+      : DEFAULT_ENQUIRY_TYPE;
+    const propertyRef =
+      typeof property === "string" && property.trim() ? property.trim() : null;
+
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
     const safeSubject = escapeHtml(subject);
     const safeMessage = escapeHtml(message);
+    const safeCategory = escapeHtml(category);
+    const safeProperty = propertyRef ? escapeHtml(propertyRef) : null;
 
     const receivedAt = new Date().toLocaleString("en-GB", {
       timeZone: "Africa/Accra",
@@ -175,22 +192,24 @@ export async function POST(req: NextRequest) {
     });
 
     const { error } = await resend.emails.send({
-      from: "Contact Form <hello@theanthracite.com>",
+      from: "The Anthracite <hello@theanthracite.com>",
       to: [process.env.RESEND_TO_EMAIL ?? "hello@theanthracite.com"],
       replyTo: email,
       // Raw (unescaped) subject — HTML entities would render literally in a header
-      subject: `[Contact] ${subject}`,
+      subject: `[${category}] ${subject}`,
       html: renderContactEmail({
         safeName,
         safeEmail,
         safeSubject,
         safeMessage,
+        safeCategory,
+        safeProperty,
         replyHref: `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(
           `Re: ${subject}`
         )}`,
         receivedAt,
       }),
-      text: `New enquiry via theanthracite.com\n\nFrom:    ${name}\nEmail:   ${email}\nSubject: ${subject}\nTime:    ${receivedAt} (Accra)\n\n${"-".repeat(48)}\n\n${message}\n`,
+      text: `New enquiry via theanthracite.com\n\nType:    ${category}\n${propertyRef ? `Property: ${propertyRef}\n` : ""}From:    ${name}\nEmail:   ${email}\nSubject: ${subject}\nTime:    ${receivedAt} (Accra)\n\n${"-".repeat(48)}\n\n${message}\n`,
     });
 
     if (error) {

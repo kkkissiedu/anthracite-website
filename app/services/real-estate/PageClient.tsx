@@ -482,6 +482,9 @@ function BathIcon() {
 
 type ModalTab = "images" | "video" | "panorama";
 
+const ENQUIRY_INPUT_CLASS =
+  "w-full bg-[#141414] border border-gold/25 focus:border-gold text-cream placeholder:text-cream/30 px-3 py-2.5 outline-none transition-colors duration-200 text-sm";
+
 function PropertyModal({
   property,
   onClose,
@@ -503,6 +506,45 @@ function PropertyModal({
 
   const [activeTab, setActiveTab] = useState<ModalTab>(defaultTab);
   const [activeImg, setActiveImg] = useState(0);
+
+  // Enquiry form — posts to the same /api/contact route as the main form
+  const [enq, setEnq] = useState({
+    name: "",
+    email: "",
+    message: "",
+    website: "",
+  });
+  const [enqStatus, setEnqStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [enqError, setEnqError] = useState("");
+
+  async function handleEnquirySubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setEnqStatus("loading");
+    setEnqError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...enq,
+          enquiryType: "Real Estate & Construction",
+          subject: property.title,
+          property: property.location
+            ? `${property.title} — ${property.location}`
+            : property.title,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
+      setEnqStatus("success");
+      setEnq({ name: "", email: "", message: "", website: "" });
+    } catch (err) {
+      setEnqStatus("error");
+      setEnqError(err instanceof Error ? err.message : "Something went wrong.");
+    }
+  }
 
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -615,13 +657,6 @@ function PropertyModal({
     video: "Video",
     panorama: "360°",
   };
-
-  // Pre-filled mailto body
-  const mailtoHref = `mailto:hello@theanthracite.com?subject=${encodeURIComponent(
-    `Enquiry: ${property.title}`
-  )}&body=${encodeURIComponent(
-    `Hello,\n\nI am interested in "${property.title}" and would like to enquire about availability.\n\nGuest Name: \nDates of Interest: [Check-in] to [Check-out]\nNumber of Guests: \n\nAny questions or requests:\n`
-  )}`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -854,36 +889,81 @@ function PropertyModal({
                 Make an Enquiry
               </p>
 
-              {/* Email — gold */}
-              <a
-                href={mailtoHref}
-                className="flex items-center justify-center gap-2.5 px-5 py-3.5 bg-gold text-anthracite text-xs tracking-[0.2em] uppercase font-semibold hover:bg-[#D4AF37] transition-colors duration-200"
-              >
-                <svg
-                  width="15"
-                  height="12"
-                  viewBox="0 0 15 12"
-                  fill="none"
-                  aria-hidden
+              {/* Enquiry form */}
+              {enqStatus === "success" ? (
+                <div
+                  className="border border-gold/40 px-4 py-5 text-center"
+                  role="status"
                 >
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="14"
-                    height="11"
-                    rx="1.5"
-                    stroke="#0D0D0D"
-                    strokeWidth="1.2"
+                  <p className="text-gold text-xs tracking-[0.2em] uppercase mb-1.5">
+                    Enquiry sent
+                  </p>
+                  <p className="text-cream/50 text-xs leading-relaxed">
+                    We&apos;ll be in touch about {property.title} shortly.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleEnquirySubmit} className="flex flex-col gap-3" noValidate>
+                  {/* Honeypot — hidden from real users */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={enq.website}
+                    onChange={(e) =>
+                      setEnq((p) => ({ ...p, website: e.target.value }))
+                    }
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden
+                    className="absolute -left-[9999px] w-px h-px opacity-0"
                   />
-                  <path
-                    d="M0.5 2L7.5 7l7-5"
-                    stroke="#0D0D0D"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
+                  <input
+                    type="text"
+                    required
+                    value={enq.name}
+                    onChange={(e) =>
+                      setEnq((p) => ({ ...p, name: e.target.value }))
+                    }
+                    placeholder="Your name"
+                    aria-label="Your name"
+                    className={ENQUIRY_INPUT_CLASS}
                   />
-                </svg>
-                Email Enquiry
-              </a>
+                  <input
+                    type="email"
+                    required
+                    value={enq.email}
+                    onChange={(e) =>
+                      setEnq((p) => ({ ...p, email: e.target.value }))
+                    }
+                    placeholder="Your email"
+                    aria-label="Your email"
+                    className={ENQUIRY_INPUT_CLASS}
+                  />
+                  <textarea
+                    required
+                    rows={3}
+                    value={enq.message}
+                    onChange={(e) =>
+                      setEnq((p) => ({ ...p, message: e.target.value }))
+                    }
+                    placeholder="Dates of interest, number of guests, questions..."
+                    aria-label="Your message"
+                    className={`${ENQUIRY_INPUT_CLASS} resize-none`}
+                  />
+
+                  {enqStatus === "error" && (
+                    <p className="text-red-400 text-xs">{enqError}</p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={enqStatus === "loading"}
+                    className="flex items-center justify-center gap-2.5 px-5 py-3.5 bg-gold text-anthracite text-xs tracking-[0.2em] uppercase font-semibold hover:bg-[#D4AF37] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {enqStatus === "loading" ? "Sending..." : "Send Enquiry"}
+                  </button>
+                </form>
+              )}
 
               {/* WhatsApp — green */}
               {property.whatsappNumber && (
