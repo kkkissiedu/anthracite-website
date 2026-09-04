@@ -20,6 +20,7 @@ import {
 } from "@/context/ProjectModalContext";
 import ToolIcon from "./ToolIcon";
 import { useSwipe } from "@/app/hooks/useSwipe";
+import Lightbox from "@/components/Lightbox";
 
 // ─── Lazy-load 3D viewer (avoids SSR issues with WebGL) ───────────────────────
 
@@ -112,6 +113,7 @@ function GoldSpinner() {
 
 function ImagesTab({ gallery }: { gallery: ResolvedImage[] }) {
   const [current, setCurrent] = useState(0);
+  const [zoomed, setZoomed] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -150,13 +152,20 @@ function ImagesTab({ gallery }: { gallery: ResolvedImage[] }) {
         key={current}
         className={`relative flex-1 min-h-0 bg-black ${prefersReducedMotion ? '' : 'slide-enter'}`}
       >
-        <Image
-          src={sanityImageSrc(gallery[current])}
-          alt={`Image ${current + 1} of ${total}`}
-          fill
-          className="object-contain"
-          sizes="100vw"
-        />
+        <button
+          type="button"
+          onClick={() => setZoomed(current)}
+          className="absolute inset-0 w-full h-full cursor-zoom-in"
+          aria-label={`View image ${current + 1} of ${total} at full size`}
+        >
+          <Image
+            src={sanityImageSrc(gallery[current])}
+            alt={`Image ${current + 1} of ${total}`}
+            fill
+            className="object-contain"
+            sizes="100vw"
+          />
+        </button>
         {/* Counter */}
         <div
           className="absolute top-4 right-4 bg-black/60 text-cream text-xs px-3 py-1.5 tracking-[0.15em]"
@@ -209,6 +218,17 @@ function ImagesTab({ gallery }: { gallery: ResolvedImage[] }) {
           ))}
         </div>
       )}
+
+      <Lightbox
+        images={gallery.map(sanityImageSrc)}
+        index={zoomed}
+        onClose={() => setZoomed(null)}
+        onIndexChange={(i) => {
+          setZoomed(i);
+          setCurrent(i);
+        }}
+        alt={(i) => `Image ${i + 1} of ${total}`}
+      />
     </div>
   );
 }

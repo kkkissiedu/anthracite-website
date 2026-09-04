@@ -9,6 +9,7 @@ import type { SanityProperty } from "@/lib/sanity";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { useSwipe } from "@/app/hooks/useSwipe";
+import Lightbox from "@/components/Lightbox";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -494,6 +495,7 @@ function PropertyModal({
 }) {
   const images = property.images ?? [];
   const hasImages = images.length > 0;
+  const [zoomed, setZoomed] = useState<number | null>(null);
   const hasVideo = !!property.videoUrl;
   const hasPanorama = !!property.panoramaUrl;
 
@@ -725,14 +727,21 @@ function PropertyModal({
         {activeTab === "images" && hasImages && (
           <div className="lg:flex lg:flex-col lg:flex-1 lg:min-h-0">
             <div className="relative w-full aspect-video lg:aspect-auto lg:flex-1 lg:min-h-0 bg-[#111]">
-              <Image
-                src={imageUrls[activeImg]}
-                alt={`${property.title} — photo ${activeImg + 1}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 896px) 100vw, 896px"
-                priority
-              />
+              <button
+                type="button"
+                onClick={() => setZoomed(activeImg)}
+                className="absolute inset-0 w-full h-full cursor-zoom-in"
+                aria-label={`View photo ${activeImg + 1} of ${images.length} at full size`}
+              >
+                <Image
+                  src={imageUrls[activeImg]}
+                  alt={`${property.title} — photo ${activeImg + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 896px) 100vw, 896px"
+                  priority
+                />
+              </button>
               {images.length > 1 && (
                 <>
                   <button
@@ -785,6 +794,17 @@ function PropertyModal({
             )}
           </div>
         )}
+
+        <Lightbox
+          images={imageUrls}
+          index={zoomed}
+          onClose={() => setZoomed(null)}
+          onIndexChange={(i) => {
+            setZoomed(i);
+            setActiveImg(i);
+          }}
+          alt={(i) => `${property.title} — photo ${i + 1}`}
+        />
 
         {/* ── Video tab ── */}
         {activeTab === "video" && hasVideo && (
